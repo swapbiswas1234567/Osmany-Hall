@@ -12,6 +12,7 @@ import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.text.Format;
 import java.text.DateFormat;
@@ -41,12 +42,12 @@ public class StoreOut extends javax.swing.JFrame {
      */
     public StoreOut() {
         initComponents();
+        conn = Jconnection.ConnecrDb(); // set connection with database
         TableDecoration();  // calling function to decorate table
-        SetInsertItemCombo();  // calling function to slect the item of the combobox in insert portion
-        SetUpdateItemCombo();  // calling function to slect the item of the combobox in update portion
         InitDatditor();    //function for disabling date edit
-        SetUpdateStatusCombo();
-        SetInsertStatusCombo();
+        GetStoreItem();    // fetch the item name from store table
+        SetUpdateStatusCombo();  // update the status combobox in beakfast lunch & dinner
+        SetInsertStatusCombo(); // Insert combobox value set according to the store table data item
     }
     
     //fundtion for decorating the table 
@@ -59,17 +60,34 @@ public class StoreOut extends javax.swing.JFrame {
         
     }
     
+    
+    // function will return the item list of store table to show in combo box
+    public String GetStoreItem(){
+        try{
+            psmt = conn.prepareStatement("select name from item");
+            rs = psmt.executeQuery();
+            while( rs.next()){
+               // System.out.println("called while  "+rs.getString(1));
+                SetInsertItemCombo(rs.getString(1));  // calling function to slect the item of the combobox in insert portion
+                SetUpdateItemCombo(rs.getString(1));  // calling function to slect the item of the combobox in update portion
+            }
+            psmt.close();
+            rs.close();
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error Whilte Fetching data from store table for combo box","Inserting Data Error",JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
+    
     //function for setting the item list of combobox in insert portion
-    public void SetInsertItemCombo(){
-        InsertItemCombo.addItem("Rice");
-        InsertItemCombo.addItem("Oil");
-        InsertItemCombo.addItem("Salt");
+    public void SetInsertItemCombo(String names){
+        InsertItemCombo.addItem(names);
+
     }
     //function for setting the item list of combobox in update portion
-    public void SetUpdateItemCombo(){
-        UpdateItemCombo.addItem("Rice");
-        UpdateItemCombo.addItem("Oil");
-        UpdateItemCombo.addItem("Salt");
+    public void SetUpdateItemCombo(String names){
+        UpdateItemCombo.addItem(names);
     }
     
     //function for setting the item list of combobox in update portion
@@ -107,7 +125,7 @@ public class StoreOut extends javax.swing.JFrame {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             
             //checking conditions before inserting on the table 
-            if( item != null && status != null && date != null && amount > 0 && CheckTableItem(status,formatter.format(date)) < 0){
+            if( item != null && status != null && date != null && amount > 0 && CheckTableItem(item,status,formatter.format(date)) < 0){
                 //if(amount >0 ){
                     //boolean a=CheckTableItem(item);
                     tablemodel = (DefaultTableModel) StoreOutTable.getModel();
@@ -181,7 +199,7 @@ public class StoreOut extends javax.swing.JFrame {
         
     }
     
-    
+    // function of update the selected table row value
     public void updatTable(){
         try{
             selectedrow = StoreOutTable.getSelectedRow();
@@ -195,7 +213,7 @@ public class StoreOut extends javax.swing.JFrame {
         
             
            // System.out.println(tableindx+" "+selectedrow);
-            if( item != null && status != null && date != null && amount > 0 && selectedrow >=0 ){
+            if( item != null && status != null && date != null && amount > 0 && selectedrow >=0 && CheckTableItem(item,status,formatter.format(date)) < 0){
                     tablemodel = (DefaultTableModel) StoreOutTable.getModel();
                     tablemodel.setValueAt(item,selectedrow, 0);
                     tablemodel.setValueAt(amount,selectedrow, 1);
@@ -213,6 +231,8 @@ public class StoreOut extends javax.swing.JFrame {
         }
     }
     
+    
+    //function for delete a selected table row
     public void DeleteTableRow(){
         selectedrow = StoreOutTable.getSelectedRow();
         if( selectedrow >=0 ){
@@ -229,14 +249,14 @@ public class StoreOut extends javax.swing.JFrame {
     }
     
     
-    
-    public int CheckTableItem(String item, String date){
+    // function to get the index number of a item based on its time it consumed or the status and input date
+    public int CheckTableItem(String item, String status, String date){
         int row = StoreOutTable.getRowCount();
         TableModel model = StoreOutTable.getModel();
         int tableindx = -1;
         for(int i=0; i<row ; i++){
             //System.out.println(model.getValueAt(i,0).toString().trim());
-            if (model.getValueAt(i,4).toString().trim().equals(item) && model.getValueAt(i,3).toString().trim().equals(date)){
+            if (model.getValueAt(i,0).toString().trim().equals(item) && model.getValueAt(i,4).toString().trim().equals(status) && model.getValueAt(i,3).toString().trim().equals(date)){
                 tableindx++;
                 return tableindx;
             }
@@ -589,35 +609,43 @@ public class StoreOut extends javax.swing.JFrame {
             //System.out.print("null");
         }
     }//GEN-LAST:event_InsertdatechoserPropertyChange
-
+    
+    // function will trigger if item is inserted in the insert combo box
     private void InsertItemComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertItemComboActionPerformed
         // TODO add your handling code here:
         String item = InsertItemCombo.getSelectedItem().toString();
         //System.out.print(item);
     }//GEN-LAST:event_InsertItemComboActionPerformed
+    
 
+    // function will triggered if insert button is pressed
     private void InsertBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InsertBtActionPerformed
         // TODO add your handling code here:
         InsertTable();
     }//GEN-LAST:event_InsertBtActionPerformed
-
+    
+    // function will triggered if mouse is clicked on table row
     private void StoreOutTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StoreOutTableMouseClicked
         // TODO add your handling code here:
         
         updatefield();
     }//GEN-LAST:event_StoreOutTableMouseClicked
-
+    
+    //function will triggered if delete button is pressed
     private void DeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteBtnActionPerformed
         // TODO add your handling code here:
         
         DeleteTableRow();
     }//GEN-LAST:event_DeleteBtnActionPerformed
-
+    
+    
+    //function will triggered if update button is pressed
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
         updatTable();
     }//GEN-LAST:event_UpdateBtnActionPerformed
-
+    
+    //function will triggered if save & exit button is pressed
     private void StoreOutSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StoreOutSaveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_StoreOutSaveActionPerformed
