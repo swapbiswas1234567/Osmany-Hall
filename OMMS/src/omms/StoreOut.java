@@ -62,7 +62,7 @@ public class StoreOut extends javax.swing.JFrame {
     
     
     // function will return the item list of store table to show in combo box
-    public String GetStoreItem(){
+    public void GetStoreItem(){
         try{
             psmt = conn.prepareStatement("select name from item");
             rs = psmt.executeQuery();
@@ -77,7 +77,7 @@ public class StoreOut extends javax.swing.JFrame {
         catch(SQLException e){
             JOptionPane.showMessageDialog(null,"Error Whilte Fetching data from store table for combo box","Inserting Data Error",JOptionPane.ERROR_MESSAGE);
         }
-        return null;
+       
     }
     
     //function for setting the item list of combobox in insert portion
@@ -108,6 +108,9 @@ public class StoreOut extends javax.swing.JFrame {
     private void InitDatditor(){
         datedit = (JTextFieldDateEditor) Insertdatechoser.getDateEditor();
         datedit.setEditable(false); // disabling date edit
+        Date datchosershow =new Date();
+        Insertdatechoser.setDate(datchosershow);  // set todays date to both of the datechooser by default
+        UpdateDatechooser.setDate(datchosershow);
     }
     
     
@@ -246,6 +249,48 @@ public class StoreOut extends javax.swing.JFrame {
         else{
             JOptionPane.showMessageDialog(null,"No Row is selected","Showing error while Updating data from textfield",JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    //function to set the remaining amount based on date
+    public void SetRemainingAmount(){
+        String remaining = null;
+        Date date = Insertdatechoser.getDate();
+        if ( date != null ){
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            String dateserial = formatter.format(date);
+            //System.out.println(dateserial);
+            try{
+            psmt = conn.prepareStatement("select available from storeinput where serial = ?");
+            psmt.setString(1, dateserial);
+            rs = psmt.executeQuery();
+            if(rs.next()){
+                remaining = rs.getString(1);
+                //System.out.println(remaining);
+                InsertRemainAmountText.setText(remaining);
+            }
+            else {
+                psmt = conn.prepareStatement("select max(available) from storeinput where serial < ?");
+                psmt.setString(1, dateserial);
+                rs = psmt.executeQuery();
+                remaining = rs.getString(1);
+                //System.out.println("called else not zero  "+dateserial+" "+rs.getString(1));
+                if(rs.next()){
+                    //System.out.println("called inside"+remaining+"  "+remaining);
+                    InsertRemainAmountText.setText(remaining);
+                }
+               
+               
+            }
+            
+            
+            psmt.close();
+            rs.close();
+            }
+            catch(SQLException e){
+                JOptionPane.showMessageDialog(null,"Error in SetRemainingItem","Fetching error from database",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
     }
     
     
@@ -598,16 +643,7 @@ public class StoreOut extends javax.swing.JFrame {
     //this function will trigger if we select a date from jdatechooser
     private void InsertdatechoserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_InsertdatechoserPropertyChange
         // TODO add your handling code here:
-        Date date = Insertdatechoser.getDate();
-        if ( date != null ){
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            //SimpleDateFormat formatter1 = new SimpleDateFormat("MM");
-            //String DATE = formatter1.format(date);
-            //System.out.println(DATE.getClass().getName());
-        }
-        else {
-            //System.out.print("null");
-        }
+        SetRemainingAmount();
     }//GEN-LAST:event_InsertdatechoserPropertyChange
     
     // function will trigger if item is inserted in the insert combo box
