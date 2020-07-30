@@ -25,8 +25,11 @@ public class StoreOutItem extends javax.swing.JFrame {
     public StoreOutItem() {
         initComponents();
         Tabledecoration();
-       
+        
     }
+    
+    
+    
     
     
     
