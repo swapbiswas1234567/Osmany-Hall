@@ -25,7 +25,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     public StoreOutItem() {
         initComponents();
         Tabledecoration();
-        //imageSet(Insertlabel, "cart.png");
+       
     }
     
     
@@ -43,22 +43,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     
     
     
-    void imageSet(JButton x, String imgname){
-	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
-	Image img1 = myimage.getImage();
-	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
-	ImageIcon i = new ImageIcon(img2);
-	x.setIcon(i);
-    }
-    
-    void imageSet(JLabel x, String imgname){
-	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
-	Image img1 = myimage.getImage();
-	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
-	ImageIcon i = new ImageIcon(img2);
-	x.setIcon(i);
-    }
-    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -330,6 +315,7 @@ public class StoreOutItem extends javax.swing.JFrame {
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
         jButton4.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/save&exitbtn (2).png"))); // NOI18N
         jButton4.setText("Save & Exit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -350,7 +336,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addContainerGap())
