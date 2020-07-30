@@ -7,6 +7,11 @@ package omms;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  *
@@ -20,6 +25,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     public StoreOutItem() {
         initComponents();
         Tabledecoration();
+        //imageSet(Insertlabel, "cart.png");
     }
     
     
@@ -36,6 +42,23 @@ public class StoreOutItem extends javax.swing.JFrame {
     }
     
     
+    
+    void imageSet(JButton x, String imgname){
+	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
+	Image img1 = myimage.getImage();
+	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
+	ImageIcon i = new ImageIcon(img2);
+	x.setIcon(i);
+    }
+    
+    void imageSet(JLabel x, String imgname){
+	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
+	Image img1 = myimage.getImage();
+	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
+	ImageIcon i = new ImageIcon(img2);
+	x.setIcon(i);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,7 +69,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        Insertlabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
@@ -80,11 +103,10 @@ public class StoreOutItem extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(208, 227, 229));
 
-        jLabel1.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\cart.png")); // NOI18N
-        jLabel1.setText("INSERT");
+        Insertlabel.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        Insertlabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Insertlabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/cart.png"))); // NOI18N
+        Insertlabel.setText("INSERT");
 
         jLabel2.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -94,6 +116,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Remaining Amount:");
 
+        jComboBox1.setFont(new java.awt.Font("Bell MT", 0, 11)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel4.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
@@ -104,6 +127,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Status :");
 
+        jComboBox2.setFont(new java.awt.Font("Bell MT", 0, 11)); // NOI18N
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel6.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
@@ -111,7 +135,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel6.setText("Amount :");
 
         jButton1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\Insertbtn (2).png")); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Insertbtn (2).png"))); // NOI18N
         jButton1.setText("Insert");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -120,7 +144,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Insertlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -148,7 +172,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Insertlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -178,9 +202,8 @@ public class StoreOutItem extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(117, 175, 182));
 
         jLabel7.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\update1.png")); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update1.png"))); // NOI18N
         jLabel7.setText("UPDATE");
 
         jLabel8.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
@@ -211,11 +234,11 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel12.setText("Amount :");
 
         jButton2.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\updateBtn.png")); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/updateBtn.png"))); // NOI18N
         jButton2.setText("Update");
 
         jButton3.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\trash.png")); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/trash.png"))); // NOI18N
         jButton3.setText("Delete");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -307,7 +330,6 @@ public class StoreOutItem extends javax.swing.JFrame {
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
         jButton4.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon("G:\\New folder (2)\\GIT\\osmany hall\\icons\\save&exitbtn (2).png")); // NOI18N
         jButton4.setText("Save & Exit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -328,7 +350,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addContainerGap())
@@ -373,6 +395,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Insertlabel;
     private javax.swing.JTable Storeouttable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -384,7 +407,6 @@ public class StoreOutItem extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox4;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
