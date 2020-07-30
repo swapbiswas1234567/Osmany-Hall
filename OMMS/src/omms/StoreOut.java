@@ -141,8 +141,8 @@ public class StoreOut extends javax.swing.JFrame {
                 SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMdd");
                 String dateserial = formatter1.format(date);
             
-                String remaining = SetRemainingAmount(Integer.parseInt(dateserial),item,0); // getting the value of remaining amount 
-                InsertRemainAmountText.setText(remaining);  //after each insertion in Jtable it will again set the remaining item
+                String remaining = SetRemainingAmount(Integer.parseInt(dateserial),item,-1); // getting the value of remaining amount 
+                InsertRemainAmountText.setText(remaining);                               //after each insertion in Jtable it will again set the remaining item
             }
             else{
                 JOptionPane.showMessageDialog(null,"you are trying to insert zero amount or amount more than remaining amount"
@@ -235,7 +235,7 @@ public class StoreOut extends javax.swing.JFrame {
                         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMdd");
                         String dateserial = formatter1.format(date);
                         
-                        String remaining = SetRemainingAmount(Integer.parseInt(dateserial),item,0); // getting the value of remaining amount 
+                        String remaining = SetRemainingAmount(Integer.parseInt(dateserial),item,-1); // getting the value of remaining amount 
                         InsertRemainAmountText.setText(remaining);  //after each insertion in Jtable it will again set the remaining item
                     }
                   else{
@@ -273,62 +273,59 @@ public class StoreOut extends javax.swing.JFrame {
     
     //function to set the remaining amount based on date and selected item on the combobox
     public String SetRemainingAmount(int dateserial, String itemname, int i){
-        Double remainingnumber=0.00;    
-        String remaining = null;
-            try{
-            psmt = conn.prepareStatement("select available from storeinput where serial = ? and item = ?");
-            psmt.setInt(1, dateserial);
-            psmt.setString(2, itemname);
-            //psmt.setString(2, itemname);
+        int maxserial = maxSerial(itemname);
+        Double available=0.0;
+        //System.out.println(itemname+" "+maxserial);
+        available = maxSerialAvailable(maxserial,itemname);
+        available = available - Tableallamount(itemname,i);
+        return available.toString();
+    }
+        
+
+    public int maxSerial(String item){
+        try {
+            psmt = conn.prepareStatement("select max(serial) from storeinput where item= ?");
+            psmt.setString(1, item);
             rs = psmt.executeQuery();
-            if(rs.next() && rs.getString(1) != null){  // if any item has same serial number in the store then it will show its remaining amount
-                //System.out.println("1st if called ");   
-                remaining = rs.getString(1);
-                //InsertRemainAmountText.setText(remaining);
-               
+            while(rs.next()){
+                //System.out.println(rs.getInt(1));
+                return rs.getInt(1);
             }
-            else {  //if item dont have same serial number means same item does not inserted in the store on same date 
-                psmt = conn.prepareStatement("select max(available) from storeinput where serial < ? and item = ?");
-                psmt.setInt(1, dateserial); 
-                psmt.setString(2, itemname);
-                rs = psmt.executeQuery();
-                //System.out.println("1st else called " +" ");
-                if(rs.next() && rs.getString(1) != null){   //so check if the searched item but inserted on previous date is available or not
-                   // System.out.println("1st else called " +" "+itemname+" "+rs.getString(1));
-                    remaining = rs.getString(1);
-                    //InsertRemainAmountText.setText(remaining);
-                  
-                }
-                else{   // if the item does not exist on the store or no amount for the item is inserted in the store table 
-                    remaining = "00.00";
-                   // InsertRemainAmountText.setText(remaining);
-                   
-                }
-               
+        } catch (SQLException ex) {
+            Logger.getLogger(StoreOut.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public Double maxSerialAvailable(int serial, String item){
+        try {
+            psmt = conn.prepareStatement("select available from storeinput where serial= ? and item= ?");
+            psmt.setInt(1, serial);
+            psmt.setString(2, item);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                //System.out.println(rs.getInt(1));
+                return rs.getDouble(1);
             }
-            psmt.close();
-            rs.close();
-            remainingnumber=Double.parseDouble(remaining);
-            if (i == 0){
-                remainingnumber= remainingnumber - IsAmountPresent(itemname, -1,dateserial);
-            }
-            else{
-                remainingnumber= remainingnumber - IsAmountPresent(itemname,StoreOutTable.getSelectedRow(),dateserial);
-            }
-            if(remainingnumber < 0){
-                remainingnumber = 00.0;
-            }
-            remaining = remainingnumber.toString().trim();
-            //System.out.println(StoreOutTable.getSelectedRow());
-            return remaining;
-            }
-            catch(SQLException e){
-                JOptionPane.showMessageDialog(null,"Error in SetRemainingItem","Fetching error from database",JOptionPane.ERROR_MESSAGE);
-                return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(StoreOut.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0.0;
+    }
+    
+    
+    public Double Tableallamount(String item,int index){
+        int row = StoreOutTable.getRowCount();
+        TableModel model = StoreOutTable.getModel();
+        Double total = 0.0;
+        for(int i=0; i<row ; i++){
+            if (model.getValueAt(i,0).toString().trim().equals(item) && index != i){
+                  total = total + Double.parseDouble(model.getValueAt(i, 1).toString());
             }
         }
-        
-    
+       // System.out.println(row+"  "+total+" "+item+" "+index);
+        return total;
+    }
     
     
     // function to get the index number of a item based on its time it consumed or the status and input date
@@ -378,22 +375,9 @@ public class StoreOut extends javax.swing.JFrame {
     }
     
     
-    public double IsAmountPresent(String item, int JtableRow, int dateserial){
-        int tablerow=-1;
-        Double InsertedAmount = 0.00;
-        TableModel model = StoreOutTable.getModel();
-        tablerow = StoreOutTable.getRowCount();
-        for(int i=0 ; i<tablerow ; i++){      
-                if(model.getValueAt(i, 0).toString().trim().equals(item) && i != JtableRow
-                   ){
-                InsertedAmount = InsertedAmount+ Double.parseDouble(model.getValueAt(i, 1).toString());
-                }
-            } 
- 
- 
-        return InsertedAmount;
-    }
     
+    
+   
     public void ClearTextfieldAfterInsert(){
         InsertAmountText.setText("");
     }
@@ -718,12 +702,12 @@ public class StoreOut extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(InsertBt, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(UpdateDatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(UpdateDatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                .addComponent(InsertBt, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(InsertStatusCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Insertdatechoser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Insertdatechoser, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                                 .addComponent(UpdateStatusCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addContainerGap(20, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -768,18 +752,18 @@ public class StoreOut extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(InsertAmountText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(31, 31, 31)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(UpdateDatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(UpdateItemCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(UpdateItemCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(UpdateDatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(UpdateStatusCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -794,10 +778,10 @@ public class StoreOut extends javax.swing.JFrame {
                                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
+                                .addGap(40, 40, 40)
                                 .addComponent(UpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
                         .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(25, 25, 25))
         );
@@ -838,7 +822,7 @@ public class StoreOut extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
@@ -850,8 +834,8 @@ public class StoreOut extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(StoreOutSave, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -872,7 +856,7 @@ public class StoreOut extends javax.swing.JFrame {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             String dateserial = formatter.format(date);
             itemname = InsertItemCombo.getSelectedItem().toString();
-            remaining=SetRemainingAmount(Integer.parseInt(dateserial),itemname,0);  // sending date and itemname to update the remaining amount box
+            remaining=SetRemainingAmount(Integer.parseInt(dateserial),itemname,-1);  // sending date and itemname to update the remaining amount box
             InsertRemainAmountText.setText(remaining);
         }
         
@@ -889,7 +873,7 @@ public class StoreOut extends javax.swing.JFrame {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             String dateserial = formatter.format(date);
             itemname = InsertItemCombo.getSelectedItem().toString();
-            remaining=SetRemainingAmount(Integer.parseInt(dateserial),itemname,0);   // sending date and itemname to update the remaining amount box
+            remaining=SetRemainingAmount(Integer.parseInt(dateserial),itemname,-1);   // sending date and itemname to update the remaining amount box
             InsertRemainAmountText.setText(remaining);
         }
     }//GEN-LAST:event_InsertItemComboActionPerformed
@@ -956,7 +940,7 @@ public class StoreOut extends javax.swing.JFrame {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             String dateserial = formatter.format(date);
             itemname = UpdateItemCombo.getSelectedItem().toString();
-            remaining = SetRemainingAmount(Integer.parseInt(dateserial),itemname,1);   // sending date and itemname to update the remaining amount box
+            remaining = SetRemainingAmount(Integer.parseInt(dateserial),itemname,-1);   // sending date and itemname to update the remaining amount box
             UpdateRemainingtxt.setText(remaining);
         }
     }//GEN-LAST:event_UpdateDatechooserPropertyChange
@@ -972,7 +956,7 @@ public class StoreOut extends javax.swing.JFrame {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             String dateserial = formatter.format(date);
             itemname = UpdateItemCombo.getSelectedItem().toString();
-            remaining = SetRemainingAmount(Integer.parseInt(dateserial),itemname,1);   // sending date and itemname to update the remaining amount box
+            remaining = SetRemainingAmount(Integer.parseInt(dateserial),itemname,-1);   // sending date and itemname to update the remaining amount box
             UpdateRemainingtxt.setText(remaining);
         }
         
