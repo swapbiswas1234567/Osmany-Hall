@@ -23,7 +23,7 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        StoreOut st =new StoreOut();
+        StoreOutItem st =new StoreOutItem();
         st.setVisible(true);
     }
     
