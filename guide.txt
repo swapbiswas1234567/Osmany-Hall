@@ -1,0 +1,64 @@
+###Variable Declarations
+
+Connection conn;
+PreparedStatement psmt;
+ResultSet rs;
+DefaultTableModel tm;
+int selectedRow;
+DecimalFormat df = new DecimalFormat("####0.000");
+
+###Set Look and Feel: Google
+
+###Table Init
+
+tm = (DefaultTableModel)tableName.getModel();
+tm.setRowCount(0);
+
+###Cursor Focus
+editTextName.requestFocusInWindow();
+
+###Date Chooser Date Set:
+
+Date date = new Date();
+dateChooser.setDate(date);
+JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+editor.setEditable(false);
+editor = (JTextFieldDateEditor) dateChooserUpdate.getDateEditor();
+editor.setEditable(false);
+
+###Input Dialog
+String itemName = null;
+itemName = JOptionPane.showInputDialog("Input Dialog Header");
+
+if(itemName == null){
+	JOptionPane.showMessageDialog(null, "No Item Entered!", "Alert!", JOptionPane.ERROR_MESSAGE); 
+	return;
+}
+
+###JOptionPane
+JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.ERROR_MESSAGE);
+JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.INFORMATION_MESSAGE);  
+
+###Converting Date Object to String
+
+Date date = dateChooser.getDate();
+Format formatter = new SimpleDateFormat("yyyy-MM-dd");  ///yyyy-MM-dd: 2019-01-07      MMM d,yyyy: 1 Jan, 2019
+String DATE = formatter.format(date);
+
+###Table Add
+Object o[] = {string1, string2, string3};
+tm.addRow(o);
+
+###Remove Table Selection
+tableName.getSelectionModel().clearSelection();   ///tableController = -1
+
+###Row Count
+int len = tm.getRowCount();
+
+###Getting Value From Table
+String value = tm.getValueAt(row, column).toString();
+
+###Setting Icon Image
+Frame f=this;     
+Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/cart.png"));    
+f.setIconImage(icon);
