@@ -18,6 +18,8 @@ public class StoredItem {
     Double bf;
     Double lunch;
     Double dinner;
+    int flag;
+    Double available;
     
     StoredItem(int dateserial , String itemname, Double inamount, Double price){
         this.dateserial = dateserial;
@@ -25,23 +27,24 @@ public class StoredItem {
         this.inamount = inamount;
         this.price = price;
         memono="###";
-        bf= 0.00;
-        lunch =0.00;
-        dinner =0.00;
+        bf= -1.0;
+        lunch =-1.0;
+        dinner =-1.0;
     }
     
     StoredItem(int dateserial,Double bf, Double lunch, Double dinner){
         this.dateserial = dateserial;
         itemname= null;
-        inamount = 0.00;
-        price=0.00;
+        inamount = -1.0;
+        price= -1.0;
         memono= null;
         this.bf =bf;
         this.lunch = lunch;
         this.dinner = dinner;
     }
     
-    StoredItem(int dateserial , String itemname, Double inamount, Double price,Double bf, Double lunch, Double dinner){
+    StoredItem(int dateserial , String itemname, Double inamount, Double price,Double bf, Double lunch, Double dinner,
+            int flag){
         this.dateserial = dateserial;
         this.itemname= itemname;
         this.inamount = inamount;
@@ -50,6 +53,7 @@ public class StoredItem {
         this.bf =bf;
         this.lunch = lunch;
         this.dinner = dinner;
+        this.flag = flag;
     }
     
     
