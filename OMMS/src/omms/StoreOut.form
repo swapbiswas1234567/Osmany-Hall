@@ -132,12 +132,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="UpdateDatechooser" pref="121" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="InsertBt" min="-2" pref="108" max="-2" attributes="0"/>
-                                  <Component id="InsertStatusCombo" max="32767" attributes="0"/>
-                                  <Component id="Insertdatechoser" pref="121" max="32767" attributes="0"/>
-                                  <Component id="UpdateStatusCombo" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="InsertBt" min="-2" pref="108" max="-2" attributes="0"/>
+                              <Component id="InsertStatusCombo" max="32767" attributes="0"/>
+                              <Component id="Insertdatechoser" pref="121" max="32767" attributes="0"/>
+                              <Component id="UpdateStatusCombo" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="20" max="32767" attributes="0"/>
                       </Group>

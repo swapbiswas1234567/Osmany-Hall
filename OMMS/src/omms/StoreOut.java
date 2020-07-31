@@ -908,11 +908,11 @@ public class StoreOut extends javax.swing.JFrame {
             Double amount = Double.parseDouble(UpdateAmountxt.getText().trim());
             if(IsAmountValid(amount,remainingamount)){
             updatTable();
-        }
-        else{
+            }
+            else{
             JOptionPane.showMessageDialog(null,"Amount is greater than remaining","Updating Data Error",JOptionPane.ERROR_MESSAGE);
-        }
-        }
+            }
+            }
         catch(Exception e){
             JOptionPane.showMessageDialog(null,"Amount not inserted in update text field","Updating Data Error",JOptionPane.ERROR_MESSAGE);
         }
