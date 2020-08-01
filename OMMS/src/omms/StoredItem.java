@@ -19,7 +19,7 @@ public class StoredItem {
     Double lunch;
     Double dinner;
     int flag;
-    Double available;
+    
     
     StoredItem(int dateserial , String itemname, Double inamount, Double price){
         this.dateserial = dateserial;
