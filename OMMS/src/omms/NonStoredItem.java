@@ -336,7 +336,7 @@ public class NonStoredItem extends javax.swing.JFrame {
     
     public void seteditedlevalue(){
         String name = "", state = "", memo = "", amount = "" , price = "", strdate="";
-        int selectedrow = -1;
+        int selectedrow = -1, dateserial =0;
         Double totalamount = 0.00, totalprice = 0.00, avgprice=0.00;
         Date date=null;
         name = editnamecombobox.getSelectedItem().toString();
@@ -349,18 +349,24 @@ public class NonStoredItem extends javax.swing.JFrame {
         
         try{
             strdate = formatter1.format(date);
+            dateserial = Integer.parseInt(formatter.format(date));
         }
-        catch(Exception e){
+        catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Date Parse in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
         
         System.out.println(selectedrow);
         boolean checkjtable = checkinjtable(name,strdate,state, selectedrow);
-        //System.out.println(checkjtable);
+        boolean databasecheck = checkitemondatabase(name.toLowerCase(),dateserial,state.toLowerCase());
+        //System.out.println(databasecheck);
         //System.out.println(name+" "+amount+" "+price+" "+date+" "+state+" "+memo);
         if(checkjtable){
             JOptionPane.showMessageDialog(null, "Same data already"
                     + " exist in Table","Date parsing error", JOptionPane.ERROR_MESSAGE);
+        }
+        else if(databasecheck){
+            JOptionPane.showMessageDialog(null, "Data already exists in the "
+                    + "database","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
         else if(selectedrow <0){
             JOptionPane.showMessageDialog(null, "No row is selected","Data updating error", JOptionPane.ERROR_MESSAGE);
@@ -518,6 +524,11 @@ public class NonStoredItem extends javax.swing.JFrame {
         jLabel3.setText("Date ");
 
         insertdatechooser.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertdatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                insertdatechooserPropertyChange(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -525,6 +536,11 @@ public class NonStoredItem extends javax.swing.JFrame {
 
         insertstatecombobox.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         insertstatecombobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        insertstatecombobox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertstatecomboboxActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -877,7 +893,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         else{
             setnonstoredtable(name,amount,price,date,state,memo);
         }
-        
+        insertmemotxt.requestFocus();
     }//GEN-LAST:event_insertbtnActionPerformed
 
     private void nonStoretableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nonStoretableMouseClicked
@@ -891,7 +907,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         if(flag == 1){
             setinsertunit();
         }
-        
+        insertmemotxt.requestFocus();
     }//GEN-LAST:event_insertnamecomboboxActionPerformed
 
     private void editnamecomboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editnamecomboboxActionPerformed
@@ -926,6 +942,17 @@ public class NonStoredItem extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_deletebtnActionPerformed
+
+    private void insertdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_insertdatechooserPropertyChange
+        // TODO add your handling code here:
+        
+        insertmemotxt.requestFocus();
+    }//GEN-LAST:event_insertdatechooserPropertyChange
+
+    private void insertstatecomboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertstatecomboboxActionPerformed
+        // TODO add your handling code here:
+        insertmemotxt.requestFocus();
+    }//GEN-LAST:event_insertstatecomboboxActionPerformed
 
     /**
      * @param args the command line arguments
