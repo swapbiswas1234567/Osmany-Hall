@@ -215,6 +215,9 @@ public class StoreOutItem extends javax.swing.JFrame {
             if( insertamount > remainingamount || remainingamount <=0 || insertamount <=0){
                 JOptionPane.showMessageDialog(null,"Invalid amount","Data Error",JOptionPane.ERROR_MESSAGE);
             }
+            else if(selectedrow <0 ){
+                JOptionPane.showMessageDialog(null,"Please Select a Row","Data Error",JOptionPane.ERROR_MESSAGE);
+            }
             else if(CheckTableItem(name,status,strdate,selectedrow) <0 && !searchIndatabase(serial,name,status)){
                 model.setValueAt(name, selectedrow, 0);
                 model.setValueAt(amount, selectedrow, 1);
@@ -223,6 +226,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                 model.setValueAt(status, selectedrow, 4);
   
             }
+          
             else{
                 JOptionPane.showMessageDialog(null,"Value already exist","Data Error",JOptionPane.ERROR_MESSAGE);
             }
