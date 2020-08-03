@@ -684,6 +684,11 @@ public class NonStoredItem extends javax.swing.JFrame {
         jLabel10.setText("Date ");
 
         editdatechooser.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        editdatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                editdatechooserPropertyChange(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -691,6 +696,11 @@ public class NonStoredItem extends javax.swing.JFrame {
 
         editstatecombobox.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         editstatecombobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        editstatecombobox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editstatecomboboxActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -916,6 +926,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             seteditunit();
         }
         
+        editmemotxt.requestFocus();
     }//GEN-LAST:event_editnamecomboboxActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
@@ -940,7 +951,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No Row is selected"
                    , "Delete Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+        insertmemotxt.requestFocus();
     }//GEN-LAST:event_deletebtnActionPerformed
 
     private void insertdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_insertdatechooserPropertyChange
@@ -953,6 +964,17 @@ public class NonStoredItem extends javax.swing.JFrame {
         // TODO add your handling code here:
         insertmemotxt.requestFocus();
     }//GEN-LAST:event_insertstatecomboboxActionPerformed
+
+    private void editstatecomboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editstatecomboboxActionPerformed
+        // TODO add your handling code here:
+        editmemotxt.requestFocus();
+    }//GEN-LAST:event_editstatecomboboxActionPerformed
+
+    private void editdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_editdatechooserPropertyChange
+        // TODO add your handling code here:
+        
+        editmemotxt.requestFocus();
+    }//GEN-LAST:event_editdatechooserPropertyChange
 
     /**
      * @param args the command line arguments

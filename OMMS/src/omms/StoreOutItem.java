@@ -120,7 +120,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     public void getAllstoreditem(){
        
         try{
-            psmt = conn.prepareStatement("select name from item");
+            psmt = conn.prepareStatement("select name from storeditem");
             rs = psmt.executeQuery();
             while(rs.next()){
                 insertCombobox.addItem(rs.getString(1));  // sending the name of item to set in the combobox
@@ -496,7 +496,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }    
         }
         
-        //.out.println(available+" prev"+prevavailable);
+        System.out.println(available+" prev"+prevavailable);
         
         if(prevavailable < available){
             if(prevavailable < 0){
