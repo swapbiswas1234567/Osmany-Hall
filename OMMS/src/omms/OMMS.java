@@ -4,10 +4,14 @@
  * and open the template in the editor.
  */
 package omms;
+import com.itextpdf.text.DocumentException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,10 +27,12 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        StoreOutItem st =new StoreOutItem();
+        //StoreOutItem st =new StoreOutItem();
         //StoreInForm st = new StoreInForm();
-        //NonStoredItem st = new NonStoredItem();
+        NonStoredItem st = new NonStoredItem();
         st.setVisible(true);
+        
+        
     }
     
     

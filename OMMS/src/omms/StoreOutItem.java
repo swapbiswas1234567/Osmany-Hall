@@ -496,7 +496,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }    
         }
         
-        System.out.println(available+" prev"+prevavailable);
+        //System.out.println(available+" prev"+prevavailable);
         
         if(prevavailable < available){
             if(prevavailable < 0){
