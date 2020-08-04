@@ -29,8 +29,8 @@ public class OMMS {
         // TODO code application logic here
         //StoreOutItem st =new StoreOutItem();
         //StoreInForm st = new StoreInForm();
-        //NonStoredItem st = new NonStoredItem();
-        TemporaryFood st = new TemporaryFood();
+        NonStoredItem st = new NonStoredItem();
+        //TemporaryFood st = new TemporaryFood();
         st.setVisible(true);
         
         

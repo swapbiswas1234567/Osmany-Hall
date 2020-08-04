@@ -137,7 +137,7 @@ public class TemporaryFood extends javax.swing.JFrame {
             psmt.setInt(2, dateserial);
             rs = psmt.executeQuery();
             while(rs.next()){
-                //System.out.println(rs.getInt(1));
+                //System.gtiout.println(rs.getInt(1));
                 psmt.close();
                 rs.close();
                 return true;

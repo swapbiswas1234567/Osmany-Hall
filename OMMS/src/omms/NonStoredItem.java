@@ -5,7 +5,7 @@
  */
 package omms;
 
-import static com.sun.xml.internal.ws.model.RuntimeModeler.capitalize;
+
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -104,7 +104,9 @@ public class NonStoredItem extends javax.swing.JFrame {
         String name = insertnamecombobox.getSelectedItem().toString();
         String unit = getunit(name.toLowerCase());
         //System.out.println(unit+" "+name);
-        insertunitlbl.setText(capitalize(unit));
+        String out = unit.substring(0, 1).toUpperCase() + unit.substring(1);
+        //System.out.println(out);
+        insertunitlbl.setText(out);
         
     }
     
@@ -112,11 +114,13 @@ public class NonStoredItem extends javax.swing.JFrame {
         String name1 = insertnamecombobox.getSelectedItem().toString();
         String unit1 = getunit(name1.toLowerCase());
         //System.out.println(unit+" "+name);
-        editunitlbl.setText(capitalize(unit1));
+        String out = unit1.substring(0, 1).toUpperCase() + unit1.substring(1);
+        editunitlbl.setText(out);
     }
     
     
     public void createnewitem(){
+        
         JTextField name = new JTextField();
         JTextField unit = new JTextField();
         name.setPreferredSize(new Dimension(150, 30));
@@ -125,10 +129,11 @@ public class NonStoredItem extends javax.swing.JFrame {
             "Item Name:", name,
             "Unit:", unit
         };
-
+      
         int option = JOptionPane.showConfirmDialog(null, message, "Create Item", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             //System.out.println(name.getText());
+            
             addnewiteminlist(name.getText().toLowerCase().trim(),unit.getText().toLowerCase().trim());  // save the item name and 
             //unit in lower case
         } else {
@@ -164,17 +169,25 @@ public class NonStoredItem extends javax.swing.JFrame {
                 psmt.setString(2, unit);
                 psmt.execute();
                 psmt.close();
-                insertnamecombobox.addItem(capitalize(name));  // sending the name of item to set in the combobox
-                editnamecombobox.addItem(capitalize(name));  // sending the name of item to set in the combobox
-               
+                String outname = name.substring(0, 1).toUpperCase() + name.substring(1);
+                String outunit = unit.substring(0, 1).toUpperCase() + unit.substring(1);
+                
+                
+                insertnamecombobox.addItem(outname);  // sending the name of item to set in the combobox
+                editnamecombobox.addItem(outname);  // sending the name of item to set in the combobox
+                
+                insertnamecombobox.setSelectedItem(outname);
+                editnamecombobox.setSelectedItem(outname);
+                
+                insertunitlbl.setText(outunit);
+                editunitlbl.setText(outunit);
                 }  
                 catch(SQLException e){
                     JOptionPane.showMessageDialog(null, "add new item in list error", "Data insertion error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            
-        insertnamecombobox.setSelectedItem(capitalize(name));
-        insertunitlbl.setText(capitalize(unit));
+         
+        
         }
         else{
             JOptionPane.showMessageDialog(null, "Enter name and unit", "Data insertion error", JOptionPane.ERROR_MESSAGE);
@@ -185,13 +198,17 @@ public class NonStoredItem extends javax.swing.JFrame {
     
     //get name of all item from database 
     public void getAllstoreditem(){
-       
+        
+        String name = "";
         try{
             psmt = conn.prepareStatement("select name from nonstoreditemlist");
             rs = psmt.executeQuery();
             while(rs.next()){
-                insertnamecombobox.addItem(capitalize(rs.getString(1)));  // sending the name of item to set in the combobox
-                editnamecombobox.addItem(capitalize(rs.getString(1)));  // sending the name of item to set in the combobox
+                name = rs.getString(1);
+                String outname = name.substring(0, 1).toUpperCase() + name.substring(1);
+                
+                insertnamecombobox.addItem(outname);  // sending the name of item to set in the combobox
+                editnamecombobox.addItem(outname);  // sending the name of item to set in the combobox
             }
             psmt.close();
             rs.close();
