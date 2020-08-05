@@ -259,7 +259,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         //System.out.println(intdate);
         boolean databasecheck = checkitemondatabase(itemname.toLowerCase(),dateserial,status.toLowerCase());
         boolean tablecheck = checkinjtable(itemname,strdate,status,-1);
-        System.out.println(databasecheck);
+        //System.out.println(databasecheck);
         if(databasecheck){
             JOptionPane.showMessageDialog(null, "data for same item same status exist in database", "Data"
                     + " conversion error", JOptionPane.ERROR_MESSAGE);
@@ -372,7 +372,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date Parse in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
         
-        System.out.println(selectedrow);
+        //System.out.println(selectedrow);
         boolean checkjtable = checkinjtable(name,strdate,state, selectedrow);
         boolean databasecheck = checkitemondatabase(name.toLowerCase(),dateserial,state.toLowerCase());
         //System.out.println(databasecheck);
