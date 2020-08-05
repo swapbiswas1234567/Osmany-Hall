@@ -27,13 +27,7 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //StoreOutItem st =new StoreOutItem();
-        //StoreInForm st = new StoreInForm();
-        //NonStoredItem st = new NonStoredItem();
-        //TemporaryFood st = new TemporaryFood();
-        //ShowLedger st = new ShowLedger();
-        //StoredItemUpdate st = new StoredItemUpdate();
-        //st.setVisible(true);
+    
         
         
     }

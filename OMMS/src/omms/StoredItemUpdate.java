@@ -79,13 +79,14 @@ public class StoredItemUpdate extends javax.swing.JFrame {
     public void setupdatetable(Date from, String item){
         //System.out.println(from+" "+to+" "+item);
         int serial =0;
-        String strdate = "";
+        String strdate = "", checkdate="";
         Date date=null;
         tablemodel = (DefaultTableModel) updatetable.getModel();
         
         
         try{
             serial = Integer.parseInt(formatter.format(from));
+            //checkdate= formatter1.format(from);
         }
         catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Date format in setupdatetable","Date parsing error", JOptionPane.ERROR_MESSAGE);
@@ -121,6 +122,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Failed to fetch data for"
                     + "set table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
+
         
     }
     
@@ -165,7 +167,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
         updatetable.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         updatetable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
         updatetable.getColumnModel().getColumn(7).setCellRenderer(centerRender);
-       
+        
         
     }
 
