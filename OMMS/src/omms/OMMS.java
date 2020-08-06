@@ -27,8 +27,9 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-    
-        
+        //NonStoredItemUpdate st = new NonStoredItemUpdate();
+        TempFoodUpdate st= new TempFoodUpdate();
+        st.setVisible(true);
         
     }
     
