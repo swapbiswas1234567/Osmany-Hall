@@ -60,14 +60,16 @@ public class TempFoodUpdate extends javax.swing.JFrame {
        Double bill=0.00;
        boolean select=false;
        Date date =null;
+       UserLog.name="account";
        
-       //System.out.println(totalrow);
+        //System.out.println(totalrow);
        
        for(int i=0; i<totalrow ;i++){
            
-           UserLog.name="account";
+           
            select = Boolean.valueOf(model.getValueAt(i,3).toString());
-          
+           //.println(select+" "+i);
+           
            if( select){
                
                 strhallid = model.getValueAt(i, 0).toString();
@@ -114,11 +116,11 @@ public class TempFoodUpdate extends javax.swing.JFrame {
                     return;
                 }
                 
-               
+                idtxt.postActionEvent();
                
            }
            
-           idtxt.postActionEvent();
+           
            //System.out.print(select);
        }
        
@@ -147,6 +149,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
         dec = new DecimalFormat("#0.000");
         model = updatetable.getModel();
         
+        idtxt.requestFocus();
     }
     
     
@@ -189,8 +192,8 @@ public class TempFoodUpdate extends javax.swing.JFrame {
                     return;
                 }
             
-                System.out.println(strdate);
-                Object o [] = {rs.getInt(1),strdate,rs.getDouble(3)};
+                //System.out.println(strdate);
+                Object o [] = {rs.getInt(1),strdate,rs.getDouble(3),false};
                 tablemodel.addRow(o);
             }
             psmt.close();
@@ -210,7 +213,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
     
     
     public void updatetabledate(Date from){
-        //System.out.println(from+" "+ " "+item);
+        //System.out.println(from+" ");
         int serial =0;
         String strdate = "",search="";
         Date date=null;
@@ -244,8 +247,8 @@ public class TempFoodUpdate extends javax.swing.JFrame {
                     return;
                 }
             
-                System.out.println(strdate);
-                Object o [] = {rs.getInt(1),strdate,rs.getDouble(3)};
+                //.println(strdate);
+                Object o [] = {rs.getInt(1),strdate,rs.getDouble(3),false};
                 tablemodel.addRow(o);
             }
             psmt.close();
@@ -443,6 +446,8 @@ public class TempFoodUpdate extends javax.swing.JFrame {
         else if( date != null && id.equals("")){
             updatetabledate(date);
         }
+        
+        idtxt.requestFocus();
     }//GEN-LAST:event_fromdatechooserPropertyChange
 
     private void idtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idtxtActionPerformed
