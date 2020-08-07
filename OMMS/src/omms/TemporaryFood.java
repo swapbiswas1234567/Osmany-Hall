@@ -18,6 +18,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -660,8 +662,18 @@ public class TemporaryFood extends javax.swing.JFrame {
     }//GEN-LAST:event_editbillActionPerformed
 
     private void saveandexitbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveandexitbtnActionPerformed
-        // TODO add your handling code here:
-        insertdatabase();
+        try {
+            // TODO add your handling code here:
+            insertdatabase();
+            JFrame frame = this;
+            Dashboard das = new Dashboard();
+            das.setVisible(true);
+            frame.setVisible(false);
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(TemporaryFood.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_saveandexitbtnActionPerformed
 
     private void deletebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletebtnActionPerformed

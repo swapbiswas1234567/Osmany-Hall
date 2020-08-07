@@ -1398,7 +1398,18 @@ public class StoreOutItem extends javax.swing.JFrame {
         if( model.getRowCount() > 0){
             int responce = JOptionPane.showConfirmDialog(this,"Do you want to save the data ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
             if (responce == JOptionPane.YES_OPTION){
-                insert();
+                try {
+                    insert();
+                    
+                    JFrame frame = this;
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         }
         else{

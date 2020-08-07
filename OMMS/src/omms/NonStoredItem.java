@@ -20,6 +20,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -75,7 +77,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             }
         });
         
-        
+        insertmemotxt.requestFocus();
     }
     
     
@@ -609,18 +611,33 @@ public class NonStoredItem extends javax.swing.JFrame {
         jLabel6.setText("Amount ");
 
         insertamountxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertamountxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertamountxtActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel7.setText("Memo No");
 
         insertmemotxt.setFont(new java.awt.Font("Bodoni MT", 0, 16)); // NOI18N
+        insertmemotxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertmemotxtActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Price");
 
         insertpricetxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertpricetxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertpricetxtActionPerformed(evt);
+            }
+        });
 
         insertbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         insertbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/noninsert.png"))); // NOI18N
@@ -979,8 +996,19 @@ public class NonStoredItem extends javax.swing.JFrame {
     }//GEN-LAST:event_editbtnActionPerformed
 
     private void saveandexitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveandexitActionPerformed
-        // TODO add your handling code here:
-        insert();
+        try {
+            // TODO add your handling code here:
+            insert();
+            
+            JFrame frame = this;
+            Dashboard das = new Dashboard();
+            das.setVisible(true);
+            frame.setVisible(false);
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(NonStoredItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_saveandexitActionPerformed
 
     private void deletebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletebtnActionPerformed
@@ -1018,6 +1046,23 @@ public class NonStoredItem extends javax.swing.JFrame {
         
         editmemotxt.requestFocus();
     }//GEN-LAST:event_editdatechooserPropertyChange
+
+    private void insertmemotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertmemotxtActionPerformed
+        // TODO add your handling code here:
+        insertamountxt.requestFocus();
+    }//GEN-LAST:event_insertmemotxtActionPerformed
+
+    private void insertamountxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertamountxtActionPerformed
+        // TODO add your handling code here:
+        
+        insertpricetxt.requestFocus();
+    }//GEN-LAST:event_insertamountxtActionPerformed
+
+    private void insertpricetxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertpricetxtActionPerformed
+        // TODO add your handling code here:
+        
+        insertbtn.doClick();
+    }//GEN-LAST:event_insertpricetxtActionPerformed
 
     /**
      * @param args the command line arguments
