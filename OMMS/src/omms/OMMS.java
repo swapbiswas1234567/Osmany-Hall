@@ -30,8 +30,8 @@ public class OMMS {
     public static void main(String[] args) {
         // TODO code application logic here
    
-        //StoreInForm st = new StoreInForm();
-        Dashboard st= new Dashboard();
+        StoreInForm st = new StoreInForm();
+        //Dashboard st= new Dashboard();
         st.setVisible(true);
         
     }
