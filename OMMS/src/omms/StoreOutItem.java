@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -62,7 +65,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         Tabledecoration();
         initialize();
         getAllstoreditem();
-        int combolen = itemComboboxlen();
+        //int combolen = itemComboboxlen();
         flag =1;  // it will allow the combobox to count the available amount 
         
         
@@ -75,7 +78,8 @@ public class StoreOutItem extends javax.swing.JFrame {
         setAvailable(dateserial, itemname);
         
         int comboindex =-1;
-        comboindex = insertCombobox.getSelectedIndex();  
+        comboindex = insertCombobox.getSelectedIndex();
+        //System.out.print(comboindex);
         String unit = setInsertunit(comboindex);
         insertunit.setText(unit);
         
@@ -83,6 +87,23 @@ public class StoreOutItem extends javax.swing.JFrame {
         comboindex1 = updateCombobox.getSelectedIndex();
         String unit1 = setupdatetunit(comboindex1);
         updateunit.setText(unit1);
+        
+        
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try{
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
     }
     
     
@@ -580,13 +601,14 @@ public class StoreOutItem extends javax.swing.JFrame {
     
     // set the unit in the amount part 
     public String setInsertunit(int index){
+        String unit ="";
         String name = comboIndextoitem(index);
         try{
-            psmt = conn.prepareStatement("select unit from item where name = ?");
+            psmt = conn.prepareStatement("select unit from storeditem where name = ?");
             psmt.setString(1, name);
             rs = psmt.executeQuery();
             while(rs.next()){
-                return (rs.getString(1));
+                unit = rs.getString(1);
             }
             psmt.close();
             rs.close();
@@ -595,27 +617,32 @@ public class StoreOutItem extends javax.swing.JFrame {
                     + "failed to set the unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             
         }
-        return "";
+        return unit;
     }
     
     public String setupdatetunit(int index){
+        String unit="";
         String name = updateCombobox.getItemAt(index);
+        //System.out.print(name);
         try{
-            psmt = conn.prepareStatement("select unit from item where name = ?");
+            psmt = conn.prepareStatement("select unit from storeditem where name = ?");
+            System.out.print("called");
             psmt.setString(1, name);
             rs = psmt.executeQuery();
-            //System.out.print(name+" "+index);
+            
             while(rs.next()){
-                return (rs.getString(1));
+                
+                unit = rs.getString(1);
             }
             psmt.close();
             rs.close();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, ""
-                    + "failed to set the unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    + "failed to set the update unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             
         }
-        return "";
+        System.out.print(unit);
+        return unit;
     }
     
     
@@ -1303,6 +1330,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             setAvailable(dateserial, itemname);
             
         int comboindex =-1;
+        
         comboindex = insertCombobox.getSelectedIndex();  
         String unit = setInsertunit(comboindex);
         insertunit.setText(unit);
