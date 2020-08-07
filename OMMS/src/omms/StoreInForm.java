@@ -96,7 +96,7 @@ public class StoreInForm extends javax.swing.JFrame {
     public void itemcombo_set()
     {
         try{
-           psmt=conn.prepareStatement("select name from item");
+           psmt=conn.prepareStatement("select name from storeditem");
            rs=psmt.executeQuery();
            
            while(rs.next())
@@ -127,7 +127,7 @@ public class StoreInForm extends javax.swing.JFrame {
              try{
                  getDate = formatter2.format(date);
                  dateserial = Integer.parseInt(formatter1.format(date));
-                 System.out.println(getDate);
+                 //System.out.println(getDate);
              }
              catch(Exception e){
                  JOptionPane.showMessageDialog(null, "Date error");
@@ -168,7 +168,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     }
                     
                     int z =inputcheckDatabase(name,dateserial);
-                    System.out.println(z);
+                    //System.out.println(z);
                    if( inputCheckTable(name,getDate,-1)<0 && inputcheckDatabase(name,dateserial)>0)
                    {
                    
@@ -230,9 +230,9 @@ public class StoreInForm extends javax.swing.JFrame {
            tabledate = tm.getValueAt(i, 4).toString();
            
            databaseserial = 0;
-           System.out.println("Save button:"+itemname);
-           System.out.println("Save button:"+amount);
-           System.out.println("Save button:"+ tabledate);
+           //System.out.println("Save button:"+itemname);
+          // System.out.println("Save button:"+amount);
+           //System.out.println("Save button:"+ tabledate);
            
            
            try{
@@ -250,7 +250,7 @@ public class StoreInForm extends javax.swing.JFrame {
       if( actvalue == 2)
       {
            try{
-                   System.out.println("Execute update");
+                   //System.out.println("Execute update");
                     psmt = conn.prepareStatement("UPDATE storeinout SET inamount= ? , price = ?  WHERE serial = ? and item = ?");
                     psmt.setDouble(1, amount);
                     psmt.setDouble(2, price);
@@ -268,7 +268,7 @@ public class StoreInForm extends javax.swing.JFrame {
       else if (actvalue== 1)
       {
       try{
-                System.out.println("Execute insert");
+                //System.out.println("Execute insert");
                     
                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,?,?,'###',0,0,0)");
                 psmt.setInt(1,serial);
@@ -319,7 +319,7 @@ public class StoreInForm extends javax.swing.JFrame {
              
        
             tbIndex++;
-            System.out.println(tbIndex); 
+            //System.out.println(tbIndex); 
             return tbIndex;
         }
         
@@ -334,8 +334,8 @@ public class StoreInForm extends javax.swing.JFrame {
         Double quantity=0.00;
         Double cost = 0.00 ;
         int date1=2022;
-        System.out.println(date);
-        System.out.println(name);
+       // System.out.println(date);
+       // System.out.println(name);
         int val = 0;        
         
         try{
@@ -343,12 +343,12 @@ public class StoreInForm extends javax.swing.JFrame {
             psmt.setInt(1,date);
             psmt.setString(2,name);
             rs=psmt.executeQuery();
-            System.out.println("Executed");
+           // System.out.println("Executed");
             while(rs.next())
             {
                 quantity =rs.getDouble(3);
                 date1=rs.getInt(1);
-                System.out.println(quantity);
+                //System.out.println(quantity);
                               
             }    
         
@@ -360,8 +360,8 @@ public class StoreInForm extends javax.swing.JFrame {
         {
             
         }
-        System.out.println(quantity);
-        System.out.println(date1);        
+        //System.out.println(quantity);
+        //System.out.println(date1);        
         
         
         if (date1 ==date)
@@ -379,7 +379,7 @@ public class StoreInForm extends javax.swing.JFrame {
             val= 1;
         
         
-        System.out.println(val);        
+       // System.out.println(val);        
         
             return val;
         
@@ -405,7 +405,7 @@ public class StoreInForm extends javax.swing.JFrame {
              try{
                  getDate = formatter2.format(date);
                  dateserial = Integer.parseInt(formatter1.format(date));
-                 System.out.println(getDate);
+                 //System.out.println(getDate);
              }
              catch(Exception e){
                  JOptionPane.showMessageDialog(null, "Date error");
@@ -446,7 +446,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     }
                     
                     int z =inputcheckDatabase(name,dateserial);
-                    System.out.println(z);
+                   //System.out.println(memo);
                    if( inputCheckTable(name,getDate,-1)<0 && inputcheckDatabase(name,dateserial)>0)
                    {
                    
@@ -488,6 +488,8 @@ public class StoreInForm extends javax.swing.JFrame {
         String quantity = tm.getValueAt(selectedRow, 1).toString().trim();
         String price = tm.getValueAt(selectedRow, 2).toString().trim();
         String DATE = tm.getValueAt(selectedRow, 4).toString().trim();
+        String memo = tm.getValueAt(selectedRow,3).toString().trim();
+        //System.out.println(memo);
         
         int len = update_cmb.getItemCount();
 
@@ -500,7 +502,7 @@ public class StoreInForm extends javax.swing.JFrame {
         
         quantityUp_txt.setText(quantity);
         priceUp_txt.setText(price);
-        
+        memotxt.setText(memo);
         SimpleDateFormat dt = new SimpleDateFormat("MMM d,yyyy"); 
         try{
             Date date = dt.parse(DATE); 
@@ -519,8 +521,8 @@ public class StoreInForm extends javax.swing.JFrame {
         String status;
         Date date;
         int index;
-        System.out.println("before remove1");
-        System.out.println(selectedRow);
+        //System.out.println("before remove1");
+        //System.out.println(selectedRow);
         
         if(selectedRow >= 0){
             try{
@@ -538,7 +540,7 @@ public class StoreInForm extends javax.swing.JFrame {
         int responce = JOptionPane.showConfirmDialog(this,"Do You Want To Delete"
                 + " The Selected Row ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         if (responce == JOptionPane.YES_OPTION){
-             System.out.println("before remove2");
+             //System.out.println("before remove2");
             tablemodel = (DefaultTableModel) Store_In_table.getModel();
             tablemodel.removeRow(selectedRow);
         }
@@ -583,6 +585,8 @@ public class StoreInForm extends javax.swing.JFrame {
         update_cmb = new javax.swing.JComboBox<>();
         quantityUp_txt = new javax.swing.JTextField();
         priceUp_txt = new javax.swing.JTextField();
+        memotxt = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Store_In_table = new javax.swing.JTable();
         savenexit_btn = new javax.swing.JButton();
@@ -591,9 +595,9 @@ public class StoreInForm extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(208, 227, 229));
 
-        StoreIn_lbl.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        StoreIn_lbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         StoreIn_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Store_in.png"))); // NOI18N
-        StoreIn_lbl.setText("STOREIN");
+        StoreIn_lbl.setText("STORED IN");
         StoreIn_lbl.setToolTipText("");
 
         dateIn_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -656,32 +660,31 @@ public class StoreInForm extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(81, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(QuantityIn_lbl)
+                    .addComponent(priceIn_lbl)
+                    .addComponent(memo_lbl)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(dateIn_lbl)
+                        .addComponent(itemIn_lbl)))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(QuantityIn_lbl)
-                            .addComponent(priceIn_lbl)
-                            .addComponent(memo_lbl)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(dateIn_lbl)
-                                .addComponent(itemIn_lbl)))
-                        .addGap(24, 24, 24)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(input_cmb, 0, 120, Short.MAX_VALUE)
-                                    .addComponent(quantityIn_txt)
-                                    .addComponent(priceIn_txt)
-                                    .addComponent(memo_txt))
-                                .addGap(53, 53, 53)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(enter_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(NewItem_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
-                            .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(input_cmb, 0, 120, Short.MAX_VALUE)
+                            .addComponent(quantityIn_txt)
+                            .addComponent(priceIn_txt)
+                            .addComponent(memo_txt))
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(enter_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(NewItem_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
+                    .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -689,39 +692,40 @@ public class StoreInForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(StoreIn_lbl)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(dateIn_lbl))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(input_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(itemIn_lbl)
-                        .addComponent(NewItem_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(QuantityIn_lbl)
-                    .addComponent(quantityIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(priceIn_lbl)
-                    .addComponent(priceIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(NewItem_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(input_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(quantityIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(QuantityIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(priceIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(priceIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(9, 9, 9)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(memo_lbl)
-                    .addComponent(memo_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addComponent(enter_btn)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addComponent(enter_btn))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(memo_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(memo_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(21, 21, 21))
         );
 
         jPanel4.setBackground(new java.awt.Color(117, 175, 182));
 
-        Update_lbl.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        Update_lbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         Update_lbl.setForeground(new java.awt.Color(255, 255, 255));
         Update_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update1.png"))); // NOI18N
         Update_lbl.setText("UPDATE");
@@ -766,57 +770,72 @@ public class StoreInForm extends javax.swing.JFrame {
 
         priceUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
 
+        jLabel1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Memo");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
+                .addContainerGap(69, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(update_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(delete_btn))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel10)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(Update_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(dateUp_lbl)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(quantityUp_txt)
-                            .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(update_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(priceUp_txt)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(Update_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel11)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(27, 27, 27))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(dateUp_lbl)
+                                    .addGap(30, 30, 30))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(memotxt)
+                                .addComponent(quantityUp_txt)
+                                .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                .addComponent(update_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(priceUp_txt)))))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Update_lbl)
-                .addGap(30, 30, 30)
+                .addComponent(Update_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                    .addComponent(dateUp_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dateUp_lbl)
-                    .addComponent(dateUp_ch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(update_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(quantityUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(update_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(priceUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(memotxt)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(quantityUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(priceUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(delete_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(update_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -876,7 +895,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(savenexit_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -906,6 +925,7 @@ public class StoreInForm extends javax.swing.JFrame {
         String quantity = quantityIn_txt.getText().trim();
         String price = priceIn_txt.getText().trim();
         Date date = dateIn_ch.getDate();
+        String memo = memo_txt.getText().trim();
         
         inputdatacheck(name,quantity,price,date);
         
@@ -920,7 +940,10 @@ public class StoreInForm extends javax.swing.JFrame {
         String quantity = quantityUp_txt.getText().trim();
         String price = priceUp_txt.getText().trim();
         Date date = dateUp_ch.getDate();
+        String memo="";
+        //memo= memotxt.getText().trim();
         
+        //System.out.print("called "+memo);
         Updateset(name , quantity, price,date);
         
     }//GEN-LAST:event_update_btnActionPerformed
@@ -951,6 +974,7 @@ public class StoreInForm extends javax.swing.JFrame {
     private javax.swing.JButton enter_btn;
     private javax.swing.JComboBox<String> input_cmb;
     private javax.swing.JLabel itemIn_lbl;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel9;
@@ -959,6 +983,7 @@ public class StoreInForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel memo_lbl;
     private javax.swing.JTextField memo_txt;
+    private javax.swing.JTextField memotxt;
     private javax.swing.JLabel priceIn_lbl;
     private javax.swing.JTextField priceIn_txt;
     private javax.swing.JTextField priceUp_txt;

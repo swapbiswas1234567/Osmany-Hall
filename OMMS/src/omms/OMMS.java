@@ -29,21 +29,9 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //NonStoredItem st = new NonStoredItem();
-        //NonStoredItemUpdate st = new NonStoredItemUpdate();
-        //TempFoodUpdate st= new TempFoodUpdate();
-        //StoredItemUpdate st= new StoredItemUpdate();
-        //Dashboard st = new Dashboard();
-        
-//        st.addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                System.out.println("WindowClosingDemo.windowClosing");
-//                System.exit(0);
-//            }
-//        });
-        
-        Dashboard st= new Dashboard();
+   
+        StoreInForm st = new StoreInForm();
+        //Dashboard st= new Dashboard();
         st.setVisible(true);
         
     }
