@@ -98,7 +98,7 @@ public class StoreInForm extends javax.swing.JFrame {
     public void itemcombo_set()
     {
         try{
-           psmt=conn.prepareStatement("select name from storeditem");
+           psmt=conn.prepareStatement("select name from storeditem ");
            rs=psmt.executeQuery();
            
            while(rs.next())
@@ -120,7 +120,7 @@ public class StoreInForm extends javax.swing.JFrame {
     }
     
     
-    public void inputdatacheck(String name, String Quantity ,String price,Date date  )
+    public void inputdatacheck(String name, String Quantity ,String price,Date date ,String memo )
      {
          try{
              String getDate =null;
@@ -175,7 +175,7 @@ public class StoreInForm extends javax.swing.JFrame {
                    {
                    
                     tablemodel = (DefaultTableModel) Store_In_table.getModel();
-                    Object o [] = {name,qty,pr,0,getDate};
+                    Object o [] = {name,qty,pr,memo,getDate};
                     tablemodel.addRow(o);
                     Store_In_table.getSelectionModel().clearSelection();
                     selectedRow =-1;
@@ -399,7 +399,7 @@ public class StoreInForm extends javax.swing.JFrame {
     
     
     
-    public void Updateset(String name, String Quantity ,String price,Date date)
+    public void Updateset(String name, String Quantity ,String price,Date date,String memo)
     {
                try{
              String getDate =null;
@@ -460,7 +460,7 @@ public class StoreInForm extends javax.swing.JFrame {
                        tm.setValueAt(name, selectedRow, 0);
                        tm.setValueAt(Quantity, selectedRow,1);
                        tm.setValueAt(price, selectedRow, 2);
-                       tm.setValueAt(0, selectedRow, 3);
+                       tm.setValueAt(memo, selectedRow, 3);
                        tm.setValueAt(getDate, selectedRow, 4);
                        
                        Store_In_table.getSelectionModel().clearSelection();
@@ -512,7 +512,7 @@ public class StoreInForm extends javax.swing.JFrame {
         
         quantityUp_txt.setText(quantity);
         priceUp_txt.setText(price);
-        memotxt.setText(memo);
+        memoUp_txt.setText(memo);
         SimpleDateFormat dt = new SimpleDateFormat("MMM d,yyyy"); 
         try{
             Date date = dt.parse(DATE); 
@@ -535,6 +535,7 @@ public class StoreInForm extends javax.swing.JFrame {
         update_cmb.setSelectedIndex(0);
         quantityUp_txt.setText("");
         priceUp_txt.setText("");
+		memoUp_txt.setText("");
         Store_In_table.getSelectionModel().clearSelection();
     }
     
@@ -565,12 +566,12 @@ public class StoreInForm extends javax.swing.JFrame {
     }
    // adding new item in the database and also combobox 
     public void addnewiteminlist(String name, String unit){
-                  
+         String Name1= firstupperCaseMaker(name);         
         if(!name.equals("") && !unit.equals("")){
             String item = null;
             try{
             psmt = conn.prepareStatement("select name from storeditem where name = ?");
-            psmt.setString(1, name);
+            psmt.setString(1, Name1);
             rs = psmt.executeQuery();
             while(rs.next()){
                 item = rs.getString(1);
@@ -586,7 +587,7 @@ public class StoreInForm extends javax.swing.JFrame {
             if(item != null){
                 JOptionPane.showMessageDialog(null, "item already exists", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
-            else{sss
+            else{
                 try{
                 psmt = conn.prepareStatement("insert into storeditem (name,unit) values (?,?)");
                 psmt.setString(1, name);
@@ -649,7 +650,7 @@ public class StoreInForm extends javax.swing.JFrame {
         update_cmb = new javax.swing.JComboBox<>();
         quantityUp_txt = new javax.swing.JTextField();
         priceUp_txt = new javax.swing.JTextField();
-        memotxt = new javax.swing.JTextField();
+        memoUp_txt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Store_In_table = new javax.swing.JTable();
@@ -840,7 +841,7 @@ public class StoreInForm extends javax.swing.JFrame {
 
         priceUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
 
-        memotxt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        memoUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -875,7 +876,7 @@ public class StoreInForm extends javax.swing.JFrame {
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)))
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(memotxt)
+                                .addComponent(memoUp_txt)
                                 .addComponent(quantityUp_txt)
                                 .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                                 .addComponent(update_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -905,7 +906,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(memotxt)
+                    .addComponent(memoUp_txt)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -997,9 +998,9 @@ public class StoreInForm extends javax.swing.JFrame {
         String quantity = quantityIn_txt.getText().trim();
         String price = priceIn_txt.getText().trim();
         Date date = dateIn_ch.getDate();
-        String memo = memo_txt.getText().trim();
+        String memo = memo_txt.getText().trim().toString();
         
-        inputdatacheck(name,quantity,price,date);
+        inputdatacheck(name,quantity,price,date,memo);
         
     }//GEN-LAST:event_enter_btnActionPerformed
 
@@ -1012,11 +1013,11 @@ public class StoreInForm extends javax.swing.JFrame {
         String quantity = quantityUp_txt.getText().trim();
         String price = priceUp_txt.getText().trim();
         Date date = dateUp_ch.getDate();
-        String memo="";
+        String memo = memoUp_txt.getText().trim().toString();
         //memo= memotxt.getText().trim();
         
         //System.out.print("called "+memo);
-        Updateset(name , quantity, price,date);
+        Updateset(name , quantity, price,date,memo);
         
     }//GEN-LAST:event_update_btnActionPerformed
 
@@ -1057,9 +1058,9 @@ public class StoreInForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField memoUp_txt;
     private javax.swing.JLabel memo_lbl;
     private javax.swing.JTextField memo_txt;
-    private javax.swing.JTextField memotxt;
     private javax.swing.JLabel priceIn_lbl;
     private javax.swing.JTextField priceIn_txt;
     private javax.swing.JTextField priceUp_txt;
