@@ -13,8 +13,13 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -33,6 +38,7 @@ public class StoreInForm extends javax.swing.JFrame {
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
     int selectedRow;
+    int flag=0;
     
     
     public StoreInForm() {
@@ -41,16 +47,28 @@ public class StoreInForm extends javax.swing.JFrame {
         initialize();
         dateNtableset();
         itemcombo_set();
+        
+        
     }
     
     
     
     public void tableDecoration()
     {
-        Store_In_table.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 12));
+        Store_In_table.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 18));
         Store_In_table.getTableHeader().setOpaque(false);
         Store_In_table.getTableHeader().setBackground(new Color(32,136,203));
         Store_In_table.getTableHeader().setForeground(new Color(255,255,255));
+        Store_In_table.setRowHeight(28);
+        
+        
+        DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   
+        centerRender.setHorizontalAlignment(JLabel.CENTER);
+        Store_In_table.getColumnModel().getColumn(0).setCellRenderer(centerRender);
+        Store_In_table.getColumnModel().getColumn(1).setCellRenderer(centerRender);
+        Store_In_table.getColumnModel().getColumn(2).setCellRenderer(centerRender);
+        Store_In_table.getColumnModel().getColumn(3).setCellRenderer(centerRender);
+        Store_In_table.getColumnModel().getColumn(4).setCellRenderer(centerRender);
         
     }
     
@@ -88,6 +106,8 @@ public class StoreInForm extends javax.swing.JFrame {
         formatter2 = new SimpleDateFormat("MMM dd,yyyy");
         selectedRow = -1;
         this.setTitle("STORE INPUT");
+        quantityIn_txt.requestFocusInWindow();
+        dec = new DecimalFormat("#0.000");
         
         
         
@@ -100,12 +120,13 @@ public class StoreInForm extends javax.swing.JFrame {
         try{
            psmt=conn.prepareStatement("select name from storeditem ");
            rs=psmt.executeQuery();
-           
+           String X="";
            while(rs.next())
            {
                String item = rs.getString(1);
-               input_cmb.addItem(item);
-               update_cmb.addItem(item);
+               X=firstupperCaseMaker(item.toLowerCase());
+               input_cmb.addItem(X);
+               update_cmb.addItem(X);
            }
            
            psmt.close();
@@ -117,6 +138,19 @@ public class StoreInForm extends javax.swing.JFrame {
          JOptionPane.showMessageDialog(null, "No item found!", "An Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
             
        }
+        
+        flag=1;
+        int comboindex =-1;
+        comboindex = input_cmb.getSelectedIndex();
+        String unit = setInsertunit(comboindex);
+        insertUnit.setText(unit);
+        
+            int comboindex1 =-1;
+            comboindex1 = update_cmb.getSelectedIndex();
+            String unit1 = setupdatetunit(comboindex1);
+            updateUnit.setText(unit1);
+
+        
     }
     
     
@@ -174,14 +208,16 @@ public class StoreInForm extends javax.swing.JFrame {
                    if( inputCheckTable(name,getDate,-1)<0 && inputcheckDatabase(name,dateserial)>0)
                    {
                    
+                    
                     tablemodel = (DefaultTableModel) Store_In_table.getModel();
-                    Object o [] = {name,qty,pr,memo,getDate};
+                    Object o [] = {name,dec.format(qty),dec.format(pr),memo,getDate};
                     tablemodel.addRow(o);
                     Store_In_table.getSelectionModel().clearSelection();
                     selectedRow =-1;
                     
                     quantityIn_txt.setText("");
                     priceIn_txt.setText("");
+                    memo_txt.setText("");
                    }
                    else if(inputCheckTable(name,getDate,-1)>= 0 )
                    {
@@ -218,6 +254,7 @@ public class StoreInForm extends javax.swing.JFrame {
         Double amount = 0.00;
         Double price=0.00;
         String itemname="";
+        String memo="";
         int serial=0;
         String tabledate = "";
         Date date;
@@ -231,7 +268,7 @@ public class StoreInForm extends javax.swing.JFrame {
            amount = Double.parseDouble(tm.getValueAt(i, 1).toString());
            price = Double.parseDouble(tm.getValueAt(i, 2).toString());
            tabledate = tm.getValueAt(i, 4).toString();
-           
+           memo=tm.getValueAt(i, 3).toString();
            databaseserial = 0;
            //System.out.println("Save button:"+itemname);
           // System.out.println("Save button:"+amount);
@@ -254,11 +291,12 @@ public class StoreInForm extends javax.swing.JFrame {
       {
            try{
                    //System.out.println("Execute update");
-                    psmt = conn.prepareStatement("UPDATE storeinout SET inamount= ? , price = ?  WHERE serial = ? and item = ?");
+                    psmt = conn.prepareStatement("UPDATE storeinout SET inamount= ? , price = ? ,memo=?  WHERE serial = ? and item = ?");
                     psmt.setDouble(1, amount);
                     psmt.setDouble(2, price);
-                    psmt.setInt(3, serial);
-                    psmt.setString(4, itemname);
+                    psmt.setString(3, memo);
+                    psmt.setInt(4, serial);
+                    psmt.setString(5, itemname);
                     psmt.execute();
                     psmt.close();
                     
@@ -273,11 +311,12 @@ public class StoreInForm extends javax.swing.JFrame {
       try{
                 //System.out.println("Execute insert");
                     
-               psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,?,?,'###',0,0,0)");
+               psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,?,?,?,0,0,0)");
                 psmt.setInt(1,serial);
                 psmt.setString(2, itemname);
                 psmt.setDouble(3, amount);
                 psmt.setDouble(4, price);
+                psmt.setString(5, memo);
                 psmt.execute();
                 psmt.close();
                 }  
@@ -465,8 +504,10 @@ public class StoreInForm extends javax.swing.JFrame {
                        
                        Store_In_table.getSelectionModel().clearSelection();
                     selectedRow =-1;
-                    quantityIn_txt.setText("");
-                    priceIn_txt.setText("");
+                    
+                    quantityUp_txt.setText("");
+                    priceUp_txt.setText("");
+                    memoUp_txt.setText("");
                    }
                    else if(inputCheckTable(name,getDate,-1)>= 0 )
                    {
@@ -520,6 +561,7 @@ public class StoreInForm extends javax.swing.JFrame {
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Problem!", JOptionPane.ERROR_MESSAGE); 
         }
+        quantityUp_txt.requestFocusInWindow();
     }
     
     //function for delete a selected table row
@@ -535,7 +577,7 @@ public class StoreInForm extends javax.swing.JFrame {
         update_cmb.setSelectedIndex(0);
         quantityUp_txt.setText("");
         priceUp_txt.setText("");
-		memoUp_txt.setText("");
+	memoUp_txt.setText("");
         Store_In_table.getSelectionModel().clearSelection();
     }
     
@@ -544,7 +586,7 @@ public class StoreInForm extends javax.swing.JFrame {
     
         
     public void createnewitem(){
-        
+        String Name="";
         JTextField name = new JTextField();
         JTextField unit = new JTextField();
         name.setPreferredSize(new Dimension(150, 30));
@@ -558,7 +600,7 @@ public class StoreInForm extends javax.swing.JFrame {
         if (option == JOptionPane.OK_OPTION) {
             //System.out.println(name.getText());
             
-            addnewiteminlist(name.getText().toLowerCase().trim(),unit.getText().toLowerCase().trim());  // save the item name and 
+            addnewiteminlist(firstupperCaseMaker(name.getText().toLowerCase().trim()),unit.getText().toLowerCase().trim());  // save the item name and 
             //unit in lower case
         } else {
             
@@ -617,8 +659,64 @@ public class StoreInForm extends javax.swing.JFrame {
         }
     }
     
+ // set the unit in the amount part 
+    public String setInsertunit(int index){
+        String unit ="";
+        String name = comboIndextoitem(index);
+        try{
+            psmt = conn.prepareStatement("select unit from storeditem where name = ?");
+            psmt.setString(1, name);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                unit = rs.getString(1);
+            }
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, ""
+                    + "failed to set the unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
+        }
+        return unit;
+    }
+       
+    //pass item name based on 
+    public String comboIndextoitem(int index){
+        return input_cmb.getItemAt(index);
+    }
     
     
+    //pass item name based on 
+    public String comboIndxtoitem(int index){
+        return update_cmb.getItemAt(index);
+    }
+     public String setupdatetunit(int index){
+        String unit="";
+        String name = update_cmb.getItemAt(index);
+        //System.out.print(name);
+        try{
+            psmt = conn.prepareStatement("select unit from storeditem where name = ?");
+            System.out.print("called");
+            psmt.setString(1, name);
+            rs = psmt.executeQuery();
+            
+            while(rs.next()){
+                
+                unit = rs.getString(1);
+            }
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, ""
+                    + "failed to set the update unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
+        }
+       
+        return unit;
+    }
+    
+     
+     
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -638,6 +736,7 @@ public class StoreInForm extends javax.swing.JFrame {
         memo_txt = new javax.swing.JTextField();
         NewItem_btn = new javax.swing.JButton();
         enter_btn = new javax.swing.JButton();
+        insertUnit = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         Update_lbl = new javax.swing.JLabel();
         dateUp_lbl = new javax.swing.JLabel();
@@ -652,6 +751,7 @@ public class StoreInForm extends javax.swing.JFrame {
         priceUp_txt = new javax.swing.JTextField();
         memoUp_txt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        updateUnit = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Store_In_table = new javax.swing.JTable();
         savenexit_btn = new javax.swing.JButton();
@@ -660,30 +760,30 @@ public class StoreInForm extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(208, 227, 229));
 
-        StoreIn_lbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
-        StoreIn_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Store_in.png"))); // NOI18N
+        StoreIn_lbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
+        StoreIn_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/cart.png"))); // NOI18N
         StoreIn_lbl.setText("STORED IN");
         StoreIn_lbl.setToolTipText("");
 
-        dateIn_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        dateIn_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         dateIn_lbl.setText("Date");
 
-        itemIn_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        itemIn_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         itemIn_lbl.setText("Item");
 
-        QuantityIn_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        QuantityIn_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         QuantityIn_lbl.setText("Quantity");
 
-        priceIn_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        priceIn_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         priceIn_lbl.setText("Price");
 
-        memo_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        memo_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         memo_lbl.setText("Memo");
 
         dateIn_ch.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         dateIn_ch.setMinimumSize(new java.awt.Dimension(30, 26));
 
-        input_cmb.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        input_cmb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         input_cmb.setAutoscrolls(true);
         input_cmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -691,14 +791,14 @@ public class StoreInForm extends javax.swing.JFrame {
             }
         });
 
-        quantityIn_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        quantityIn_txt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         quantityIn_txt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantityIn_txtActionPerformed(evt);
             }
         });
 
-        priceIn_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        priceIn_txt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         priceIn_txt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 priceIn_txtActionPerformed(evt);
@@ -706,8 +806,13 @@ public class StoreInForm extends javax.swing.JFrame {
         });
 
         memo_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        memo_txt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memo_txtActionPerformed(evt);
+            }
+        });
 
-        NewItem_btn.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        NewItem_btn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         NewItem_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Insertbtn (2).png"))); // NOI18N
         NewItem_btn.setText("NEW");
         NewItem_btn.addActionListener(new java.awt.event.ActionListener() {
@@ -716,7 +821,7 @@ public class StoreInForm extends javax.swing.JFrame {
             }
         });
 
-        enter_btn.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        enter_btn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         enter_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Enter.png"))); // NOI18N
         enter_btn.setText("ENTER");
         enter_btn.addActionListener(new java.awt.event.ActionListener() {
@@ -725,13 +830,16 @@ public class StoreInForm extends javax.swing.JFrame {
             }
         });
 
+        insertUnit.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        insertUnit.setText("Unit");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(QuantityIn_lbl)
@@ -742,18 +850,21 @@ public class StoreInForm extends javax.swing.JFrame {
                                 .addComponent(itemIn_lbl)))
                         .addGap(24, 24, 24)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(enter_btn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(input_cmb, 0, 120, Short.MAX_VALUE)
-                                    .addComponent(quantityIn_txt)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(priceIn_txt)
+                                    .addComponent(quantityIn_txt, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(input_cmb, 0, 140, Short.MAX_VALUE)
                                     .addComponent(memo_txt))
-                                .addGap(53, 53, 53)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(enter_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(NewItem_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
-                            .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(NewItem_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(insertUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(153, 153, 153)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -765,57 +876,50 @@ public class StoreInForm extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dateIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(input_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(NewItem_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(itemIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(NewItem_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(input_cmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(quantityIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(quantityIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(insertUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(QuantityIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(priceIn_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(priceIn_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(9, 9, 9)))
+                    .addComponent(priceIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(enter_btn))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(memo_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(memo_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(21, 21, 21))
+                    .addComponent(memo_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(memo_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(enter_btn)
+                .addContainerGap())
         );
 
         jPanel4.setBackground(new java.awt.Color(117, 175, 182));
 
-        Update_lbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
-        Update_lbl.setForeground(new java.awt.Color(255, 255, 255));
+        Update_lbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         Update_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update1.png"))); // NOI18N
         Update_lbl.setText("UPDATE");
 
-        dateUp_lbl.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        dateUp_lbl.setForeground(new java.awt.Color(255, 255, 255));
+        dateUp_lbl.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         dateUp_lbl.setText("Date");
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         jLabel9.setText("Item");
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Quantity");
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         jLabel11.setText("Price");
 
-        update_btn.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        update_btn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         update_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update1.png"))); // NOI18N
         update_btn.setText("UPDATE");
         update_btn.addActionListener(new java.awt.event.ActionListener() {
@@ -824,7 +928,7 @@ public class StoreInForm extends javax.swing.JFrame {
             }
         });
 
-        delete_btn.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        delete_btn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         delete_btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/trash_1.png"))); // NOI18N
         delete_btn.setText("DELETE");
         delete_btn.addActionListener(new java.awt.event.ActionListener() {
@@ -832,56 +936,82 @@ public class StoreInForm extends javax.swing.JFrame {
                 delete_btnActionPerformed(evt);
             }
         });
+        delete_btn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                delete_btnKeyPressed(evt);
+            }
+        });
 
         dateUp_ch.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
 
         update_cmb.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        update_cmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                update_cmbActionPerformed(evt);
+            }
+        });
 
         quantityUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        quantityUp_txt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityUp_txtActionPerformed(evt);
+            }
+        });
 
         priceUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        priceUp_txt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                priceUp_txtActionPerformed(evt);
+            }
+        });
 
         memoUp_txt.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        memoUp_txt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                memoUp_txtActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Memo");
+
+        updateUnit.setFont(new java.awt.Font("Segoe UI Semibold", 0, 16)); // NOI18N
+        updateUnit.setText("Unit");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(95, Short.MAX_VALUE)
+                .addContainerGap(94, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(update_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(delete_btn))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(Update_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jLabel11)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(Update_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel11)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(dateUp_lbl)
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(27, 27, 27))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                    .addComponent(dateUp_lbl)
-                                    .addGap(30, 30, 30))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)))
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(memoUp_txt)
-                                .addComponent(quantityUp_txt)
-                                .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                .addComponent(update_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(priceUp_txt)))))
-                .addContainerGap(95, Short.MAX_VALUE))
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(memoUp_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                    .addComponent(priceUp_txt)
+                                    .addComponent(update_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dateUp_ch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(quantityUp_txt))
+                                .addGap(10, 10, 10)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(updateUnit)))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -898,15 +1028,17 @@ public class StoreInForm extends javax.swing.JFrame {
                     .addComponent(update_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(quantityUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(updateUnit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(quantityUp_txt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(priceUp_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(memoUp_txt)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(memoUp_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -915,6 +1047,7 @@ public class StoreInForm extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        Store_In_table.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Store_In_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -926,6 +1059,8 @@ public class StoreInForm extends javax.swing.JFrame {
                 "Item", "Quantity", "Price", "Memo", "Date"
             }
         ));
+        Store_In_table.setSelectionBackground(new java.awt.Color(0, 255, 204));
+        Store_In_table.setSelectionForeground(new java.awt.Color(51, 51, 51));
         Store_In_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Store_In_tableMouseClicked(evt);
@@ -968,29 +1103,62 @@ public class StoreInForm extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(savenexit_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(savenexit_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void savenexit_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savenexit_btnActionPerformed
-        insertUpdate();
+      if( tm.getRowCount() > 0){
+            int responce = JOptionPane.showConfirmDialog(this,"Do you want to save the data ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (responce == JOptionPane.YES_OPTION){
+                try {
+                    insertUpdate();
+                    
+                    JFrame frame = this;
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"No item is inserted on the table","Table item not found",JOptionPane.ERROR_MESSAGE);
+        }
+       
+        
     }//GEN-LAST:event_savenexit_btnActionPerformed
 
     private void quantityIn_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityIn_txtActionPerformed
-              
+             priceIn_txt.requestFocusInWindow();
     }//GEN-LAST:event_quantityIn_txtActionPerformed
 
     private void input_cmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_input_cmbActionPerformed
+            
+          if ( flag ==1 ){
+            
+        int comboindex =-1;
         
+        comboindex = input_cmb.getSelectedIndex();  
+        String unit = setInsertunit(comboindex);
+        insertUnit.setText(unit);
+        }
+      
+        
+          
+        quantityIn_txt.requestFocusInWindow();
+         
     }//GEN-LAST:event_input_cmbActionPerformed
 
     private void priceIn_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceIn_txtActionPerformed
-        // TODO add your handling code here:
+        memo_txt.requestFocusInWindow();
     }//GEN-LAST:event_priceIn_txtActionPerformed
 
     private void enter_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enter_btnActionPerformed
@@ -1029,6 +1197,39 @@ public class StoreInForm extends javax.swing.JFrame {
         createnewitem();
     }//GEN-LAST:event_NewItem_btnActionPerformed
 
+    private void memo_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memo_txtActionPerformed
+        enter_btn.doClick();
+        quantityIn_txt.requestFocusInWindow();
+    }//GEN-LAST:event_memo_txtActionPerformed
+
+    private void update_cmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_cmbActionPerformed
+         if ( flag ==1 ){
+            int comboindex1 =-1;
+            comboindex1 = update_cmb.getSelectedIndex();
+            String unit1 = setupdatetunit(comboindex1);
+            updateUnit.setText(unit1);
+            
+            quantityUp_txt.requestFocusInWindow();
+         }
+    }//GEN-LAST:event_update_cmbActionPerformed
+
+    private void quantityUp_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityUp_txtActionPerformed
+       priceUp_txt.requestFocusInWindow();
+    }//GEN-LAST:event_quantityUp_txtActionPerformed
+
+    private void memoUp_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memoUp_txtActionPerformed
+        update_btn.doClick();
+        quantityIn_txt.requestFocusInWindow();
+    }//GEN-LAST:event_memoUp_txtActionPerformed
+
+    private void priceUp_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceUp_txtActionPerformed
+        memoUp_txt.requestFocusInWindow();
+    }//GEN-LAST:event_priceUp_txtActionPerformed
+
+    private void delete_btnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_delete_btnKeyPressed
+    
+    }//GEN-LAST:event_delete_btnKeyPressed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -1050,6 +1251,7 @@ public class StoreInForm extends javax.swing.JFrame {
     private javax.swing.JButton delete_btn;
     private javax.swing.JButton enter_btn;
     private javax.swing.JComboBox<String> input_cmb;
+    private javax.swing.JLabel insertUnit;
     private javax.swing.JLabel itemIn_lbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1067,6 +1269,7 @@ public class StoreInForm extends javax.swing.JFrame {
     private javax.swing.JTextField quantityIn_txt;
     private javax.swing.JTextField quantityUp_txt;
     private javax.swing.JButton savenexit_btn;
+    private javax.swing.JLabel updateUnit;
     private javax.swing.JButton update_btn;
     private javax.swing.JComboBox<String> update_cmb;
     // End of variables declaration//GEN-END:variables
