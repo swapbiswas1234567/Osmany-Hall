@@ -50,7 +50,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
     public TempFoodUpdate() {
         initComponents();
         Tabledecoration();
-        inittialization();
+        initialization();
         flag=1;
         
         JFrame frame = this;
@@ -152,11 +152,11 @@ public class TempFoodUpdate extends javax.swing.JFrame {
     
     
     
-    public void inittialization(){
+    public void initialization(){
         conn = Jconnection.ConnecrDb(); // set connection with database
         formatter = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
         formatter1 = new SimpleDateFormat("MMM dd,yyyy");
-        Date todaysdate =new Date();
+        Date todaysdate = new Date();
         fromdatechooser.setDate(todaysdate);  // setting both datechooser todays date
         
         
@@ -179,7 +179,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
         //System.out.println(from+" "+ " "+item);
         int serial =0, hallid=0;
         String strdate = "",search="";
-        Date date=null;
+        Date date = null;
         tablemodel = (DefaultTableModel) updatetable.getModel();
         formatter2 = new SimpleDateFormat("yyyyMM");
         
@@ -366,6 +366,31 @@ public class TempFoodUpdate extends javax.swing.JFrame {
             }
         });
 
+        updatetable.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        updatetable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Hall Id", "Date", "Bill", "Select"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        updatetable.setAutoscrolls(false);
+        updatetable.setIntercellSpacing(new java.awt.Dimension(0, 0));
+        updatetable.setRowHeight(26);
+        updatetable.setSelectionBackground(new java.awt.Color(232, 57, 97));
+        updatetable.setShowHorizontalLines(false);
+        updatetable.setShowVerticalLines(false);
+        jScrollPane1.setViewportView(updatetable);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -386,6 +411,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addComponent(deletebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(65, 65, 65))
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,46 +427,22 @@ public class TempFoodUpdate extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(idtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(32, 32, 32))
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addContainerGap())
         );
-
-        updatetable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Hall Id", "Date", "Bill", "Select"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        updatetable.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        updatetable.setRowHeight(26);
-        updatetable.setSelectionBackground(new java.awt.Color(232, 57, 97));
-        updatetable.setShowHorizontalLines(false);
-        updatetable.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(updatetable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -453,6 +455,7 @@ public class TempFoodUpdate extends javax.swing.JFrame {
         String id="";
         date = fromdatechooser.getDate();
         id = idtxt.getText();
+        System.out.println(date);
         
         tablemodel = (DefaultTableModel) updatetable.getModel();
         if(tablemodel.getColumnCount() > 0){

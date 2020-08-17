@@ -29,9 +29,11 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-          NSItemView st=new NSItemView();
-       // StoreInForm st = new StoreInForm();
-        //Dashboard st= new Dashboard();
+         // NSItemView st=new NSItemView();
+        //StoreInForm st = new StoreInForm();
+        //Dashboard st = new Dashboard();
+        TempFoodView st = new TempFoodView();
+        //TempFoodUpdate st = new TempFoodUpdate();
         st.setVisible(true);
        
     }
