@@ -528,8 +528,8 @@ public class StoreInForm extends javax.swing.JFrame {
 //                    tablemodel.addRow(o);
                        
                        tm.setValueAt(name, selectedRow, 0);
-                       tm.setValueAt(Quantity, selectedRow,1);
-                       tm.setValueAt(price, selectedRow, 2);
+                       tm.setValueAt(dec.format(qty), selectedRow,1);
+                       tm.setValueAt(dec.format(pr), selectedRow, 2);
                        tm.setValueAt(memo, selectedRow, 3);
                        tm.setValueAt(getDate, selectedRow, 4);
                        
@@ -1090,8 +1090,8 @@ public class StoreInForm extends javax.swing.JFrame {
                 "Item", "Quantity", "Price", "Memo", "Date"
             }
         ));
-        Store_In_table.setSelectionBackground(new java.awt.Color(0, 255, 204));
-        Store_In_table.setSelectionForeground(new java.awt.Color(51, 51, 51));
+        Store_In_table.setSelectionBackground(new java.awt.Color(232, 57, 97));
+        Store_In_table.setSelectionForeground(new java.awt.Color(240, 240, 240));
         Store_In_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Store_In_tableMouseClicked(evt);

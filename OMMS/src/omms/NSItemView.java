@@ -102,7 +102,7 @@ public class NSItemView extends javax.swing.JFrame {
            
            while(rs.next())
            {
-               String item = rs.getString(1).toUpperCase();
+               String item = firstupperCaseMaker(rs.getString(1).toLowerCase());
                nsitem_cmb.addItem(item);
            }
            
@@ -157,9 +157,10 @@ public class NSItemView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                 }
-                
+                String X= firstupperCaseMaker(item);
+                String Y=firstupperCaseMaker(rs.getString(6));
                 if(status.equals(rs.getString(6))){
-                Object o [] = {strdate,item,rs.getDouble(3),0,rs.getDouble(4),rs.getString(6),rs.getString(5)};
+                Object o [] = {strdate,X,rs.getDouble(3),0,rs.getDouble(4),Y,rs.getString(5)};
                 tm.addRow(o);
                 }
                 count=2;
@@ -199,7 +200,14 @@ public class NSItemView extends javax.swing.JFrame {
     
     //get item unit
     
-    
+    public String firstupperCaseMaker(String s){
+        int len = s.length();
+        char[] c = s.toCharArray();
+        int temp = (int)c[0] - 32;
+        c[0] = (char)temp;
+        
+        return new String(c);
+    }
     
     
     
@@ -224,7 +232,7 @@ public class NSItemView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(208, 227, 229));
 
-        NSitem_lbl.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        NSitem_lbl.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         NSitem_lbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         NSitem_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/nonstored.png"))); // NOI18N
         NSitem_lbl.setText("NON STORED ITEM VIEW");
@@ -263,19 +271,19 @@ public class NSItemView extends javax.swing.JFrame {
             }
         });
 
-        name_lbl.setFont(new java.awt.Font("Tahoma", 3, 16)); // NOI18N
+        name_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         name_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/NSitem.png"))); // NOI18N
         name_lbl.setText("NAME");
 
-        status_lbl.setFont(new java.awt.Font("Tahoma", 3, 16)); // NOI18N
+        status_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         status_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Statustime.png"))); // NOI18N
         status_lbl.setText("STATUS");
 
-        todt_lbl.setFont(new java.awt.Font("Tahoma", 3, 16)); // NOI18N
+        todt_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         todt_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/from-to date.png"))); // NOI18N
         todt_lbl.setText("TO");
 
-        from_lbl.setFont(new java.awt.Font("Tahoma", 3, 16)); // NOI18N
+        from_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         from_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/from-to date.png"))); // NOI18N
         from_lbl.setText("FROM");
 
@@ -327,7 +335,7 @@ public class NSItemView extends javax.swing.JFrame {
                 .addGap(46, 46, 46))
         );
 
-        nsview_tbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        nsview_tbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         nsview_tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -339,7 +347,7 @@ public class NSItemView extends javax.swing.JFrame {
                 "Date", "Name", "Quantity", "Unit", "Price", "Status", "Memo"
             }
         ));
-        nsview_tbl.setSelectionBackground(new java.awt.Color(204, 0, 0));
+        nsview_tbl.setSelectionBackground(new java.awt.Color(232, 57, 97));
         nsview_tbl.setSelectionForeground(new java.awt.Color(240, 240, 240));
         jScrollPane2.setViewportView(nsview_tbl);
 

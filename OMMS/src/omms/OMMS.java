@@ -31,6 +31,7 @@ public class OMMS {
         // TODO code application logic here
 
         Dashboard st=new Dashboard();
+        //NSItemView st= new NSItemView();
         st.setVisible(true);
        
     }
