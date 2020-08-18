@@ -9,27 +9,18 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -54,9 +45,15 @@ public class StoreOutItem extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
+<<<<<<< HEAD
+    DecimalFormat dec2;
+    int flag=0;
+    Double avg=0.0;
+=======
     int flag = 0;
     Double avg = 0.0;
 
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
     /**
      * Creates new form StoreOutItem
      */
@@ -115,6 +112,8 @@ public class StoreOutItem extends javax.swing.JFrame {
         updatedatechooser.setDate(todaysdate);
 
         dec = new DecimalFormat("#0.000");
+        dec2 = new DecimalFormat("#0.00");
+        
         model = Storeouttable.getModel();
 
         JTextFieldDateEditor dtedit;
@@ -147,17 +146,29 @@ public class StoreOutItem extends javax.swing.JFrame {
     }
 
     //adding inserted item on the jtable 
+<<<<<<< HEAD
+    public void setOuttable(String name, String status,String amount,String remaining, Date date, String avg){
+        
+        try{
+=======
     public void setOuttable(String name, String status, String amount, String remaining, Date date) {
 
         try {
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
 
             String getdate = null;
             int dateserial = -1;
             Double available = 0.00;
             Double remainingval = 0.00;
+<<<<<<< HEAD
+            Double avgprice =0.00;
+            
+            try{
+=======
             Double tableamount = 0.0;
 
             try {
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
                 getdate = formatter3.format(date);
                 dateserial = Integer.parseInt(formatter1.format(date));
 
@@ -169,6 +180,31 @@ public class StoreOutItem extends javax.swing.JFrame {
 
             available = Double.parseDouble(amount);
             remainingval = Double.parseDouble(remaining);
+<<<<<<< HEAD
+            avgprice = Double.parseDouble(avg);
+            
+            if( available <= 0 || available > remainingval){
+                JOptionPane.showMessageDialog(null,"Invalid amount","Data Error",JOptionPane.ERROR_MESSAGE);
+            }
+            else if( !searchIndatabase(dateserial,name,status) && CheckTableItem(name,status,getdate,-1) < 0){
+                //System.out.println(dec.format(available));
+                tablemodel = (DefaultTableModel) Storeouttable.getModel();
+                Object o [] = {name,dec.format(available),dec2.format(avgprice),getdate, status};
+                tablemodel.addRow(o);
+                clearTextfieldafterinsert(); // after each insertion it will clear text field 
+                setAvailable(dateserial,name);
+                Storeouttable.clearSelection();
+            }
+            else if(CheckTableItem(name,status,getdate,-1) >= 0){
+                JOptionPane.showMessageDialog(null,"Data already inserted in the "
+                        + "table","Data Error",JOptionPane.ERROR_MESSAGE);
+                return ;
+            }
+            else {
+                JOptionPane.showMessageDialog(null,"Data exist "
+                        + "in database","Data Error",JOptionPane.ERROR_MESSAGE);
+                return ;
+=======
 
             if (available <= 0 || available > remainingval) {
                 JOptionPane.showMessageDialog(null, "Invalid amount", "Data Error", JOptionPane.ERROR_MESSAGE);
@@ -187,6 +223,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Data exist "
                         + "in database", "Data Error", JOptionPane.ERROR_MESSAGE);
                 return;
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             }
 
         } catch (HeadlessException | NumberFormatException e) {
@@ -203,7 +240,12 @@ public class StoreOutItem extends javax.swing.JFrame {
             String status = updatestatuscombo.getSelectedItem().toString();
             String amount = updateamounttxt.getText().trim();
             String remaining = updateavailable.getText().trim();
+<<<<<<< HEAD
+            String avg = updateavgprice.getText();
+            String strdate=null;
+=======
             String strdate = null;
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             Double insertamount = 0.0;
             Double remainingamount = 0.0;
             Date date;
@@ -215,17 +257,60 @@ public class StoreOutItem extends javax.swing.JFrame {
             int serial = Integer.parseInt(formatter1.format(date));
             insertamount = Double.parseDouble(amount);
             remainingamount = Double.parseDouble(remaining);
+<<<<<<< HEAD
+            Double avgprice = Double.parseDouble(avg);
+            
+            boolean databaseres = searchIndatabase(serial,name,status);
+            
+            if( insertamount > remainingamount || remainingamount <=0 || insertamount <=0){
+                JOptionPane.showMessageDialog(null,"Invalid amount","Data Error",JOptionPane.ERROR_MESSAGE);
+            }
+            else if(selectedrow <0 ){
+                JOptionPane.showMessageDialog(null,"No Row is selected","Row selection Error",JOptionPane.ERROR_MESSAGE);
+            }
+            else if(CheckTableItem(name,status,strdate,selectedrow) <0 && !databaseres){
+=======
 
             if (insertamount > remainingamount || remainingamount <= 0 || insertamount <= 0) {
                 JOptionPane.showMessageDialog(null, "Invalid amount", "Data Error", JOptionPane.ERROR_MESSAGE);
             } else if (selectedrow < 0) {
                 JOptionPane.showMessageDialog(null, "Please Select a Row", "Data Error", JOptionPane.ERROR_MESSAGE);
             } else if (CheckTableItem(name, status, strdate, selectedrow) < 0 && !searchIndatabase(serial, name, status)) {
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
                 model.setValueAt(name, selectedrow, 0);
-                model.setValueAt(amount, selectedrow, 1);
-                model.setValueAt(remaining, selectedrow, 2);
+                model.setValueAt(dec.format(insertamount), selectedrow, 1);
+                model.setValueAt(dec2.format(avgprice), selectedrow, 2);
                 model.setValueAt(strdate, selectedrow, 3);
                 model.setValueAt(status, selectedrow, 4);
+<<<<<<< HEAD
+                
+                Storeouttable.clearSelection();
+                
+            String itemname="";
+            Date date2 = insertdatechooser.getDate();
+            int dateserial =-1;
+            itemname = insertCombobox.getSelectedItem().toString();  // setting the remaining amount for insert box
+            dateserial = Integer.parseInt(formatter1.format(date2));
+            setAvailable(dateserial, itemname);
+            
+            updateamounttxt.setText("");
+            updateavailable.setText("");
+            }
+          
+            else if (databaseres){
+                JOptionPane.showMessageDialog(null,"Same item in same date &"
+                        + " state exist in database","Data Error",JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Same item in same date &"
+                        + " state exist in JTable","Data Error",JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+        catch(HeadlessException | NumberFormatException e){
+            JOptionPane.showMessageDialog(null,"invalid amount format"
+                    + " error while updating","Data Error",JOptionPane.ERROR_MESSAGE);
+=======
 
             } else {
                 JOptionPane.showMessageDialog(null, "Value already exist", "Data Error", JOptionPane.ERROR_MESSAGE);
@@ -233,6 +318,7 @@ public class StoreOutItem extends javax.swing.JFrame {
 
         } catch (HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Update box data reading error", "Data Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
         }
 
     }
@@ -412,6 +498,13 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
 
         }
+<<<<<<< HEAD
+        
+        
+        if(prevavailable < available){
+            if(prevavailable < 0){
+                prevavailable =0.0;
+=======
 
         //System.out.println(itemname+" "+available+" " +" "+prevavailable+" ");
         if (prevavailable < available) {
@@ -419,6 +512,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             //prevavailable = prevavailable - jTableavailable();
             if (prevavailable < 0) {
                 prevavailable = 0.0;
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             }
 
             //System.out.print(unit);
@@ -430,8 +524,13 @@ public class StoreOutItem extends javax.swing.JFrame {
 
             updateavailable.setText(dec.format(available));
         }
+<<<<<<< HEAD
+        
+        updateavgprice.setText(dec2.format(avg));
+=======
 
         updateavgprice.setText(dec.format(avg));
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
     }
 
     public void setAvailable(int dateserial, String itemname) {
@@ -471,9 +570,15 @@ public class StoreOutItem extends javax.swing.JFrame {
             if (prevavailable < 0) {
                 prevavailable = 0.00;
             }
+<<<<<<< HEAD
+            //int comboindex =-1;
+            //comboindex = insertCombobox.getSelectedIndex();  
+            //String unit = setInsertunit(comboindex);
+=======
             int comboindex = -1;
             comboindex = insertCombobox.getSelectedIndex();
             String unit = setInsertunit(comboindex);
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             //insertunit.setText(unit);
 
             insertavailabletxt.setText(dec.format(prevavailable));
@@ -485,10 +590,39 @@ public class StoreOutItem extends javax.swing.JFrame {
             //System.out.println(dec.format(prevavailable).toString()+unit);
             insertavailabletxt.setText(dec.format(available));
         }
-        insertavgprice.setText(dec.format(avg));
+        insertavgprice.setText(dec2.format(avg));
     }
 
     // count the available amount of a item from arraylist 
+<<<<<<< HEAD
+    public Double countprevAvailableitem(int serial, String item){
+        Double available= 0.00, totalamount=0.00 , totalprice = 0.00;
+        avg =0.00;
+        
+        
+        try{
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,serial from storeinout where item =? and serial <= ? ");
+            psmt.setString(1, item);
+            psmt.setInt(2, serial);
+            rs = psmt.executeQuery();
+            
+            while(rs.next()){
+                available =available+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
+                //System.out.println("called "+available+" "+rs.getDouble(1));
+                totalamount = totalamount + rs.getDouble(1);
+                totalprice = totalprice + rs.getDouble(5);
+                //System.out.println(available);
+                if(available == 0 && rs.getInt(6) != serial){
+                   totalamount = 0.00;
+                   totalprice =0.00;
+                }
+            }
+            //System.out.println(totalamount +" "+totalprice);
+            if(totalprice != 0.0 && totalamount != 0.0){
+                avg = totalprice/totalamount;
+            }
+            
+=======
     public Double countprevAvailableitem(int serial, String item) {
         //System.out.println(serial+" prev "+item);
         Double available = 0.00;
@@ -508,6 +642,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
             avg = avg / count;
             //System.out.println(count+" "+avg);
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             psmt.close();
             rs.close();
         } catch (SQLException e) {
@@ -519,12 +654,24 @@ public class StoreOutItem extends javax.swing.JFrame {
         //System.out.println(available);
         return available;
     }
+<<<<<<< HEAD
+    
+    public Double databaseAvailable(int serial, String item){
+        
+        Double available= 0.00;
+        avg =0.00;
+        
+        
+        try{
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner from storeinout where item =?");
+=======
 
     public Double databaseAvailable(int serial, String item) {
 
         Double available = 0.00;
         try {
             psmt = conn.prepareStatement("select inamount,bf,lunch,dinner from storeinout where item =? ");
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
             psmt.setString(1, item);
             rs = psmt.executeQuery();
             while (rs.next()) {
@@ -568,7 +715,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         //System.out.print(name);
         try {
             psmt = conn.prepareStatement("select unit from storeditem where name = ?");
-            System.out.print("called");
+            //out.print("called");
             psmt.setString(1, name);
             rs = psmt.executeQuery();
 
@@ -583,7 +730,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                     + "failed to set the update unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
 
         }
-        System.out.print(unit);
+       // System.out.print(unit);
         return unit;
     }
 
@@ -603,9 +750,17 @@ public class StoreOutItem extends javax.swing.JFrame {
         }
         return 0;
     }
+<<<<<<< HEAD
+    
+    
+    
+    public void Tabledecoration(){
+        Storeouttable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 16));
+=======
 
     public void Tabledecoration() {
         Storeouttable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 14));
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
         Storeouttable.getTableHeader().setOpaque(false);
         Storeouttable.getTableHeader().setBackground(new Color(32, 136, 203));
         Storeouttable.getTableHeader().setForeground(new Color(255, 255, 255));
@@ -753,6 +908,27 @@ public class StoreOutItem extends javax.swing.JFrame {
     //function for delete a selected table row
     public void DeleteTableRow() {
         int selectedrow = Storeouttable.getSelectedRow();
+<<<<<<< HEAD
+       
+        if(selectedrow >= 0){
+            int responce = JOptionPane.showConfirmDialog(this,"Do You Want To Delete"
+                + " The Selected Row ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (responce == JOptionPane.YES_OPTION){
+            tablemodel = (DefaultTableModel) Storeouttable.getModel();
+            tablemodel.removeRow(selectedrow);
+            
+            String itemname="";
+            Date date = insertdatechooser.getDate();
+            int dateserial =-1;
+            itemname = insertCombobox.getSelectedItem().toString();  // setting the remaining amount initially
+            dateserial = Integer.parseInt(formatter1.format(date));
+            setAvailable(dateserial, itemname);
+            
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"No Row is selected","Data Delete Error",JOptionPane.ERROR_MESSAGE);
+=======
         int serial = 0;
         String itemname;
         String stdate;
@@ -780,6 +956,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "No Row is selected", "Showing "
                     + "error while Updating data from textfield", JOptionPane.ERROR_MESSAGE);
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
         }
 
     }
@@ -846,7 +1023,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Date ");
 
-        insertdatechooser.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertdatechooser.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         insertdatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 insertdatechooserPropertyChange(evt);
@@ -864,7 +1041,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Item");
 
-        insertamounttxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertamounttxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         insertamounttxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 insertamounttxtActionPerformed(evt);
@@ -887,7 +1064,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Available");
 
-        insertavailabletxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertavailabletxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         insertbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         insertbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Insertbtn (2).png"))); // NOI18N
@@ -906,7 +1083,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Avg Price");
 
-        insertavgprice.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        insertavgprice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         insertunit.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         insertunit.setForeground(new java.awt.Color(255, 0, 0));
@@ -1017,7 +1194,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Amount");
 
-        updateamounttxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        updateamounttxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         updateamounttxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateamounttxtActionPerformed(evt);
@@ -1036,7 +1213,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
         });
 
-        updateavailable.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        updateavailable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1060,7 +1237,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
         });
 
-        updatedatechooser.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        updatedatechooser.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         updatedatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 updatedatechooserPropertyChange(evt);
@@ -1071,7 +1248,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Avg Price");
 
-        updateavgprice.setFont(new java.awt.Font("Bodoni MT", 0, 16)); // NOI18N
+        updateavgprice.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         updateunit.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         updateunit.setForeground(new java.awt.Color(255, 51, 51));
@@ -1127,15 +1304,13 @@ public class StoreOutItem extends javax.swing.JFrame {
                     .addComponent(updatedatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(updatestatuscombo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(updateamounttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 11, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(updateamounttxt, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(updatestatuscombo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1159,7 +1334,7 @@ public class StoreOutItem extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Item", "Amount", "Remaining Amount", "Date", "Status"
+                "Item", "Amount", "Avg Price", "Date", "Status"
             }
         ));
         Storeouttable.setIntercellSpacing(new java.awt.Dimension(0, 0));
@@ -1202,7 +1377,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveAndexitbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1260,8 +1435,14 @@ public class StoreOutItem extends javax.swing.JFrame {
         String amount = insertamounttxt.getText().trim();
         String remaining = insertavailabletxt.getText().trim();
         Date date = insertdatechooser.getDate();
+<<<<<<< HEAD
+        String avg= insertavgprice.getText();
+        
+        setOuttable(name,status,amount,remaining,date, avg);
+=======
 
         setOuttable(name, status, amount, remaining, date);
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
         insertamounttxt.requestFocusInWindow();
     }//GEN-LAST:event_insertbtnActionPerformed
 
@@ -1280,7 +1461,7 @@ public class StoreOutItem extends javax.swing.JFrame {
 //        Date date = updatedatechooser.getDate();
 
         setUpdatevalue();
-        Storeouttable.clearSelection();
+        //Storeouttable.clearSelection();
     }//GEN-LAST:event_updatebtnActionPerformed
 
     private void updateComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateComboboxActionPerformed

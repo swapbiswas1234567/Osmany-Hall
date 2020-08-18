@@ -93,11 +93,11 @@ public class ShowLedger extends javax.swing.JFrame {
     }
     
     public Double[] getpreviousavailable(int dateserial, String itemname){
-        Double []available = new Double[2];
+        Double []available = new Double[3];
         //System.out.println(dateserial);
         available[0]= 0.00;
         available[1] = 0.00;
-        int count=0;
+        available[2] = 0.00;
         
         try{
             psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price from storeinout where item =? and serial < ?");
@@ -106,15 +106,14 @@ public class ShowLedger extends javax.swing.JFrame {
             rs = psmt.executeQuery();
             while(rs.next()){
                 available[0] =available[0]+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
-                if( rs.getDouble(1) != 0 && rs.getDouble(5) != 0){
-                    available[1] = available[1] +(rs.getDouble(5)/rs.getDouble(1));
-                    count++;
+                available[1] = available[1]+rs.getDouble(1);
+                available[2]= available[2]+rs.getDouble(5);
+                if(available[0] == 0){
+                    available[1] = 0.00;
+                    available[2]= 0.00;
                 }
-                
             }
-            if( count !=0){
-                available[1]= available[1]/count;
-            }
+            //System.out.println(available[1]);
             psmt.close();
             rs.close();
             
@@ -177,13 +176,14 @@ public class ShowLedger extends javax.swing.JFrame {
         //System.out.println(from+" "+to+" "+item);
         int fromserial = 0, toserial = 0, count=2;
         Double lastavg=0.00, lastavl=0.00 , fromavailable=0.00;
-        Double prevavailable[] =new Double[2];
+        Double prevavailable[] =new Double[3];
         prevavailable[0] = 0.00;
         prevavailable[1] =0.00;
+        prevavailable[2] =0.00;
         String strdate = "";
         Date date=null;
         tablemodel = (DefaultTableModel) ledgertable.getModel();
-        
+        boolean flag=false;
         
         try{
             fromserial = Integer.parseInt(formatter.format(from));
@@ -194,10 +194,8 @@ public class ShowLedger extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
         prevavailable = getpreviousavailable(fromserial, item);
-        //System.out.println(prevavailable[0]+" "+prevavailable[1]);
-        if( prevavailable[1] == 0){
-            count=1;
-        }
+        //System.out.println(prevavailable[0]+" "+prevavailable[1]+" "+prevavailable[2]);
+        
         fromavailable = prevavailable[0];
         try{
             psmt = conn.prepareStatement("select serial,inamount,bf,lunch,dinner,price,memono from storeinout where item =? and serial >= ? and serial <=? order by serial");
@@ -215,33 +213,42 @@ public class ShowLedger extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                 }
-                if(rs.getDouble(6) != 0 && rs.getDouble(2) != 0){
-                    lastavg = prevavailable[1]+(rs.getDouble(6)/rs.getDouble(2));
-                    //System.out.println(prevavailable[1]+" "+lastavg+" "+count);
-                    prevavailable[1] = lastavg/count;
-                }
-                lastavl = prevavailable[0]+rs.getDouble(2)-(rs.getDouble(3)+rs.getDouble(4)+rs.getDouble(5));
-                //available =available+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
+                //System.out.println(prevavailable[0]);
+                lastavl = prevavailable[0] +rs.getDouble(2)-(rs.getDouble(3)+rs.getDouble(4)+rs.getDouble(5));
+                prevavailable[1] =  prevavailable[1] + rs.getDouble(2);
+                prevavailable[2] =  prevavailable[2] + rs.getDouble(6);
                 //System.out.println("serial "+rs.getInt(1)+"prev available: "+prevavailable[0]+"last available: "+lastavl+"avg price: "+prevavailable[1]);
+                lastavg = prevavailable[2]/prevavailable[1];
                 
-                
-                
-                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),lastavl,dec.format(prevavailable[1]),rs.getString(7)};
+                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),lastavl,dec.format(lastavg),rs.getString(7)};
                 tablemodel.addRow(o);
+                prevavailable[0] = lastavl;
                 
-                prevavailable[0] =lastavl;
-                count=2;
-                
+                if(lastavl == 0){
+                    prevavailable[1] =0.00;
+                    prevavailable[2] = 0.00;
+                }
+                flag=true;
             }
             psmt.close();
             rs.close();
             
+           //System.out.println("called "+item);
             String unit = getunit(item);
-            namelbl.setText(item);
-            previousavllbl.setText(fromavailable.toString());
-            currevtavllbl.setText(prevavailable[0].toString());
-            dayslbl.setText(Integer.toString(tablemodel.getRowCount()));
-            unitlbl.setText(unit);
+            if(flag){
+                namelbl.setText(item);
+                previousavllbl.setText(fromavailable.toString());
+                currevtavllbl.setText(prevavailable[0].toString());
+                dayslbl.setText(Integer.toString(tablemodel.getRowCount()));
+                unitlbl.setText(unit);
+            }
+            else{
+                namelbl.setText("");
+                previousavllbl.setText("");
+                currevtavllbl.setText("");
+               dayslbl.setText("");
+               unitlbl.setText("");
+            }
            // setlbl(item,fromavailable.toString(),prevavailable[0].toString(),Integer.toString(tablemodel.getRowCount()));
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for"
@@ -418,6 +425,7 @@ public class ShowLedger extends javax.swing.JFrame {
         ledgertable.setIntercellSpacing(new java.awt.Dimension(0, 0));
         ledgertable.setRowHeight(26);
         ledgertable.setSelectionBackground(new java.awt.Color(232, 57, 97));
+        ledgertable.setSelectionForeground(new java.awt.Color(240, 240, 240));
         jScrollPane1.setViewportView(ledgertable);
         if (ledgertable.getColumnModel().getColumnCount() > 0) {
             ledgertable.getColumnModel().getColumn(2).setMinWidth(110);
@@ -450,7 +458,7 @@ public class ShowLedger extends javax.swing.JFrame {
         jLabel14.setText("Unit : ");
 
         jLabel15.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
-        jLabel15.setText("No Of Days :");
+        jLabel15.setText("No Of Row :");
 
         dayslbl.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
 

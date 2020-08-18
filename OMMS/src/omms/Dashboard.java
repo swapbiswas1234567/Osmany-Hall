@@ -5,7 +5,14 @@
  */
 package omms;
 
+<<<<<<< HEAD
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+=======
 import javax.swing.JOptionPane;
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
 
 /**
  *
@@ -18,7 +25,20 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        
+        String image = "dashboard.jpg";
+        imageSet(imagelbl, image);
     }
+    
+    
+    void imageSet(JLabel x, String imgname){
+	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
+	Image img1 = myimage.getImage();
+	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
+	ImageIcon i = new ImageIcon(img2);
+	x.setIcon(i);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,6 +49,7 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        imagelbl = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         storeinbtn = new javax.swing.JMenuItem();
@@ -77,7 +98,7 @@ public class Dashboard extends javax.swing.JFrame {
         jMenu1.add(jSeparator2);
 
         storeupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        storeupdatebtn.setText("Stored Item Update");
+        storeupdatebtn.setText("Stored Item View & Update");
         storeupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 storeupdatebtnActionPerformed(evt);
@@ -111,7 +132,7 @@ public class Dashboard extends javax.swing.JFrame {
         jMenu2.add(jSeparator3);
 
         nonstoreupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        nonstoreupdatebtn.setText("Non Stored Item Update");
+        nonstoreupdatebtn.setText("Non Stored Item View & Update");
         nonstoreupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nonstoreupdatebtnActionPerformed(evt);
@@ -144,7 +165,7 @@ public class Dashboard extends javax.swing.JFrame {
         tmpfoodbtn.add(tempFoodViewjMenuItm);
 
         tmpfoodupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        tmpfoodupdatebtn.setText("Temporary Food Update");
+        tmpfoodupdatebtn.setText("Temporary Food View & Update");
         tmpfoodupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tmpfoodupdatebtnActionPerformed(evt);
@@ -160,11 +181,11 @@ public class Dashboard extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 759, Short.MAX_VALUE)
+            .addComponent(imagelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addComponent(imagelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
 
         pack();
@@ -172,6 +193,9 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void storeinbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeinbtnActionPerformed
         // TODO add your handling code here:
+        StoreInForm st= new StoreInForm();
+        st.setVisible(true);
+        dispose();
     }//GEN-LAST:event_storeinbtnActionPerformed
 
     private void storeoutbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeoutbtnActionPerformed
@@ -215,9 +239,25 @@ public class Dashboard extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_nonstoreupdatebtnActionPerformed
 
+<<<<<<< HEAD
+    private void tempfoodinbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempfoodinbtnActionPerformed
+        // TODO add your handling code here:
+        
+        TemporaryFoodIn tf = new TemporaryFoodIn();
+        tf.setVisible(true);
+        dispose();
+        
+    }//GEN-LAST:event_tempfoodinbtnActionPerformed
+
+    private void tmpfoodupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmpfoodupdatebtnActionPerformed
+        // TODO add your handling code here:
+        
+        TmpFoodUpdate tfu = new TmpFoodUpdate();
+=======
     private void tmpfoodupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmpfoodupdatebtnActionPerformed
         // TODO add your handling code here:
         TempFoodUpdate tfu = new TempFoodUpdate();
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
         tfu.setVisible(true);
         dispose();
 
@@ -279,6 +319,7 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel imagelbl;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

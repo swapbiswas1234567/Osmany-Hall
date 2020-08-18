@@ -54,6 +54,12 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
         getAllstoreditem();
         flag=1;
         
+        Date date= fromdatechooser.getDate();
+        String name = itemcombobox.getSelectedItem().toString().toLowerCase();
+        setupdatetable(date,name);
+        
+        
+        
         JFrame frame = this;
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
         frame.addWindowListener(new WindowAdapter() {
@@ -162,7 +168,8 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
             psmt = conn.prepareStatement("select name from nonstoreditemlist");
             rs = psmt.executeQuery();
             while(rs.next()){
-                itemcombobox.addItem(rs.getString(1));  // sending the name of item to set in the combobox
+                String outname = rs.getString(1).substring(0, 1).toUpperCase() + rs.getString(1).substring(1);
+                itemcombobox.addItem(outname);  // sending the name of item to set in the combobox
             }
             psmt.close();
             rs.close();
@@ -230,7 +237,9 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
                 }
             
                 //System.out.println(strdate);
-                Object o [] = {false,strdate,item,rs.getDouble(3),rs.getDouble(4),rs.getString(5),rs.getString(6)};
+                String outname = item.substring(0, 1).toUpperCase() + item.substring(1);
+                String outstate = rs.getString(6).substring(0, 1).toUpperCase() + rs.getString(6).substring(1);
+                Object o [] = {false,strdate,outname,rs.getDouble(3),rs.getDouble(4),rs.getString(5),outstate};
                 tablemodel.addRow(o);
             }
             psmt.close();
@@ -388,10 +397,9 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        updatetable.setIntercellSpacing(new java.awt.Dimension(0, 0));
         updatetable.setRowHeight(25);
         updatetable.setSelectionBackground(new java.awt.Color(232, 57, 97));
-        updatetable.setShowHorizontalLines(false);
+        updatetable.setSelectionForeground(new java.awt.Color(240, 240, 240));
         updatetable.setShowVerticalLines(false);
         jScrollPane1.setViewportView(updatetable);
 
@@ -429,7 +437,7 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
         
         //setupdatetable();
         if( date != null && flag ==1){
-            name = itemcombobox.getSelectedItem().toString();
+            name = itemcombobox.getSelectedItem().toString().toLowerCase();
             setupdatetable(date,name);
         }
         
@@ -450,7 +458,7 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
         
         //setupdatetable();
         if( date != null && flag ==1){
-            name = itemcombobox.getSelectedItem().toString();
+            name = itemcombobox.getSelectedItem().toString().toLowerCase();
             setupdatetable(date,name);
         }
         

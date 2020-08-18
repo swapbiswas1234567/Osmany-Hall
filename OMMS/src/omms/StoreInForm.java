@@ -5,6 +5,8 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +15,14 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+<<<<<<< HEAD
+import javax.swing.JFrame;
+=======
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -49,6 +55,28 @@ public class StoreInForm extends javax.swing.JFrame {
         itemcombo_set();
         
         
+<<<<<<< HEAD
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                try{
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        });
+        
+        
+        
+=======
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
     }
     
     
@@ -504,9 +532,14 @@ public class StoreInForm extends javax.swing.JFrame {
                        
                        Store_In_table.getSelectionModel().clearSelection();
                     selectedRow =-1;
+<<<<<<< HEAD
+                    quantityIn_txt.setText("");
+                    priceIn_txt.setText("");
+=======
                     
                     quantityUp_txt.setText("");
                     priceUp_txt.setText("");
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
                     memoUp_txt.setText("");
                    }
                    else if(inputCheckTable(name,getDate,-1)>= 0 )
@@ -608,7 +641,10 @@ public class StoreInForm extends javax.swing.JFrame {
     }
    // adding new item in the database and also combobox 
     public void addnewiteminlist(String name, String unit){
+
+        System.out.println(name+" "+unit);          
          String Name1= firstupperCaseMaker(name);         
+
         if(!name.equals("") && !unit.equals("")){
             String item = null;
             try{
@@ -840,6 +876,31 @@ public class StoreInForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+<<<<<<< HEAD
+                    .addComponent(QuantityIn_lbl)
+                    .addComponent(priceIn_lbl)
+                    .addComponent(memo_lbl)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(dateIn_lbl)
+                        .addComponent(itemIn_lbl)))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(input_cmb, 0, 120, Short.MAX_VALUE)
+                            .addComponent(quantityIn_txt)
+                            .addComponent(priceIn_txt)
+                            .addComponent(memo_txt))
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(enter_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(NewItem_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
+                    .addComponent(dateIn_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+=======
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(QuantityIn_lbl)
@@ -865,6 +926,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(StoreIn_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(153, 153, 153)))
+>>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(

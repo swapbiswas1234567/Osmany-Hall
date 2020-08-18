@@ -73,6 +73,7 @@ public class NonStoredItem extends javax.swing.JFrame {
                     conn.close();
                 }catch(Exception e){
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
         });
@@ -156,7 +157,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         int option = JOptionPane.showConfirmDialog(null, message, "Create Item", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             //System.out.println(name.getText());
-            
+            //name.requestFocus(); //not working 
             addnewiteminlist(name.getText().toLowerCase().trim(),unit.getText().toLowerCase().trim());  // save the item name and 
             //unit in lower case
         } else {
@@ -181,6 +182,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             }catch(SQLException e){
                 JOptionPane.showMessageDialog(null, "Failed to fetch "
                         + "data checking in addnewiteminlist", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             if(item != null){
                 JOptionPane.showMessageDialog(null, "item already exists", "Data fetch error", JOptionPane.ERROR_MESSAGE);
@@ -207,6 +209,7 @@ public class NonStoredItem extends javax.swing.JFrame {
                 }  
                 catch(SQLException e){
                     JOptionPane.showMessageDialog(null, "add new item in list error", "Data insertion error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
          
@@ -237,6 +240,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             rs.close();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
    
@@ -258,6 +262,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             }catch(SQLException e){
                 JOptionPane.showMessageDialog(null, "Failed to fetch "
                         + "unit in getunit", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                
             }
         return unit;
     }
@@ -278,6 +283,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null, "conversion error in setonstoretable", "Data"
                     + " conversion error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         //System.out.println(intdate);
         boolean databasecheck = checkitemondatabase(itemname.toLowerCase(),dateserial,status.toLowerCase());
@@ -323,6 +329,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
         }
         
        return false; 
@@ -362,6 +369,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         catch(ParseException e){
             JOptionPane.showMessageDialog(null, "Date Parse "
                     + "error in Updatefield", "Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         //System.out.println(date);
         editdatechooser.setDate(date);
@@ -393,25 +401,34 @@ public class NonStoredItem extends javax.swing.JFrame {
         }
         catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Date Parse in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
         //System.out.println(selectedrow);
-        boolean checkjtable = checkinjtable(name,strdate,state, selectedrow);
-        boolean databasecheck = checkitemondatabase(name.toLowerCase(),dateserial,state.toLowerCase());
+        boolean checkjtable=false; 
+        checkjtable = checkinjtable(name,strdate,state, selectedrow);
+        boolean databasecheck = false;
+        databasecheck = checkitemondatabase(name.toLowerCase(),dateserial,state.toLowerCase());
+        
+        if(memo.equals("")){
+            memo="###";
+        }
         //System.out.println(databasecheck);
         //System.out.println(name+" "+amount+" "+price+" "+date+" "+state+" "+memo);
-        if(checkjtable){
-            JOptionPane.showMessageDialog(null, "Same data already"
-                    + " exist in Table","Date parsing error", JOptionPane.ERROR_MESSAGE);
+       
+        if(selectedrow <0){
+            JOptionPane.showMessageDialog(null, "No row is selected","Data updating error", JOptionPane.ERROR_MESSAGE);
         }
         else if(databasecheck){
             JOptionPane.showMessageDialog(null, "Data already exists in the "
                     + "database","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
-        else if(selectedrow <0){
-            JOptionPane.showMessageDialog(null, "No row is selected","Data updating error", JOptionPane.ERROR_MESSAGE);
+        else if(checkjtable){
+            JOptionPane.showMessageDialog(null, "Same data already"
+                    + " exist in Table","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
-        else if( Double.parseDouble(amount) > 0 && Double.parseDouble(price) >0 && !(memo.equals("") || price.equals("")
+        
+        else if( Double.parseDouble(amount) > 0 && Double.parseDouble(price) >0 && !( price.equals("")
                 || amount.equals(""))){
             try{
                 totalamount = Double.parseDouble(amount);
@@ -420,6 +437,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             }
             catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "write correct number","updating date error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             
             model.setValueAt(name, selectedrow , 0);
@@ -429,6 +447,11 @@ public class NonStoredItem extends javax.swing.JFrame {
             model.setValueAt(strdate, selectedrow , 4);
             model.setValueAt(state, selectedrow , 5);
             model.setValueAt(memo, selectedrow , 6);
+            
+            nonStoretable.clearSelection();
+        }
+        else if(Double.parseDouble(amount) <= 0 || Double.parseDouble(price) <= 0){
+            JOptionPane.showMessageDialog(null, "invalid amount","updating date error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -736,7 +759,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Bell MT", 0, 20)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/edit.png"))); // NOI18N
-        jLabel9.setText("  EDIT");
+        jLabel9.setText("  UPDATE");
 
         jLabel10.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -777,22 +800,37 @@ public class NonStoredItem extends javax.swing.JFrame {
         jLabel13.setText("Amount ");
 
         editamounttxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        editamounttxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editamounttxtActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel14.setText("Memo No");
 
         editmemotxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        editmemotxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editmemotxtActionPerformed(evt);
+            }
+        });
 
         jLabel15.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Price");
 
         editpricetxt.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        editpricetxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editpricetxtActionPerformed(evt);
+            }
+        });
 
         editbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         editbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/rubber.png"))); // NOI18N
-        editbtn.setText("Edit");
+        editbtn.setText("Update");
         editbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editbtnActionPerformed(evt);
@@ -946,7 +984,7 @@ public class NonStoredItem extends javax.swing.JFrame {
 
     private void insertbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertbtnActionPerformed
         // TODO add your handling code here:
-        String name = null, state = null, memo = null, amount = null , price = null;
+        String name = null, state = null, memo = "###", amount = null , price = null;
         Date date=null;
         name = insertnamecombobox.getSelectedItem().toString();
         state = insertstatecombobox.getSelectedItem().toString();
@@ -954,8 +992,11 @@ public class NonStoredItem extends javax.swing.JFrame {
         amount = insertamountxt.getText().trim();
         price = insertpricetxt.getText().trim();
         date = insertdatechooser.getDate();
+        if(memo.equals("")){
+            memo="###";
+        }
         
-        if(memo.equals("") || amount.equals("") || price.equals("")){
+        if(amount.equals("") || price.equals("")){
             JOptionPane.showMessageDialog(null, "Fill all the field before"
                     + "insertion", "Data read error", JOptionPane.ERROR_MESSAGE);
             
@@ -992,22 +1033,31 @@ public class NonStoredItem extends javax.swing.JFrame {
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
         // TODO add your handling code here:
         seteditedlevalue();
-        nonStoretable.clearSelection();
+        
     }//GEN-LAST:event_editbtnActionPerformed
 
     private void saveandexitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveandexitActionPerformed
-        try {
+        
             // TODO add your handling code here:
-            insert();
-            
-            JFrame frame = this;
-            Dashboard das = new Dashboard();
-            das.setVisible(true);
-            frame.setVisible(false);
-            conn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(NonStoredItem.class.getName()).log(Level.SEVERE, null, ex);
+           if(model.getRowCount() > 0){
+               
+            int responce = JOptionPane.showConfirmDialog(this,"Do you want to save the data ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (responce == JOptionPane.YES_OPTION){
+                try {
+                    insert();
+                    
+                    JFrame frame = this;
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
         }
+            
         
     }//GEN-LAST:event_saveandexitActionPerformed
 
@@ -1015,7 +1065,8 @@ public class NonStoredItem extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedrow = -1;
         selectedrow = nonStoretable.getSelectedRow();
-        if( selectedrow > 0){
+        System.out.println(selectedrow);
+        if( selectedrow >= 0){
             deleterow(selectedrow);    
         }
         else{
@@ -1063,6 +1114,21 @@ public class NonStoredItem extends javax.swing.JFrame {
         
         insertbtn.doClick();
     }//GEN-LAST:event_insertpricetxtActionPerformed
+
+    private void editmemotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editmemotxtActionPerformed
+        // TODO add your handling code here:
+        editamounttxt.requestFocus();
+    }//GEN-LAST:event_editmemotxtActionPerformed
+
+    private void editamounttxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editamounttxtActionPerformed
+        // TODO add your handling code here:
+        editpricetxt.requestFocus();
+    }//GEN-LAST:event_editamounttxtActionPerformed
+
+    private void editpricetxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editpricetxtActionPerformed
+        // TODO add your handling code here:
+        editbtn.doClick();
+    }//GEN-LAST:event_editpricetxtActionPerformed
 
     /**
      * @param args the command line arguments
