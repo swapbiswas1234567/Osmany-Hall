@@ -32,8 +32,10 @@ public class OMMS {
 
    
         
-        Dashboard st= new Dashboard();
-        st.setVisible(true);
+       // Dashboard st= new Dashboard();
+       StoreInForm st= new StoreInForm();
+       
+       st.setVisible(true);
 
        
 
