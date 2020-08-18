@@ -23,24 +23,16 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.form
           <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
           <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-=======
-          <Component id="jPanel1" max="32767" attributes="0"/>
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.form
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.form
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="355" max="32767" attributes="0"/>
-=======
-              <EmptySpace max="32767" attributes="0"/>
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.form
           </Group>
       </Group>
     </DimensionLayout>
@@ -78,7 +70,6 @@
                   <Component id="jLabel1" min="-2" pref="378" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
-              <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -104,13 +95,7 @@
                       <Component id="yeartxt" alignment="0" min="-2" pref="44" max="-2" attributes="0"/>
                       <Component id="deletebtn" alignment="0" min="-2" pref="44" max="-2" attributes="0"/>
                   </Group>
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.form
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-=======
-                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="248" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.form
               </Group>
           </Group>
         </DimensionLayout>
@@ -227,12 +212,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deletebtnActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-          <AuxValues>
-            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-          </AuxValues>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
 
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.form
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
         <Component class="javax.swing.JTable" name="updatetable">
@@ -309,64 +295,6 @@
             </Property>
           </Properties>
         </Component>
-=======
-          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JTable" name="updatetable">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Bell MT" size="18" style="0"/>
-                </Property>
-                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="0">
-                    <Column editable="true" title="Hall Id" type="java.lang.Object"/>
-                    <Column editable="true" title="Date" type="java.lang.Object"/>
-                    <Column editable="true" title="Bill" type="java.lang.Object"/>
-                    <Column editable="true" title="Select" type="java.lang.Boolean"/>
-                  </Table>
-                </Property>
-                <Property name="autoscrolls" type="boolean" value="false"/>
-                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                  <TableColumnModel selectionModel="0">
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                  </TableColumnModel>
-                </Property>
-                <Property name="intercellSpacing" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[0, 0]"/>
-                </Property>
-                <Property name="rowHeight" type="int" value="26"/>
-                <Property name="selectionBackground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="61" green="39" red="e8" type="rgb"/>
-                </Property>
-                <Property name="showHorizontalLines" type="boolean" value="false"/>
-                <Property name="showVerticalLines" type="boolean" value="false"/>
-                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                </Property>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.form
       </SubComponents>
     </Container>
   </SubComponents>

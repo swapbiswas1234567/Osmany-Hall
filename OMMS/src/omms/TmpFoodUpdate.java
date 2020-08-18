@@ -51,12 +51,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
     public TmpFoodUpdate() {
         initComponents();
         Tabledecoration();
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
         inittialization();
-=======
-        initialization();
-        flag=1;
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         
         
            JFrame frame = this;
@@ -158,25 +153,10 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
     
     
     
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
     public void inittialization(){
         conn = Jconnection.ConnecrDb(); // set connection with database
         formatter = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
         formatter1 = new SimpleDateFormat("MMM dd,yyyy");
-=======
-    
-    public void initialization(){
-        conn = Jconnection.ConnecrDb(); // set connection with database
-        formatter = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
-        formatter1 = new SimpleDateFormat("MMM dd,yyyy");
-        Date todaysdate = new Date();
-        fromdatechooser.setDate(todaysdate);  // setting both datechooser todays date
-        
-        
-        JTextFieldDateEditor dtedit;
-        dtedit = (JTextFieldDateEditor) fromdatechooser.getDateEditor();
-        dtedit.setEditable(false);
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         
         int year = Calendar.getInstance().get(Calendar.YEAR);
         String stryear = Integer.toString(year);
@@ -212,20 +192,10 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
     
     
     
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
     public void updatetablemonth(String serial){
         
         Date date=null;
         String strdate="";
-=======
-    public void setupdatetable(Date from, String id){
-        //System.out.println(from+" "+ " "+item);
-        int serial =0, hallid=0;
-        String strdate = "",search="";
-        Date date = null;
-        tablemodel = (DefaultTableModel) updatetable.getModel();
-        formatter2 = new SimpleDateFormat("yyyyMM");
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         
         serial = serial+"%";
         
@@ -442,31 +412,6 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
             }
         });
 
-        updatetable.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        updatetable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Hall Id", "Date", "Bill", "Select"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        updatetable.setAutoscrolls(false);
-        updatetable.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        updatetable.setRowHeight(26);
-        updatetable.setSelectionBackground(new java.awt.Color(232, 57, 97));
-        updatetable.setShowHorizontalLines(false);
-        updatetable.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(updatetable);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -479,7 +424,6 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
                 .addComponent(monthcombo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -492,13 +436,6 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-=======
-                .addComponent(fromdatechooser, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
-                .addComponent(deletebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
-            .addComponent(jScrollPane1)
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -506,7 +443,6 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -545,36 +481,19 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
         updatetable.setShowVerticalLines(false);
         jScrollPane1.setViewportView(updatetable);
 
-=======
-                    .addComponent(deletebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(fromdatechooser, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(idtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
-=======
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
         );
 
         pack();
@@ -582,32 +501,8 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
 
     private void monthcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthcomboActionPerformed
         // TODO add your handling code here:
-<<<<<<< HEAD:OMMS/src/omms/TmpFoodUpdate.java
         commonfortable();
     }//GEN-LAST:event_monthcomboActionPerformed
-=======
-        
-        Date date=null;
-        String id="";
-        date = fromdatechooser.getDate();
-        id = idtxt.getText();
-        System.out.println(date);
-        
-        tablemodel = (DefaultTableModel) updatetable.getModel();
-        if(tablemodel.getColumnCount() > 0){
-            tablemodel.setRowCount(0);
-        }
-        
-        if( date != null && !id.equals("")){
-            setupdatetable(date,id);
-        }
-        else if( date != null && id.equals("")){
-            updatetabledate(date);
-        }
-        
-        idtxt.requestFocus();
-    }//GEN-LAST:event_fromdatechooserPropertyChange
->>>>>>> 8cd1958ca18b868d61eda443c934961ebfa6a164:OMMS/src/omms/TempFoodUpdate.java
 
     private void hallidtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hallidtxtActionPerformed
         // TODO add your handling code here:
