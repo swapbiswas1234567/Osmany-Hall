@@ -32,7 +32,8 @@ public class OMMS {
 
    
         
-        Dashboard st= new Dashboard();
+        //Dashboard st= new Dashboard();
+        MealSheet st = new MealSheet();
         st.setVisible(true);
 
        

@@ -62,8 +62,7 @@ public class MealSheet extends javax.swing.JFrame {
     }
     
     
-    
-    
+
     
     public void inittialization(){
         conn = Jconnection.ConnecrDb(); // set connection with database
@@ -92,6 +91,66 @@ public class MealSheet extends javax.swing.JFrame {
         lunchtxt.setText("");
         dinnertxt.setText("");
     }
+    
+    public void countmealon(int dateserial){
+        
+        try{
+            psmt = conn.prepareStatement("select sum(mealsheet.breakfast), sum(mealsheet.lunch), sum(mealsheet.dinner) from stuinfo INNER JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date= ?");
+            psmt.setInt(1, dateserial);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                //System.out.print(rs.getInt(1));
+                totalbftxt.setText(Integer.toString(rs.getInt(1)));
+                totallunchtxt.setText(Integer.toString(rs.getInt(2)));
+                totaldinnertxt.setText(Integer.toString(rs.getInt(3)));
+                
+            }
+            
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to count total bf lunch dinner", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
+    public void counttotalmeal(int dateserial){
+        
+        try{
+            psmt = conn.prepareStatement("select count(mealsheet.hallid) from stuinfo INNER JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date= ?");
+            psmt.setInt(1, dateserial);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                //System.out.print(rs.getInt(1));
+                totalmeallbl.setText(Integer.toString(rs.getInt(1)));
+                
+            }
+            
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to count total meal", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
+    
+    
+    public void deleteunnecessarydate(){
+        
+        try{
+                psmt = conn.prepareStatement("DELETE from mealsheet where breakfast=0 and lunch =0 and dinner =0;");
+                psmt.execute();
+                psmt.close();
+                //System.out.println("called");   
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while deleting "
+                        + "unnecessary data", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        
+    }
+    
     
     public void onall(Date date){
         int totalrow =-1, dateserial=0, hallid=0, bf=1, lunch=1,dinner=1;
@@ -130,6 +189,124 @@ public class MealSheet extends javax.swing.JFrame {
             
         }
         
+        
+    }
+    
+    public void offall(Date date){
+        
+        int dateserial =0;
+        try{
+            dateserial = Integer.parseInt(formatter.format(date));
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Date Parse "
+                    + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        try{
+                psmt = conn.prepareStatement("delete from mealsheet where date = ?");
+                psmt.setInt(1, dateserial);
+                psmt.execute();
+                psmt.close();
+                //System.out.println("called");   
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while"
+                        + " turning all breakfast off", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        countmealon(dateserial);
+        counttotalmeal(dateserial);
+        
+    }
+    
+    
+    public void offallbreakfast(Date date){
+        int dateserial =0;
+        try{
+            dateserial = Integer.parseInt(formatter.format(date));
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Date Parse "
+                    + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        try{
+                psmt = conn.prepareStatement("update mealsheet set breakfast=0 where date = ?");
+                psmt.setInt(1, dateserial);
+                psmt.execute();
+                psmt.close();
+                //System.out.println("called");   
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while"
+                        + " turning all breakfast off", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        countmealon(dateserial);
+        counttotalmeal(dateserial);
+        
+        
+    }
+    
+    
+    public void offalllunch(Date date){
+        int dateserial =0;
+        try{
+            dateserial = Integer.parseInt(formatter.format(date));
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Date Parse "
+                    + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        try{
+                psmt = conn.prepareStatement("update mealsheet set lunch=0 where date = ?");
+                psmt.setInt(1, dateserial);
+                psmt.execute();
+                psmt.close();
+                //System.out.println("called");   
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while"
+                        + " turning all breakfast off", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        countmealon(dateserial);
+        counttotalmeal(dateserial);
+        
+    }
+    
+    
+    
+    public void offallldinner(Date date){
+        int dateserial =0;
+        try{
+            dateserial = Integer.parseInt(formatter.format(date));
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Date Parse "
+                    + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        try{
+                psmt = conn.prepareStatement("update mealsheet set dinner=0 where date = ?");
+                psmt.setInt(1, dateserial);
+                psmt.execute();
+                psmt.close();
+                //System.out.println("called");   
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while"
+                        + " turning all breakfast off", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        countmealon(dateserial);
+        counttotalmeal(dateserial);
         
     }
     
@@ -274,8 +451,8 @@ public class MealSheet extends javax.swing.JFrame {
                 
             }
         
-        
-        
+            countmealon(dateserial);  // each time after setting the meal on table it will count the total meal on 
+            counttotalmeal(dateserial);
     }
     
     public void setupdate(int selectedrow, Date date){
@@ -286,6 +463,7 @@ public class MealSheet extends javax.swing.JFrame {
         lunch= lunchtxt.getText().trim();
         dinner= dinnertxt.getText().trim();
         hallid = Integer.parseInt(hallidlbl.getText());
+        //System.out.println(selectedrow);
         
         try{
             dateserial = Integer.parseInt(formatter.format(date));
@@ -296,13 +474,14 @@ public class MealSheet extends javax.swing.JFrame {
             return;
         }
         
+        
         if((bf.equals("1") || bf.equals("0")) && (lunch.equals("1") || lunch.equals("0")) && (dinner.equals("1") || dinner.equals("0"))){
             //System.out.println(bf+" "+lunch+" "+dinner);
 //            onmodel.setValueAt(bf, selectedrow, 4);
 //            onmodel.setValueAt(lunch, selectedrow, 5);
 //            onmodel.setValueAt(dinner, selectedrow, 6);
 
-              try{
+            try{
                 psmt = conn.prepareStatement("update mealsheet set breakfast=?,lunch=?, dinner=? where hallid=? and date = ?");
                 psmt.setInt(1, Integer.parseInt(bf));
                 psmt.setInt(2, Integer.parseInt(lunch));
@@ -316,7 +495,8 @@ public class MealSheet extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Data updating errpr"
                         + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
-              
+            
+            deleteunnecessarydate(); 
             clearbothtable();
             setofftable(date);
             setontable(date);
@@ -345,6 +525,46 @@ public class MealSheet extends javax.swing.JFrame {
             rs.close();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void searchontable(String hallid){
+        int totalrow=-1, id=-1;
+        totalrow = onmodel.getRowCount();
+        int flag=-1;
+        for(int i=0; i<totalrow; i++){
+            if(onmodel.getValueAt(i, 1).toString().equals(hallid)){
+                //ontable.setRowSelectionInterval(i, i);
+                ontable.requestFocus();
+                ontable.changeSelection(i,0,false, false);
+                flag=0;
+                updatefield(i);
+                id = Integer.parseInt(hallid);
+                setiedntity(id);
+            }
+        }
+        if(flag ==-1){
+            JOptionPane.showMessageDialog(null, "Hall id "+hallid+" does "
+                    + "not found in this table", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }
+    
+    
+    public void searchofftable(String hallid){
+        int totalrow=-1 , id=-1;
+        totalrow = offmodel.getRowCount();
+        int flag=-1;
+        for(int i=0; i<totalrow; i++){
+            if(offmodel.getValueAt(i, 1).toString().equals(hallid)){
+                offtable.requestFocus();
+                offtable.changeSelection(i,0,false, false);
+                flag=0;
+            }
+        }
+        if(flag ==-1){
+            JOptionPane.showMessageDialog(null, "Hall id "+hallid+" does "
+                    + "not found in this table", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -397,7 +617,7 @@ public class MealSheet extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Data updating errpr"
                         + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
-            
+            clearfields();
             clearbothtable();
             setofftable(date);
             setontable(date);
@@ -416,7 +636,7 @@ public class MealSheet extends javax.swing.JFrame {
         Date date = null;
         
         hallid = Integer.parseInt(offmodel.getValueAt(selectedrow,1).toString());
-        
+        //System.out.print(selectedrow+" "+dateserial);
         try{
             check = Boolean.parseBoolean(offmodel.getValueAt(selectedrow,0).toString());
         }
@@ -492,15 +712,15 @@ public class MealSheet extends javax.swing.JFrame {
         sheetdate = new com.toedter.calendar.JDateChooser();
         onhallidtxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        ontablesearchbtn = new javax.swing.JButton();
         offallbtn = new javax.swing.JButton();
         onallbtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         offhallidtxt = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        offtablesearchbtn = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        totalmeallbl = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ontable = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -517,14 +737,14 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         dinnertxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        totalbftxt = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        totallunchtxt = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        totaldinnertxt = new javax.swing.JLabel();
+        offallbfbtn = new javax.swing.JButton();
+        offalllunchbtn = new javax.swing.JButton();
+        offalldinnerbtn = new javax.swing.JButton();
         updatebtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -544,19 +764,34 @@ public class MealSheet extends javax.swing.JFrame {
         });
 
         onhallidtxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        onhallidtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onhallidtxtActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/hallid.png"))); // NOI18N
         jLabel3.setText("Hall Id ");
 
-        jButton1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/search.png"))); // NOI18N
-        jButton1.setText("Seacrch");
+        ontablesearchbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        ontablesearchbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/search.png"))); // NOI18N
+        ontablesearchbtn.setText("Seacrch");
+        ontablesearchbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ontablesearchbtnActionPerformed(evt);
+            }
+        });
 
         offallbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         offallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off.png"))); // NOI18N
         offallbtn.setText("Off All");
+        offallbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offallbtnActionPerformed(evt);
+            }
+        });
 
         onallbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         onallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turnon.png"))); // NOI18N
@@ -572,9 +807,21 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/hallid.png"))); // NOI18N
         jLabel4.setText("Hall Id ");
 
-        jButton4.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/search.png"))); // NOI18N
-        jButton4.setText("Search");
+        offhallidtxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        offhallidtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offhallidtxtActionPerformed(evt);
+            }
+        });
+
+        offtablesearchbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        offtablesearchbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/search.png"))); // NOI18N
+        offtablesearchbtn.setText("Search");
+        offtablesearchbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offtablesearchbtnActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Bell MT", 0, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -585,9 +832,9 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Total On : ");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel6.setText("0");
+        totalmeallbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalmeallbl.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        totalmeallbl.setText("0");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -604,7 +851,7 @@ public class MealSheet extends javax.swing.JFrame {
                     .addComponent(onhallidtxt))
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(ontablesearchbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -617,11 +864,11 @@ public class MealSheet extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(offhallidtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(offtablesearchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -639,14 +886,14 @@ public class MealSheet extends javax.swing.JFrame {
                         .addComponent(sheetdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(offtablesearchbtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(onhallidtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ontablesearchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(offallbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(onallbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -731,7 +978,7 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Name :  ");
 
-        hallidlbl.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        hallidlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         namelbl.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
 
@@ -747,35 +994,50 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Dinner ");
 
-        jLabel7.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel7.setText("Total Breakfast");
 
-        jLabel15.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jLabel15.setText("0");
+        totalbftxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalbftxt.setText("0");
 
-        jLabel16.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel16.setText("Total Lunch");
 
-        jLabel17.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jLabel17.setText("0");
+        totallunchtxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totallunchtxt.setText("0");
 
-        jLabel18.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        jLabel18.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel18.setText("Total Dinner");
 
-        jLabel19.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jLabel19.setText("0");
+        totaldinnertxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totaldinnertxt.setText("0");
 
-        jButton5.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off selected.png"))); // NOI18N
-        jButton5.setText("Off All Breakfast");
+        offallbfbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        offallbfbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off selected.png"))); // NOI18N
+        offallbfbtn.setText("Off All Breakfast");
+        offallbfbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offallbfbtnActionPerformed(evt);
+            }
+        });
 
-        jButton6.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off lunch.png"))); // NOI18N
-        jButton6.setText("Off All Lunch");
+        offalllunchbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        offalllunchbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off lunch.png"))); // NOI18N
+        offalllunchbtn.setText("Off All Lunch");
+        offalllunchbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offalllunchbtnActionPerformed(evt);
+            }
+        });
 
-        jButton7.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/dinner off.png"))); // NOI18N
-        jButton7.setText("Off All Dinner");
+        offalldinnerbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        offalldinnerbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/dinner off.png"))); // NOI18N
+        offalldinnerbtn.setText("Off All Dinner");
+        offalldinnerbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                offalldinnerbtnActionPerformed(evt);
+            }
+        });
 
         updatebtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         updatebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update meal.png"))); // NOI18N
@@ -818,17 +1080,17 @@ public class MealSheet extends javax.swing.JFrame {
                     .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(totallunchtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(totaldinnertxt, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                    .addComponent(totalbftxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(87, 87, 87))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(offallbfbtn)
                 .addGap(19, 19, 19)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -846,7 +1108,7 @@ public class MealSheet extends javax.swing.JFrame {
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(bftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(totalbftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(hallidlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -854,7 +1116,7 @@ public class MealSheet extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(totallunchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lunchtxt)
                             .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -863,13 +1125,13 @@ public class MealSheet extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(dinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(totaldinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(updatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(offallbfbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -935,6 +1197,8 @@ public class MealSheet extends javax.swing.JFrame {
     private void ontableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ontableMouseClicked
         // TODO add your handling code here:
         //System.out.println("called");
+        offtable.clearSelection();
+        
         Date date=null;
         int dateserial =0, selectedrow =-1;
         date = sheetdate.getDate();
@@ -962,6 +1226,8 @@ public class MealSheet extends javax.swing.JFrame {
 
     private void offtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_offtableMouseClicked
         // TODO add your handling code here:
+        ontable.clearSelection();
+        
         Date date=null;
         int dateserial =0, selectedrow =-1;
         date = sheetdate.getDate();
@@ -994,6 +1260,7 @@ public class MealSheet extends javax.swing.JFrame {
         Date date=null;
         date = sheetdate.getDate();
         selectedrow = ontable.getSelectedRow();
+        System.out.print(selectedrow+" "+date);
         if(selectedrow >= 0){
             setupdate(selectedrow, date);
         }
@@ -1001,6 +1268,132 @@ public class MealSheet extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No row is selected","Update error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_updatebtnActionPerformed
+
+    private void offallbfbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offallbfbtnActionPerformed
+        // TODO add your handling code here:
+        Date date =null;
+        date = sheetdate.getDate();
+        if(date != null){
+            offallbreakfast(date);
+            deleteunnecessarydate();
+            clearbothtable();
+            setofftable(date);
+            setontable(date);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "No Date selected","Update error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_offallbfbtnActionPerformed
+
+    private void offalllunchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offalllunchbtnActionPerformed
+        // TODO add your handling code here:
+        Date date =null;
+        date = sheetdate.getDate();
+        if(date != null){
+            offalllunch(date);
+            deleteunnecessarydate();
+            clearbothtable();
+            setofftable(date);
+            setontable(date);
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "No Date selected","Update error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_offalllunchbtnActionPerformed
+
+    private void offalldinnerbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offalldinnerbtnActionPerformed
+        // TODO add your handling code here:
+        Date date =null;
+        date = sheetdate.getDate();
+        if(date != null){
+            offallldinner(date);
+            deleteunnecessarydate();
+            clearbothtable();
+            setofftable(date);
+            setontable(date);
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "No Date selected","Update error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_offalldinnerbtnActionPerformed
+
+    private void ontablesearchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ontablesearchbtnActionPerformed
+        // TODO add your handling code here:
+        String hallid ="";
+        int id=0;
+        hallid = onhallidtxt.getText().trim();
+        
+        try{
+            id = Integer.parseInt(hallid);
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        if(id >0){
+            searchontable(hallid);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_ontablesearchbtnActionPerformed
+
+    private void offtablesearchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offtablesearchbtnActionPerformed
+        // TODO add your handling code here:
+        
+        String hallid ="";
+        int id=0;
+        hallid = offhallidtxt.getText().trim();
+        
+        try{
+            id = Integer.parseInt(hallid);
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        if(id >0){
+            searchofftable(hallid);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_offtablesearchbtnActionPerformed
+
+    private void onhallidtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onhallidtxtActionPerformed
+        // TODO add your handling code here:
+        ontablesearchbtn.doClick();
+        offtable.clearSelection();
+    }//GEN-LAST:event_onhallidtxtActionPerformed
+
+    private void offhallidtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offhallidtxtActionPerformed
+        // TODO add your handling code here:
+        offtablesearchbtn.doClick();
+        ontable.clearSelection();
+    }//GEN-LAST:event_offhallidtxtActionPerformed
+
+    private void offallbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offallbtnActionPerformed
+        // TODO add your handling code here:
+        Date date =null;
+        date = sheetdate.getDate();
+        if(date != null){
+            offall(date);
+            clearfields();
+            deleteunnecessarydate();
+            clearbothtable();
+            setofftable(date);
+            setontable(date);
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "No Date selected","Update error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_offallbtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1041,25 +1434,16 @@ public class MealSheet extends javax.swing.JFrame {
     private javax.swing.JTextField bftxt;
     private javax.swing.JTextField dinnertxt;
     private javax.swing.JLabel hallidlbl;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1069,13 +1453,22 @@ public class MealSheet extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField lunchtxt;
     private javax.swing.JLabel namelbl;
+    private javax.swing.JButton offallbfbtn;
     private javax.swing.JButton offallbtn;
+    private javax.swing.JButton offalldinnerbtn;
+    private javax.swing.JButton offalllunchbtn;
     private javax.swing.JTextField offhallidtxt;
     private javax.swing.JTable offtable;
+    private javax.swing.JButton offtablesearchbtn;
     private javax.swing.JButton onallbtn;
     private javax.swing.JTextField onhallidtxt;
     private javax.swing.JTable ontable;
+    private javax.swing.JButton ontablesearchbtn;
     private com.toedter.calendar.JDateChooser sheetdate;
+    private javax.swing.JLabel totalbftxt;
+    private javax.swing.JLabel totaldinnertxt;
+    private javax.swing.JLabel totallunchtxt;
+    private javax.swing.JLabel totalmeallbl;
     private javax.swing.JButton updatebtn;
     // End of variables declaration//GEN-END:variables
 }
