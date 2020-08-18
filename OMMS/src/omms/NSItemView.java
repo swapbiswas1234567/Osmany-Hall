@@ -1,6 +1,7 @@
 
 package omms;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -34,6 +35,8 @@ public class NSItemView extends javax.swing.JFrame {
     DecimalFormat dec;
     int selectedRow;
     int flag=0;
+    PreparedStatement psmt1 = null;
+    ResultSet rs1 = null;
     
    
 
@@ -42,6 +45,7 @@ public class NSItemView extends javax.swing.JFrame {
         initialize();
         tabledecoration();
         itemcombo_set();
+        dateNtableset();
         flag=1;
     }
 
@@ -67,7 +71,7 @@ public class NSItemView extends javax.swing.JFrame {
     ///Table decoration
     
     public void tabledecoration(){
-        nsview_tbl.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 14));
+        nsview_tbl.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 18));
         nsview_tbl.getTableHeader().setOpaque(false);
         nsview_tbl.getTableHeader().setBackground(new Color(32,136,203));
         nsview_tbl.getTableHeader().setForeground(new Color(255,255,255));
@@ -84,7 +88,6 @@ public class NSItemView extends javax.swing.JFrame {
         nsview_tbl.getColumnModel().getColumn(4).setCellRenderer(centerRender);
         nsview_tbl.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         nsview_tbl.getColumnModel().getColumn(6).setCellRenderer(centerRender);
-        nsview_tbl.getColumnModel().getColumn(7).setCellRenderer(centerRender);
        
         
     }
@@ -99,7 +102,7 @@ public class NSItemView extends javax.swing.JFrame {
            
            while(rs.next())
            {
-               String item = rs.getString(1);
+               String item = rs.getString(1).toUpperCase();
                nsitem_cmb.addItem(item);
            }
            
@@ -124,6 +127,7 @@ public class NSItemView extends javax.swing.JFrame {
         prevavailable[0] = 0.00;
         prevavailable[1] =0.00;
         String strdate = "";
+        
         Date date=null;
         tm = (DefaultTableModel) nsview_tbl.getModel();
         
@@ -155,7 +159,7 @@ public class NSItemView extends javax.swing.JFrame {
                 }
                 
                 if(status.equals(rs.getString(6))){
-                Object o [] = {0,strdate,item,rs.getDouble(3),0,rs.getDouble(4),rs.getString(6),rs.getString(5)};
+                Object o [] = {strdate,item,rs.getDouble(3),0,rs.getDouble(4),rs.getString(6),rs.getString(5)};
                 tm.addRow(o);
                 }
                 count=2;
@@ -174,11 +178,26 @@ public class NSItemView extends javax.swing.JFrame {
     }
     
     
+   public void dateNtableset()
+    {
+        tm=(DefaultTableModel)nsview_tbl.getModel();
+        tm.setRowCount(0);
+        
+       
+        
+        /***Date Setting**/
+        Date date= new Date();
+        frdt_ch.setDate(date);
+        todt_ch.setDate(date);
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) frdt_ch.getDateEditor();
+        editor.setEditable(false);
+        editor = (JTextFieldDateEditor) todt_ch.getDateEditor();
+        editor.setEditable(false);
+        
+    }
+     
     
-    
-    
-    
-    
+    //get item unit
     
     
     
@@ -228,6 +247,11 @@ public class NSItemView extends javax.swing.JFrame {
         nsitem_cmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nsitem_cmbActionPerformed(evt);
+            }
+        });
+        nsitem_cmb.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                nsitem_cmbPropertyChange(evt);
             }
         });
 
@@ -303,17 +327,20 @@ public class NSItemView extends javax.swing.JFrame {
                 .addGap(46, 46, 46))
         );
 
+        nsview_tbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         nsview_tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Select", "Date", "Name", "Quantity", "Unit", "Price", "Status", "Memo"
+                "Date", "Name", "Quantity", "Unit", "Price", "Status", "Memo"
             }
         ));
+        nsview_tbl.setSelectionBackground(new java.awt.Color(204, 0, 0));
+        nsview_tbl.setSelectionForeground(new java.awt.Color(240, 240, 240));
         jScrollPane2.setViewportView(nsview_tbl);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -348,9 +375,9 @@ public class NSItemView extends javax.swing.JFrame {
             tm.setRowCount(0);
         }
         
-        
+        System.out.println(from);
         if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString();
+            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
             stat= status_cmb.getSelectedItem().toString().toLowerCase();
             setnsItemtable(from, to, item,stat);
         }
@@ -373,7 +400,7 @@ public class NSItemView extends javax.swing.JFrame {
         
         
         if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString();
+            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
             stat= status_cmb.getSelectedItem().toString().toLowerCase();
            
             setnsItemtable(from, to, item,stat);
@@ -420,12 +447,35 @@ public class NSItemView extends javax.swing.JFrame {
         
         
         if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString();
+            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
             stat= status_cmb.getSelectedItem().toString().toLowerCase();
            
             setnsItemtable(from, to, item,stat);
         }
     }//GEN-LAST:event_status_cmbActionPerformed
+
+    private void nsitem_cmbPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_nsitem_cmbPropertyChange
+        int len = -1;
+        Date from=null, to =null;
+        String item="";
+        String stat="";
+         from = frdt_ch.getDate();
+         to = todt_ch.getDate(); 
+ 
+        
+        tm = (DefaultTableModel) nsview_tbl.getModel();
+        if(tm.getColumnCount() > 0){
+            tm.setRowCount(0);
+        }
+        
+        
+        if( from != null && to != null && flag==1){
+            item = nsitem_cmb.getSelectedItem().toString();
+            stat= status_cmb.getSelectedItem().toString().toLowerCase();
+           
+            setnsItemtable(from, to, item,stat);
+        }
+    }//GEN-LAST:event_nsitem_cmbPropertyChange
 
     /**
      * @param args the command line arguments
