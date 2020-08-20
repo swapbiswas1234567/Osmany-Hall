@@ -30,7 +30,9 @@ public class OMMS {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        Dashboard st=new Dashboard();
+        //Dashboard st=new Dashboard();
+        //NSItemView st= new NSItemView();
+        MealSheet st= new MealSheet();
         st.setVisible(true);
        
     }

@@ -445,7 +445,7 @@ public class NSItemView extends javax.swing.JFrame {
             tm.setRowCount(0);
         }
         
-        
+        System.out.println("called");
         if( from != null && to != null && flag==1){
             item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
             stat= status_cmb.getSelectedItem().toString().toLowerCase();

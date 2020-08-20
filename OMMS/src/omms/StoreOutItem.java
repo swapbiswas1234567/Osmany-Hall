@@ -1255,7 +1255,15 @@ public class StoreOutItem extends javax.swing.JFrame {
             new String [] {
                 "Item", "Amount", "Avg Price", "Date", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Storeouttable.setIntercellSpacing(new java.awt.Dimension(0, 0));
         Storeouttable.setRowHeight(25);
         Storeouttable.setSelectionBackground(new java.awt.Color(232, 57, 97));

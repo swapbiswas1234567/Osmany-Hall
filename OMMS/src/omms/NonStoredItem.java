@@ -926,7 +926,15 @@ public class NonStoredItem extends javax.swing.JFrame {
             new String [] {
                 "Item", "Amount", "Total Price", "Avg Price", "Date", "Status", "Memo No"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         nonStoretable.setIntercellSpacing(new java.awt.Dimension(0, 0));
         nonStoretable.setRowHeight(26);
         nonStoretable.setSelectionBackground(new java.awt.Color(232, 57, 97));

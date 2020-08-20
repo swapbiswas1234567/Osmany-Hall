@@ -421,7 +421,15 @@ public class ShowLedger extends javax.swing.JFrame {
             new String [] {
                 "Date", "Item", "Previous Quantity", "In Quantity", "Breakfast", "Lunch", "Dinner", "Last Quantity", "Avg Price", "Memo No"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         ledgertable.setIntercellSpacing(new java.awt.Dimension(0, 0));
         ledgertable.setRowHeight(26);
         ledgertable.setSelectionBackground(new java.awt.Color(232, 57, 97));

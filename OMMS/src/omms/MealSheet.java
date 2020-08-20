@@ -48,7 +48,10 @@ public class MealSheet extends javax.swing.JFrame {
     DecimalFormat dec2;
     int flag=0;
     
-    
+    JProgressBar jProgressBar;
+    JFrame frame;
+    JOptionPane pane;
+    JDialog dialog;
     
 
     /**
@@ -79,6 +82,11 @@ public class MealSheet extends javax.swing.JFrame {
         dec = new DecimalFormat("#0.00");
         onmodel = ontable.getModel();
         offmodel = offtable.getModel();
+        
+        onprogress.setStringPainted(true);
+        onprogress.setVisible(true);
+        onprogress.setValue(0);
+        onprogress.update(onprogress.getGraphics());
         
         onhallidtxt.requestFocus();
     }
@@ -165,10 +173,17 @@ public class MealSheet extends javax.swing.JFrame {
             return;
         }
         //System.out.println(totalrow);
+        int interval = totalrow/100;
+        int count =1;
         
         for(int i=0; i<totalrow; i++){
-            //System.out.println(onmodel.getValueAt(i, 1));
+            //System.out.println(i%interval);
             hallid = Integer.parseInt(offmodel.getValueAt(i, 1).toString());
+            if( i%interval == 0){
+               onprogress.setValue(count);
+               onprogress.update(onprogress.getGraphics());
+               count++;
+            }
             
             try{
                 psmt = conn.prepareStatement("insert into mealsheet (hallid, date, breakfast,lunch,dinner) values(?,?,?,?,?)");
@@ -352,25 +367,15 @@ public class MealSheet extends javax.swing.JFrame {
         
     }
     
+  
     
-    public void progressbar(int toatal){
-        JFrame frame = new JFrame("MessageDialog");
-        JOptionPane pane = new JOptionPane();
-        pane.setMessage("long message...");
-        JProgressBar jProgressBar = new JProgressBar(1, 100);
-        for(int i=0; i<100; i++){
-            jProgressBar.setValue(i);
-        }
-        pane.add(jProgressBar,1);
-        JDialog dialog = pane.createDialog(frame, "Information message");
-        dialog.setVisible(true);
-        dialog.dispose();
-    }
+    
+   
     
     
     
     public void setofftable(Date date){
-        int dateserial=0;
+        int dateserial=0, totalrow=-1;
         offtablemodel = (DefaultTableModel) offtable.getModel();
         
         try{
@@ -384,9 +389,10 @@ public class MealSheet extends javax.swing.JFrame {
         
         try{
             
-            psmt = conn.prepareStatement("select hallid,roomno, name from stuinfo where hallid not in (select stuinfo.hallid from stuinfo inner join mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date= ?)");
+            psmt = conn.prepareStatement("select hallid,roomno, name from stuinfo where hallid not in (select stuinfo.hallid from stuinfo inner join mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date= ?) and entrydate <= ?");
             //System.out.println(dateserial);
             psmt.setInt(1, dateserial);
+            psmt.setInt(2, dateserial);
             rs = psmt.executeQuery();
             //System.out.println("called");
             while(rs.next()){
@@ -400,11 +406,16 @@ public class MealSheet extends javax.swing.JFrame {
             psmt.close();
             rs.close();
             
-           
+            totalrow = offtable.getRowCount();
+            offlbl.setText(Integer.toString(totalrow));
+            
             }catch(SQLException e){
                 JOptionPane.showMessageDialog(null, "Failed to fetch data for"
                         + "set off table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
+        
+        //totalrow = offmodel.getRowCount();
+        //offlbl.setText(Integer.toUnsignedString(totalrow));
         
         
         
@@ -437,7 +448,7 @@ public class MealSheet extends javax.swing.JFrame {
             rs = psmt.executeQuery();
             
             while(rs.next()){
-                Object o [] = {false,rs.getInt(1), rs.getInt(2), rs.getString(3),rs.getInt(4),
+                Object o [] = {false,rs.getInt(1), rs.getString(2), rs.getString(3),rs.getInt(4),
                     rs.getInt(5),rs.getString(6)};
                 ontablemodel.addRow(o);
             }
@@ -457,7 +468,7 @@ public class MealSheet extends javax.swing.JFrame {
     
     public void setupdate(int selectedrow, Date date){
         String bf="", lunch="", dinner="";
-        int dateserial =0, hallid=0;
+        int dateserial =0, hallid=0, inbf=0,indinner=0, inlunch=0;
         
         bf= bftxt.getText().trim();
         lunch= lunchtxt.getText().trim();
@@ -475,7 +486,18 @@ public class MealSheet extends javax.swing.JFrame {
         }
         
         
-        if((bf.equals("1") || bf.equals("0")) && (lunch.equals("1") || lunch.equals("0")) && (dinner.equals("1") || dinner.equals("0"))){
+        try{
+            inbf = Integer.parseInt(bf);
+            inlunch = Integer.parseInt(lunch);
+            indinner = Integer.parseInt(dinner);
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Bf lunch dinner format erro","Date parsing error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        if( inbf >= 0 && inlunch >=0  && indinner >= 0){
             //System.out.println(bf+" "+lunch+" "+dinner);
 //            onmodel.setValueAt(bf, selectedrow, 4);
 //            onmodel.setValueAt(lunch, selectedrow, 5);
@@ -500,11 +522,14 @@ public class MealSheet extends javax.swing.JFrame {
             clearbothtable();
             setofftable(date);
             setontable(date);
-            
-            clearfields();
+            selectoffupdate(hallidlbl.getText());
+            selectonupdate(hallidlbl.getText());
+            onhallidtxt.setText("");
+            onhallidtxt.requestFocus();
+            //clearfields();
         }
         else{
-            JOptionPane.showMessageDialog(null, "Invalid input enter 0 or 1 ", "Data update error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Invalid input enter value than -1 ", "Data update error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -528,19 +553,29 @@ public class MealSheet extends javax.swing.JFrame {
         }
     }
     
-    public void searchontable(String hallid){
+    public void searchontable(String hallid, boolean check, int dateserial){
         int totalrow=-1, id=-1;
         totalrow = onmodel.getRowCount();
         int flag=-1;
+        //System.out.print(check);
+        
         for(int i=0; i<totalrow; i++){
             if(onmodel.getValueAt(i, 1).toString().equals(hallid)){
                 //ontable.setRowSelectionInterval(i, i);
                 ontable.requestFocus();
                 ontable.changeSelection(i,0,false, false);
+                if(check){
+                    ontable.setValueAt(true, i, 0);
+                    updateontable(i,dateserial);
+                    onhallidtxt.setText("");
+                    flag=0;
+                    break;
+                }
                 flag=0;
                 updatefield(i);
                 id = Integer.parseInt(hallid);
                 setiedntity(id);
+                break;
             }
         }
         if(flag ==-1){
@@ -551,7 +586,7 @@ public class MealSheet extends javax.swing.JFrame {
     }
     
     
-    public void searchofftable(String hallid){
+    public void searchofftable(String hallid, boolean check, int dateserial){
         int totalrow=-1 , id=-1;
         totalrow = offmodel.getRowCount();
         int flag=-1;
@@ -559,12 +594,48 @@ public class MealSheet extends javax.swing.JFrame {
             if(offmodel.getValueAt(i, 1).toString().equals(hallid)){
                 offtable.requestFocus();
                 offtable.changeSelection(i,0,false, false);
+                if(check){
+                    offtable.setValueAt(true, i, 0);
+                    //System.out.print(onmodel.getValueAt(i, 0));
+                    updateofftable(i,dateserial);
+                    offhallidtxt.setText("");
+                }
                 flag=0;
+                break;
             }
         }
         if(flag ==-1){
             JOptionPane.showMessageDialog(null, "Hall id "+hallid+" does "
                     + "not found in this table", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
+    public void selectonupdate(String hallid){
+        int totalrow=-1;
+        totalrow = onmodel.getRowCount();
+        for(int i=0; i<totalrow; i++){
+            if(onmodel.getValueAt(i, 1).toString().equals(hallid)){
+                //System.out.println("called");
+                ontable.requestFocus();
+                ontable.changeSelection(i,0,false, false);
+                updatefield(i);
+                setiedntity(Integer.parseInt(hallid));
+                break;
+            }
+        }
+    }
+    
+    
+    public void selectoffupdate(String hallid){
+        int totalrow=-1;
+        totalrow = offmodel.getRowCount();
+        for(int i=0; i<totalrow; i++){
+            if(offmodel.getValueAt(i, 1).toString().equals(hallid)){
+                offtable.requestFocus();
+                offtable.changeSelection(i,0,false, false);
+                break;
+            }
         }
     }
     
@@ -604,7 +675,7 @@ public class MealSheet extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date convertion error in update ontable","Date parsing error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+        //System.out.print(check);
         if(check){
             try{
                 psmt = conn.prepareStatement("DELETE FROM mealsheet WHERE hallid=? and date = ?");
@@ -621,10 +692,12 @@ public class MealSheet extends javax.swing.JFrame {
             clearbothtable();
             setofftable(date);
             setontable(date);
+            selectoffupdate(Integer.toString(hallid));
         }
         else if(!check){
             updatefield(selectedrow);
             setiedntity(hallid);
+            bftxt.requestFocus();
         }
     }
     
@@ -674,6 +747,7 @@ public class MealSheet extends javax.swing.JFrame {
             clearbothtable();
             setofftable(date);
             setontable(date);
+            selectonupdate(Integer.toString(hallid));
         }
     }
     
@@ -721,15 +795,15 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         totalmeallbl = new javax.swing.JLabel();
+        onprogress = new javax.swing.JProgressBar();
+        onchk = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        offlbl = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ontable = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         offtable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        hallidlbl = new javax.swing.JLabel();
-        namelbl = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         bftxt = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -746,6 +820,10 @@ public class MealSheet extends javax.swing.JFrame {
         offalllunchbtn = new javax.swing.JButton();
         offalldinnerbtn = new javax.swing.JButton();
         updatebtn = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        hallidlbl = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        namelbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -785,7 +863,7 @@ public class MealSheet extends javax.swing.JFrame {
         });
 
         offallbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        offallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turn-off.png"))); // NOI18N
+        offallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/wrong.png"))); // NOI18N
         offallbtn.setText("Off All");
         offallbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -794,7 +872,7 @@ public class MealSheet extends javax.swing.JFrame {
         });
 
         onallbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        onallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/turnon.png"))); // NOI18N
+        onallbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/correct.png"))); // NOI18N
         onallbtn.setText("On All");
         onallbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -829,49 +907,73 @@ public class MealSheet extends javax.swing.JFrame {
         jLabel5.setText("Daily Meal Sheet");
 
         jLabel1.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setForeground(new java.awt.Color(255, 51, 0));
         jLabel1.setText("Total On : ");
 
         totalmeallbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalmeallbl.setForeground(new java.awt.Color(255, 51, 0));
         totalmeallbl.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         totalmeallbl.setText("0");
+
+        onchk.setBackground(new java.awt.Color(208, 227, 229));
+        onchk.setFont(new java.awt.Font("Bell MT", 0, 24)); // NOI18N
+        onchk.setText("Auto");
+
+        jLabel8.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 51, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Total Off :");
+
+        offlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        offlbl.setForeground(new java.awt.Color(255, 51, 0));
+        offlbl.setText("0");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(onchk, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sheetdate, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                    .addComponent(onhallidtxt))
-                .addGap(40, 40, 40)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ontablesearchbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(onhallidtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sheetdate, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                        .addComponent(ontablesearchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 100, Short.MAX_VALUE)
                         .addComponent(offallbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(41, 41, 41)
-                        .addComponent(onallbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(offhallidtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(offtablesearchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addComponent(onallbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(offhallidtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                    .addComponent(offlbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(offtablesearchbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(onprogress, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -886,10 +988,17 @@ public class MealSheet extends javax.swing.JFrame {
                         .addComponent(sheetdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(totalmeallbl, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(offlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(onprogress, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(onchk, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(offtablesearchbtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(onhallidtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -913,14 +1022,22 @@ public class MealSheet extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         ontable.setSelectionBackground(new java.awt.Color(232, 57, 97));
         ontable.setSelectionForeground(new java.awt.Color(240, 240, 240));
         ontable.setShowVerticalLines(false);
+        ontable.getTableHeader().setReorderingAllowed(false);
         ontable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ontableMouseClicked(evt);
@@ -947,15 +1064,23 @@ public class MealSheet extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         offtable.setRowHeight(26);
         offtable.setSelectionBackground(new java.awt.Color(232, 57, 97));
         offtable.setSelectionForeground(new java.awt.Color(240, 240, 240));
         offtable.setShowVerticalLines(false);
+        offtable.getTableHeader().setReorderingAllowed(false);
         offtable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 offtableMouseClicked(evt);
@@ -970,46 +1095,61 @@ public class MealSheet extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(117, 175, 182));
 
-        jLabel8.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel8.setText("Hall Id :  ");
-
-        jLabel9.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Name :  ");
-
-        hallidlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
-        namelbl.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-
         jLabel12.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Breakfast ");
+
+        bftxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        bftxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bftxtActionPerformed(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Lunch ");
 
+        lunchtxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lunchtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lunchtxtActionPerformed(evt);
+            }
+        });
+
         jLabel14.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Dinner ");
 
+        dinnertxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        dinnertxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dinnertxtActionPerformed(evt);
+            }
+        });
+
         jLabel7.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 51, 0));
         jLabel7.setText("Total Breakfast");
 
         totalbftxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalbftxt.setForeground(new java.awt.Color(255, 51, 0));
         totalbftxt.setText("0");
 
         jLabel16.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 51, 0));
         jLabel16.setText("Total Lunch");
 
         totallunchtxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totallunchtxt.setForeground(new java.awt.Color(255, 51, 0));
         totallunchtxt.setText("0");
 
         jLabel18.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 51, 0));
         jLabel18.setText("Total Dinner");
 
         totaldinnertxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totaldinnertxt.setForeground(new java.awt.Color(255, 51, 0));
         totaldinnertxt.setText("0");
 
         offallbfbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
@@ -1031,7 +1171,7 @@ public class MealSheet extends javax.swing.JFrame {
         });
 
         offalldinnerbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        offalldinnerbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/dinner off.png"))); // NOI18N
+        offalldinnerbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/dinneroff.png"))); // NOI18N
         offalldinnerbtn.setText("Off All Dinner");
         offalldinnerbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1048,91 +1188,121 @@ public class MealSheet extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Hall ID ");
+
+        hallidlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Name  ");
+
+        namelbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(2, 2, 2)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(hallidlbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(namelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(dinnertxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                    .addComponent(bftxt)
-                    .addComponent(lunchtxt))
-                .addGap(18, 18, 18)
-                .addComponent(updatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(totallunchtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(totaldinnertxt, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                    .addComponent(totalbftxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(87, 87, 87))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(offallbfbtn)
-                .addGap(19, 19, 19)
-                .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(updatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(199, 199, 199)
+                        .addComponent(offallbfbtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(305, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(lunchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(bftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(namelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(hallidlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(totallunchtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(totaldinnertxt, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                            .addComponent(totalbftxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(87, 87, 87))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(namelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(bftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(totalbftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(hallidlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(totalbftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(totallunchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lunchtxt)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(totallunchtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hallidlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(dinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(totaldinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(updatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(offallbfbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(namelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lunchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(totaldinnertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(offallbfbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(offalllunchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(offalldinnerbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(updatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1152,10 +1322,10 @@ public class MealSheet extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(1, 1, 1)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -1260,7 +1430,7 @@ public class MealSheet extends javax.swing.JFrame {
         Date date=null;
         date = sheetdate.getDate();
         selectedrow = ontable.getSelectedRow();
-        System.out.print(selectedrow+" "+date);
+        //System.out.print(selectedrow+" "+date);
         if(selectedrow >= 0){
             setupdate(selectedrow, date);
         }
@@ -1324,57 +1494,79 @@ public class MealSheet extends javax.swing.JFrame {
     private void ontablesearchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ontablesearchbtnActionPerformed
         // TODO add your handling code here:
         String hallid ="";
-        int id=0;
+        Date date=null;
+        int id=0, dateserial =0;
+        boolean check=false;
         hallid = onhallidtxt.getText().trim();
+        date = sheetdate.getDate();
+        check = onchk.isSelected();
+        //System.out.println(check);
         
         try{
             id = Integer.parseInt(hallid);
+            dateserial = Integer.parseInt(formatter.format(date));
             }
             catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         if(id >0){
-            searchontable(hallid);
+            searchontable(hallid,check,dateserial);
+            
         }
         else{
             JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        if(check){
+            onhallidtxt.requestFocus();
+        }
+        else{
+            bftxt.requestFocus();
         }
     }//GEN-LAST:event_ontablesearchbtnActionPerformed
 
     private void offtablesearchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offtablesearchbtnActionPerformed
         // TODO add your handling code here:
         
+        Date date=null;
         String hallid ="";
-        int id=0;
+        boolean check=false;
+        int id=0, dateserial =0;
         hallid = offhallidtxt.getText().trim();
+        date = sheetdate.getDate();
+        check = onchk.isSelected();
+        
         
         try{
             id = Integer.parseInt(hallid);
+            dateserial = Integer.parseInt(formatter.format(date));
             }
             catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         if(id >0){
-            searchofftable(hallid);
+            searchofftable(hallid,check,dateserial);
+            
         }
         else{
             JOptionPane.showMessageDialog(null, "Enter valid hall id","hallid parsing error", JOptionPane.ERROR_MESSAGE);
         }
+        offhallidtxt.requestFocus();
         
     }//GEN-LAST:event_offtablesearchbtnActionPerformed
 
     private void onhallidtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onhallidtxtActionPerformed
         // TODO add your handling code here:
         ontablesearchbtn.doClick();
-        offtable.clearSelection();
+        //offtable.clearSelection();
     }//GEN-LAST:event_onhallidtxtActionPerformed
 
     private void offhallidtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offhallidtxtActionPerformed
         // TODO add your handling code here:
         offtablesearchbtn.doClick();
-        ontable.clearSelection();
+        //ontable.clearSelection();
     }//GEN-LAST:event_offhallidtxtActionPerformed
 
     private void offallbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offallbtnActionPerformed
@@ -1394,6 +1586,21 @@ public class MealSheet extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No Date selected","Update error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_offallbtnActionPerformed
+
+    private void lunchtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lunchtxtActionPerformed
+        // TODO add your handling code here:
+        dinnertxt.requestFocus();
+    }//GEN-LAST:event_lunchtxtActionPerformed
+
+    private void dinnertxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dinnertxtActionPerformed
+        // TODO add your handling code here:
+        updatebtn.doClick();
+    }//GEN-LAST:event_dinnertxtActionPerformed
+
+    private void bftxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bftxtActionPerformed
+        // TODO add your handling code here:
+        lunchtxt.requestFocus();
+    }//GEN-LAST:event_bftxtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1444,6 +1651,7 @@ public class MealSheet extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1458,10 +1666,13 @@ public class MealSheet extends javax.swing.JFrame {
     private javax.swing.JButton offalldinnerbtn;
     private javax.swing.JButton offalllunchbtn;
     private javax.swing.JTextField offhallidtxt;
+    private javax.swing.JLabel offlbl;
     private javax.swing.JTable offtable;
     private javax.swing.JButton offtablesearchbtn;
     private javax.swing.JButton onallbtn;
+    private javax.swing.JCheckBox onchk;
     private javax.swing.JTextField onhallidtxt;
+    private javax.swing.JProgressBar onprogress;
     private javax.swing.JTable ontable;
     private javax.swing.JButton ontablesearchbtn;
     private com.toedter.calendar.JDateChooser sheetdate;
