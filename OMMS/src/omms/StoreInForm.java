@@ -160,6 +160,9 @@ public class StoreInForm extends javax.swing.JFrame {
              String getDate =null;
              int dateserial =-1;
              
+             System.out.println("AJmir " + Quantity);
+             
+             
              try{
                  getDate = formatter2.format(date);
                  dateserial = Integer.parseInt(formatter1.format(date));
@@ -170,17 +173,28 @@ public class StoreInForm extends javax.swing.JFrame {
              }
              
               //quantity check
-                 if(Quantity.equals(null) ||checkLetter(Quantity) != true)
+               if(checkLetter(Quantity) != true)
+                 {
+                        JOptionPane.showMessageDialog(null, "Invalid Quantity Input");
+                        return;
+                 }
+               else if(Quantity.equals("")  )
                     {
-                        JOptionPane.showMessageDialog(null, "Quantity Input Error 1");
+                        JOptionPane.showMessageDialog(null, "Quantity Field Empty");
                         return; 
                     }
+               if(checkLetter(Quantity) != true)
+                    {
+                        JOptionPane.showMessageDialog(null, "Quantity Wrong Input");
+                        return; 
+                    }
+                 
                  
                  double qty= Double.parseDouble(Quantity) ;
                     
                     if(qty ==0 )
                     {
-                        JOptionPane.showMessageDialog(null, "Quanity Input Error 2");
+                        JOptionPane.showMessageDialog(null, " Quantity can not be 0");
                         return; 
                     }
                     
@@ -188,18 +202,24 @@ public class StoreInForm extends javax.swing.JFrame {
                     
 
                     //Price checking
+                    if(checkLetter(price) != true)
+                 {
+                        JOptionPane.showMessageDialog(null, "Invalid Price Input");
+                        return;
+                 }
+              
                     
-                    if(price.equals(null) || checkLetter(price) != true)
+                    if(price.equals("") )
                     {
-                        JOptionPane.showMessageDialog(null, "Price Input Error 1");
+                        JOptionPane.showMessageDialog(null, "Price Field Empty");
                         return; 
                     }
-                    
+                                       
                     double pr= Double.parseDouble(price) ;
                     
-                    if(pr == 0)
+                    if(pr == 0 )
                     {
-                        JOptionPane.showMessageDialog(null, "Price Input Error 2");
+                        JOptionPane.showMessageDialog(null, "Invalid Price");
                         return; 
                     }
                     
@@ -454,17 +474,23 @@ public class StoreInForm extends javax.swing.JFrame {
              }
              
               //quantity check
-                 if(Quantity.equals(null) ||checkLetter(Quantity) != true)
+                 if(Quantity.equals("") ||checkLetter(Quantity) != true)
                     {
-                        JOptionPane.showMessageDialog(null, "Quantity Input Error 1");
+                        JOptionPane.showMessageDialog(null, "Quantity Field Empty");
                         return; 
                     }
                  
+                 if(checkLetter(Quantity) != true)
+                    {
+                        JOptionPane.showMessageDialog(null, "Quantity Wrong Input");
+                        return; 
+                    }
+                    
                  double qty= Double.parseDouble(Quantity) ;
                     
                     if(qty ==0 )
                     {
-                        JOptionPane.showMessageDialog(null, "Quanity Input Error 2");
+                        JOptionPane.showMessageDialog(null, "Quanity CAnnot be 0");
                         return; 
                     }
                     
@@ -473,9 +499,14 @@ public class StoreInForm extends javax.swing.JFrame {
 
                     //Price checking
                     
-                    if(price.equals(null) || checkLetter(price) != true)
+                    if(price.equals(""))
                     {
-                        JOptionPane.showMessageDialog(null, "Price Input Error 1");
+                        JOptionPane.showMessageDialog(null, "Price Field Empty");
+                        return; 
+                    }
+                    if(checkLetter(price) != true)
+                    {
+                        JOptionPane.showMessageDialog(null, "Price Wrong Input");
                         return; 
                     }
                     
@@ -483,7 +514,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     
                     if(pr == 0)
                     {
-                        JOptionPane.showMessageDialog(null, "Price Input Error 2");
+                        JOptionPane.showMessageDialog(null, "Price Input Error 0");
                         return; 
                     }
                     
@@ -497,8 +528,8 @@ public class StoreInForm extends javax.swing.JFrame {
 //                    tablemodel.addRow(o);
                        
                        tm.setValueAt(name, selectedRow, 0);
-                       tm.setValueAt(Quantity, selectedRow,1);
-                       tm.setValueAt(price, selectedRow, 2);
+                       tm.setValueAt(dec.format(qty), selectedRow,1);
+                       tm.setValueAt(dec.format(pr), selectedRow, 2);
                        tm.setValueAt(memo, selectedRow, 3);
                        tm.setValueAt(getDate, selectedRow, 4);
                        
@@ -515,7 +546,7 @@ public class StoreInForm extends javax.swing.JFrame {
                    }
                    else if (inputcheckDatabase(name,dateserial)==-1 )
                    {
-                       JOptionPane.showMessageDialog(null, "Data is in the Database");
+                       JOptionPane.showMessageDialog(null, date+" "+ "Data is in the Database");
                    }
                    
                    
@@ -1059,8 +1090,8 @@ public class StoreInForm extends javax.swing.JFrame {
                 "Item", "Quantity", "Price", "Memo", "Date"
             }
         ));
-        Store_In_table.setSelectionBackground(new java.awt.Color(0, 255, 204));
-        Store_In_table.setSelectionForeground(new java.awt.Color(51, 51, 51));
+        Store_In_table.setSelectionBackground(new java.awt.Color(232, 57, 97));
+        Store_In_table.setSelectionForeground(new java.awt.Color(240, 240, 240));
         Store_In_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Store_In_tableMouseClicked(evt);

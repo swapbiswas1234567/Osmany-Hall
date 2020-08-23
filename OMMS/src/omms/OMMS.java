@@ -40,7 +40,8 @@ public class OMMS {
         //StoreInForm st = new StoreInForm();
         //StoreOutItem st =new StoreOutItem();
         //Dashboard st= new Dashboard();
-        stdIndBillStat st = new stdIndBillStat();
+        //stdIndBillStat st = new stdIndBillStat();
+        stdHallAdmission st = new stdHallAdmission();
         st.setVisible(true);
 
     }

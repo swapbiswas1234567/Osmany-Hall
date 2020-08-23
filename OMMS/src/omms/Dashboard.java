@@ -5,7 +5,10 @@
  */
 package omms;
 
-import javax.swing.JOptionPane;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 /**
  *
@@ -18,7 +21,20 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        
+        String image = "dashboard.jpg";
+        imageSet(imagelbl, image);
     }
+    
+    
+    void imageSet(JLabel x, String imgname){
+	ImageIcon myimage =  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/"+imgname)));
+	Image img1 = myimage.getImage();
+	Image img2 = img1.getScaledInstance(x.getWidth(), x.getHeight(), Image.SCALE_SMOOTH);
+	ImageIcon i = new ImageIcon(img2);
+	x.setIcon(i);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,6 +45,7 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        imagelbl = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         storeinbtn = new javax.swing.JMenuItem();
@@ -44,8 +61,12 @@ public class Dashboard extends javax.swing.JFrame {
         nonstoreupdatebtn = new javax.swing.JMenuItem();
         tmpfoodbtn = new javax.swing.JMenu();
         tempfoodinbtn = new javax.swing.JMenuItem();
-        tempFoodViewjMenuItm = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
         tmpfoodupdatebtn = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        tempfoodview = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        createmealsheet = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,7 +98,7 @@ public class Dashboard extends javax.swing.JFrame {
         jMenu1.add(jSeparator2);
 
         storeupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        storeupdatebtn.setText("Stored Item Update");
+        storeupdatebtn.setText("Stored Item View & Update");
         storeupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 storeupdatebtnActionPerformed(evt);
@@ -111,7 +132,7 @@ public class Dashboard extends javax.swing.JFrame {
         jMenu2.add(jSeparator3);
 
         nonstoreupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        nonstoreupdatebtn.setText("Non Stored Item Update");
+        nonstoreupdatebtn.setText("Non Stored Item View & Update");
         nonstoreupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nonstoreupdatebtnActionPerformed(evt);
@@ -122,7 +143,6 @@ public class Dashboard extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         tmpfoodbtn.setText("Temporary Food");
-        tmpfoodbtn.setDoubleBuffered(true);
         tmpfoodbtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
 
         tempfoodinbtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
@@ -133,26 +153,41 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
         tmpfoodbtn.add(tempfoodinbtn);
-
-        tempFoodViewjMenuItm.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        tempFoodViewjMenuItm.setText("Temporart Food View");
-        tempFoodViewjMenuItm.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tempFoodViewjMenuItmActionPerformed(evt);
-            }
-        });
-        tmpfoodbtn.add(tempFoodViewjMenuItm);
+        tmpfoodbtn.add(jSeparator5);
 
         tmpfoodupdatebtn.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
-        tmpfoodupdatebtn.setText("Temporary Food Update");
+        tmpfoodupdatebtn.setText("Temporary Food View & Update");
         tmpfoodupdatebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tmpfoodupdatebtnActionPerformed(evt);
             }
         });
         tmpfoodbtn.add(tmpfoodupdatebtn);
+        tmpfoodbtn.add(jSeparator6);
+
+        tempfoodview.setText("Temporary Food View");
+        tempfoodview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tempfoodviewActionPerformed(evt);
+            }
+        });
+        tmpfoodbtn.add(tempfoodview);
 
         jMenuBar1.add(tmpfoodbtn);
+
+        jMenu3.setText("Daily Meal Sheet");
+        jMenu3.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+
+        createmealsheet.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
+        createmealsheet.setText("Create or Update Meal Sheet");
+        createmealsheet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createmealsheetActionPerformed(evt);
+            }
+        });
+        jMenu3.add(createmealsheet);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -160,11 +195,11 @@ public class Dashboard extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 759, Short.MAX_VALUE)
+            .addComponent(imagelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addComponent(imagelbl, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
 
         pack();
@@ -172,76 +207,83 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void storeinbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeinbtnActionPerformed
         // TODO add your handling code here:
+        StoreInForm st= new StoreInForm();
+        st.setVisible(true);
+        dispose();
     }//GEN-LAST:event_storeinbtnActionPerformed
 
     private void storeoutbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeoutbtnActionPerformed
         // TODO add your handling code here:
-
-        StoreOutItem st = new StoreOutItem();
+        
+        StoreOutItem st= new StoreOutItem();
         st.setVisible(true);
         dispose();
     }//GEN-LAST:event_storeoutbtnActionPerformed
 
     private void storeupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeupdatebtnActionPerformed
         // TODO add your handling code here:
-
-        StoredItemUpdate st = new StoredItemUpdate();
+        
+        StoredItemUpdate st= new StoredItemUpdate();
         st.setVisible(true);
         dispose();
     }//GEN-LAST:event_storeupdatebtnActionPerformed
 
     private void ledgerbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ledgerbtnActionPerformed
         // TODO add your handling code here:
-
-        ShowLedger sl = new ShowLedger();
+        
+        ShowLedger sl= new ShowLedger();
         sl.setVisible(true);
         dispose();
-
+        
     }//GEN-LAST:event_ledgerbtnActionPerformed
 
     private void nonstorebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonstorebtnActionPerformed
         // TODO add your handling code here:
-        NonStoredItem ns = new NonStoredItem();
+        NonStoredItem ns= new NonStoredItem();
         ns.setVisible(true);
         dispose();
-
+        
     }//GEN-LAST:event_nonstorebtnActionPerformed
 
     private void nonstoreupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonstoreupdatebtnActionPerformed
         // TODO add your handling code here:
-
-        NonStoredItemUpdate nsu = new NonStoredItemUpdate();
+        
+        NonStoredItemUpdate nsu= new NonStoredItemUpdate();
         nsu.setVisible(true);
         dispose();
     }//GEN-LAST:event_nonstoreupdatebtnActionPerformed
 
-    private void tmpfoodupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmpfoodupdatebtnActionPerformed
-        // TODO add your handling code here:
-        TempFoodUpdate tfu = new TempFoodUpdate();
-        tfu.setVisible(true);
-        dispose();
-
-    }//GEN-LAST:event_tmpfoodupdatebtnActionPerformed
-
-    private void tempFoodViewjMenuItmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempFoodViewjMenuItmActionPerformed
-        //TODO add your handling code here:
-        try {
-            TempFoodView tfv = new TempFoodView();
-            tfv.setVisible(true);
-            dispose();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Temporary Food View page isn't found!!!", "Page Missing Error!!!", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_tempFoodViewjMenuItmActionPerformed
-
     private void tempfoodinbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempfoodinbtnActionPerformed
         // TODO add your handling code here:
-
-        TemporaryFood tf = new TemporaryFood();
+        
+        TemporaryFoodIn tf = new TemporaryFoodIn();
         tf.setVisible(true);
         dispose();
-
+        
     }//GEN-LAST:event_tempfoodinbtnActionPerformed
+
+    private void tmpfoodupdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmpfoodupdatebtnActionPerformed
+        // TODO add your handling code here:
+        
+        TmpFoodUpdate tfu = new TmpFoodUpdate();
+        tfu.setVisible(true);
+        dispose();
+        
+    }//GEN-LAST:event_tmpfoodupdatebtnActionPerformed
+
+    private void tempfoodviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempfoodviewActionPerformed
+        // TODO add your handling code here:
+        TempFoodView tfu = new TempFoodView();
+        tfu.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_tempfoodviewActionPerformed
+
+    private void createmealsheetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createmealsheetActionPerformed
+        // TODO add your handling code here:
+        MealSheet ms= new MealSheet();
+        ms.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_createmealsheetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -279,21 +321,26 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem createmealsheet;
+    private javax.swing.JLabel imagelbl;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JMenuItem ledgerbtn;
     private javax.swing.JMenuItem nonstorebtn;
     private javax.swing.JMenuItem nonstoreupdatebtn;
     private javax.swing.JMenuItem storeinbtn;
     private javax.swing.JMenuItem storeoutbtn;
     private javax.swing.JMenuItem storeupdatebtn;
-    private javax.swing.JMenuItem tempFoodViewjMenuItm;
     private javax.swing.JMenuItem tempfoodinbtn;
+    private javax.swing.JMenuItem tempfoodview;
     private javax.swing.JMenu tmpfoodbtn;
     private javax.swing.JMenuItem tmpfoodupdatebtn;
     // End of variables declaration//GEN-END:variables
