@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -30,8 +32,14 @@ public class OMMS {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        Dashboard st=new Dashboard();
+        //Dashboard st=new Dashboard();
+        stdIndBillStat st= new stdIndBillStat();
+        //GenerateBill st = new GenerateBill();
         st.setVisible(true);
+        //Map<Integer, BillAmount> billmap = new HashMap<>();
+         //DailyAvgBill st= new DailyAvgBill();
+         //st.setbill(0, 0);
+        
        
     }
     
