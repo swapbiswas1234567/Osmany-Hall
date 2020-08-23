@@ -34,7 +34,7 @@ public class TempFoodView extends javax.swing.JFrame {
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    
+
     TableModel model;
     DefaultTableModel tablemodel = null;
 
@@ -55,7 +55,7 @@ public class TempFoodView extends javax.swing.JFrame {
         closeBtn();
         //setTempFoodViewTable();
     }
-    
+
     /*
         Seeting the cross button action to Dashboard
      */
@@ -85,8 +85,6 @@ public class TempFoodView extends javax.swing.JFrame {
         toDateChooser.setDate(todaysDate);
     }
 
-
-    
     public void updateByFromToDateTFVTable(Date from, Date to) {
 
         //System.out.println("Date "+from);
@@ -149,7 +147,6 @@ public class TempFoodView extends javax.swing.JFrame {
         }
     }
 
-    
     public void updateByFromToDateIdTFVTable(Date from, Date to, String id) {
 
         //System.out.println("Date "+from);
@@ -347,7 +344,7 @@ public class TempFoodView extends javax.swing.JFrame {
 
         totalBillJlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         totalBillJlbl.setForeground(new java.awt.Color(255, 51, 0));
-        totalBillJlbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalBillJlbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -370,7 +367,7 @@ public class TempFoodView extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fromDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(toDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -379,9 +376,9 @@ public class TempFoodView extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(tempFoodViewJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(toDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,7 +391,8 @@ public class TempFoodView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(totalBillJlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -423,23 +421,27 @@ public class TempFoodView extends javax.swing.JFrame {
 
         String todaysDate = formatDate.format(new Date()).trim();
         String temp = formatDate.format(fromDate).trim();
-        id = idTxt.getText().trim();
-
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
         if (tablemodel.getColumnCount() > 0) {
             tablemodel.setRowCount(0);
         }
 
-        //System.out.println(" To " + formatDate.format(toDate) + " Todays " + formatDate.format(new Date()));
-        if (!id.equals("")) {
-            //System.out.println("Search by id and from date in idTxt");
-            updateByFromToDateIdTFVTable(fromDate, toDate, id);
-        } else {
-            //System.out.println("Search by to and from date in idTxt");
-            updateByFromToDateTFVTable(fromDate, toDate);
+        try {
+            id = idTxt.getText().trim();
+            int err = Integer.parseInt(id);
+            // System.out.println(" To " + formatDate.format(toDate) + " Todays " + formatDate.format(new Date()));
+            if (!id.equals("")) {
+                //System.out.println("Search by id and from date in idTxt");
+                updateByFromToDateIdTFVTable(fromDate, toDate, id);
+            } else {
+                //System.out.println("Search by to and from date in idTxt");
+                updateByFromToDateTFVTable(fromDate, toDate);
+            }
+            //System.out.println(strFromDate);
+            idTxt.requestFocus();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid Id inserted, Enter a valid Roll no or Hall Id", "Wrong Input", JOptionPane.ERROR_MESSAGE);
         }
-        //System.out.println(strFromDate);
-        idTxt.requestFocus();
     }//GEN-LAST:event_idTxtActionPerformed
 
     private void fromDateChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_fromDateChooserPropertyChange
@@ -450,7 +452,7 @@ public class TempFoodView extends javax.swing.JFrame {
 
         fromDate = fromDateChooser.getDate();
         toDate = toDateChooser.getDate();
-        id = idTxt.getText();
+        id = idTxt.getText().trim();
 
         //System.out.println("Print Id " + id + " From " + fromDate + " To " + toDate);
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
