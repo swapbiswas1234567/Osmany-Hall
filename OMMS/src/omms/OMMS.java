@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package omms;
+
 import com.itextpdf.text.DocumentException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -21,6 +22,7 @@ import javax.swing.JOptionPane;
  * @author Ajmir
  */
 public class OMMS {
+
     //Connection con=null; 
     //PreparedStatement ps =null;
     //ResultSet rs = null;
@@ -29,22 +31,18 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-<<<<<<< HEAD
-         // NSItemView st=new NSItemView();
+        // NSItemView st=new NSItemView();
         //StoreInForm st = new StoreInForm();
         //Dashboard st = new Dashboard();
-        TempFoodView st = new TempFoodView();
+        //TempFoodView st = new TempFoodView();
         //TempFoodUpdate st = new TempFoodUpdate();
-=======
-          //NSItemView st=new NSItemView();
-       StoreInForm st = new StoreInForm();
-       //StoreOutItem st =new StoreOutItem();
+        //NSItemView st=new NSItemView();
+        //StoreInForm st = new StoreInForm();
+        //StoreOutItem st =new StoreOutItem();
         //Dashboard st= new Dashboard();
->>>>>>> d0b8cbdb7e526d671cebf981e6dedd03d1e9f2a3
+        stdIndBillStat st = new stdIndBillStat();
         st.setVisible(true);
-       
+
     }
-    
-    
-    
+
 }

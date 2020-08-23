@@ -34,7 +34,7 @@ public class TempFoodView extends javax.swing.JFrame {
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    
+
     TableModel model;
     DefaultTableModel tablemodel = null;
 
@@ -55,7 +55,7 @@ public class TempFoodView extends javax.swing.JFrame {
         closeBtn();
         //setTempFoodViewTable();
     }
-    
+
     /*
         Seeting the cross button action to Dashboard
      */
@@ -85,8 +85,6 @@ public class TempFoodView extends javax.swing.JFrame {
         toDateChooser.setDate(todaysDate);
     }
 
-
-    
     public void updateByFromToDateTFVTable(Date from, Date to) {
 
         //System.out.println("Date "+from);
@@ -149,7 +147,6 @@ public class TempFoodView extends javax.swing.JFrame {
         }
     }
 
-    
     public void updateByFromToDateIdTFVTable(Date from, Date to, String id) {
 
         //System.out.println("Date "+from);
@@ -347,7 +344,7 @@ public class TempFoodView extends javax.swing.JFrame {
 
         totalBillJlbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         totalBillJlbl.setForeground(new java.awt.Color(255, 51, 0));
-        totalBillJlbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalBillJlbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -423,23 +420,27 @@ public class TempFoodView extends javax.swing.JFrame {
 
         String todaysDate = formatDate.format(new Date()).trim();
         String temp = formatDate.format(fromDate).trim();
-        id = idTxt.getText().trim();
-
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
         if (tablemodel.getColumnCount() > 0) {
             tablemodel.setRowCount(0);
         }
 
-        //System.out.println(" To " + formatDate.format(toDate) + " Todays " + formatDate.format(new Date()));
-        if (!id.equals("")) {
-            //System.out.println("Search by id and from date in idTxt");
-            updateByFromToDateIdTFVTable(fromDate, toDate, id);
-        } else {
-            //System.out.println("Search by to and from date in idTxt");
-            updateByFromToDateTFVTable(fromDate, toDate);
+        try {
+            id = idTxt.getText().trim();
+            int err = Integer.parseInt(id);
+            // System.out.println(" To " + formatDate.format(toDate) + " Todays " + formatDate.format(new Date()));
+            if (!id.equals("")) {
+                //System.out.println("Search by id and from date in idTxt");
+                updateByFromToDateIdTFVTable(fromDate, toDate, id);
+            } else {
+                //System.out.println("Search by to and from date in idTxt");
+                updateByFromToDateTFVTable(fromDate, toDate);
+            }
+            //System.out.println(strFromDate);
+            idTxt.requestFocus();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid Id inserted, Enter a valid Roll no or Hall Id", "Wrong Input", JOptionPane.ERROR_MESSAGE);
         }
-        //System.out.println(strFromDate);
-        idTxt.requestFocus();
     }//GEN-LAST:event_idTxtActionPerformed
 
     private void fromDateChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_fromDateChooserPropertyChange
@@ -450,7 +451,7 @@ public class TempFoodView extends javax.swing.JFrame {
 
         fromDate = fromDateChooser.getDate();
         toDate = toDateChooser.getDate();
-        id = idTxt.getText();
+        id = idTxt.getText().trim();
 
         //System.out.println("Print Id " + id + " From " + fromDate + " To " + toDate);
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
