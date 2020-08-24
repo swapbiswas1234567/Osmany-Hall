@@ -33,32 +33,7 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-<<<<<<< HEAD
-
-        //Dashboard st=new Dashboard();
-        stdIndBillStat st= new stdIndBillStat();
-        //GenerateBill st = new GenerateBill();
-        st.setVisible(true);
-        //Map<Integer, BillAmount> billmap = new HashMap<>();
-         //DailyAvgBill st= new DailyAvgBill();
-         //st.setbill(0, 0);
         
-       
-=======
-        // NSItemView st=new NSItemView();
-        //StoreInForm st = new StoreInForm();
-        //Dashboard st = new Dashboard();
-        //TempFoodView st = new TempFoodView();
-        //TempFoodUpdate st = new TempFoodUpdate();
-        //NSItemView st=new NSItemView();
-        //StoreInForm st = new StoreInForm();
-        //StoreOutItem st =new StoreOutItem();
-        //Dashboard st= new Dashboard();
-        //stdIndBillStat st = new stdIndBillStat();
-        stdHallAdmission st = new stdHallAdmission();
-        st.setVisible(true);
-
->>>>>>> 3951fcbe8d233c2ea07ae56c44975801fedfcb75
     }
 
 }

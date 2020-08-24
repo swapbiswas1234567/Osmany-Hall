@@ -106,11 +106,14 @@ public class stdIndBillStat extends javax.swing.JFrame {
     public boolean checkhallid(String hallid){
         boolean exist=false;
         try{
-            psmt = conn.prepareStatement("select hallid from stuinfo where hallid= ?");
+            psmt = conn.prepareStatement("select roll,name,dept,hallid from stuinfo where hallid= ?");
             psmt.setString(1, hallid);
             rs = psmt.executeQuery();
             while(rs.next()){
                 exist= true;
+                namelbl.setText(rs.getString(2));
+                rolllbl.setText(rs.getString(1));
+                deptlbl.setText(rs.getString(3));
             }
             psmt.close();
             rs.close();
@@ -124,11 +127,14 @@ public class stdIndBillStat extends javax.swing.JFrame {
     public int checkroll(String roll){
         int hallid=0;
         try{
-            psmt = conn.prepareStatement("select hallid from stuinfo where roll= ?");
+            psmt = conn.prepareStatement("select hallid,roll,name,dept from stuinfo where roll= ?");
             psmt.setString(1, roll);
             rs = psmt.executeQuery();
             while(rs.next()){
                 hallid = rs.getInt(1);
+                namelbl.setText(rs.getString(3));
+                rolllbl.setText(rs.getString(2));
+                deptlbl.setText(rs.getString(4));
             }
             psmt.close();
             rs.close();
@@ -179,9 +185,9 @@ public class stdIndBillStat extends javax.swing.JFrame {
                 lunch = mealsheet.get(key).lunch;
                 dinner = mealsheet.get(key).dinner;
                 
-                bfbill = billmap.get(key).bf;
-                lunchbill = billmap.get(key).lunch;
-                dinnerbill = billmap.get(key).dinner;
+                bfbill = billmap.get(key).bf*bf;
+                lunchbill = billmap.get(key).lunch*lunch;
+                dinnerbill = billmap.get(key).dinner * dinner;
                 
                 total = (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill);
                 
@@ -394,22 +400,26 @@ public class stdIndBillStat extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(namelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(grandtotaltxt, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(shwobtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rolllbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                        .addGap(5, 5, 5))
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(deptlbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(grandtotaltxt, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(shwobtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(rolllbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                        .addGap(16, 16, 16))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(namelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(deptlbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(20, 20, 20))))
         );
 
         billtable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -499,6 +509,9 @@ public class stdIndBillStat extends javax.swing.JFrame {
             }
             catch(Exception e ){
                 JOptionPane.showMessageDialog(null, "Enter a valid hallid", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+                namelbl.setText("");
+                rolllbl.setText("");
+                deptlbl.setText("");
                 return;
             }
             mealstatus(fromdate,todate, id);
@@ -511,6 +524,9 @@ public class stdIndBillStat extends javax.swing.JFrame {
             }
             else{
                 JOptionPane.showMessageDialog(null, "id does not exist", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+                namelbl.setText("");
+                rolllbl.setText("");
+                deptlbl.setText("");
                 return;
             }
         }
