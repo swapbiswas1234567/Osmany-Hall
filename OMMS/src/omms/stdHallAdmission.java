@@ -86,31 +86,22 @@ public class stdHallAdmission extends javax.swing.JFrame {
     }
 
     public boolean rollValidity(String stdRoll) {
-        if (stdRoll.length() != 9) {
-            JOptionPane.showMessageDialog(null, "Insert a valid roll", "Invalid Roll Inserted", JOptionPane.ERROR_MESSAGE);
-        } else {
-            try {
-                int s = Integer.parseInt(stdRoll);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Insert a valid roll", "Invalid Roll Inserted", JOptionPane.ERROR_MESSAGE);
+        try {
+            ps = conn.prepareStatement("SELECT * FROM stuinfo WHERE roll = ?");
+            ps.setString(1, stdRoll);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                ps.close();
+                rs.close();
+                JOptionPane.showMessageDialog(null, "This roll is used before", "Invalid Roll Inserted", JOptionPane.ERROR_MESSAGE);
+                return false;
+            } else {
+                ps.close();
+                rs.close();
+                return true;
             }
-            try {
-                ps = conn.prepareStatement("SELECT * FROM stuinfo WHERE roll = ?");
-                ps.setString(1, stdRoll);
-                rs = ps.executeQuery();
-                if (rs.next()) {
-                    ps.close();
-                    rs.close();
-                    JOptionPane.showMessageDialog(null, "This roll is used before", "Invalid Roll Inserted", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                } else {
-                    ps.close();
-                    rs.close();
-                    return true;
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Data Fetching Error", "Database Problem", JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Fetching Error", "Database Problem", JOptionPane.ERROR_MESSAGE);
         }
 
         return false;
@@ -161,6 +152,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
         batchTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(760, 561));
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -183,7 +175,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                 .addGap(15, 15, 15))
         );
 
@@ -253,7 +245,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(100, Short.MAX_VALUE)
+                .addContainerGap(102, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -278,7 +270,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(contactNoTxt))
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +306,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(submitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -359,14 +351,6 @@ public class stdHallAdmission extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Enter Student's Batch", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
         } else {
             if (rollValidity(stdRoll)) {
-
-                try {
-                    stdContactNo = contactNoTxt.getText().toString().trim();
-                    int contactNo = Integer.parseInt(stdContactNo);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Enter Valid Contact No.", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
                 try {
                     int hallId = generateHallid();
                     ps = conn.prepareStatement("INSERT INTO stuinfo (hallid, roll, name, dept, batch, roomno, entrydate, contno) VALUES (?,?,?,?,?,?,?,?)");
@@ -382,6 +366,10 @@ public class stdHallAdmission extends javax.swing.JFrame {
 
                     ps.close();
                     clearAll();
+
+                    String msg = "Hall Id of " + stdName + " is " + hallId;
+
+                    JOptionPane.showMessageDialog(null, msg);
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(null, "Data insertion failed", "Database Error", JOptionPane.ERROR_MESSAGE);
                     return;
