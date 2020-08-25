@@ -82,7 +82,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
         roomNoTxt.setText("");
         contactNoTxt.setText("");
         setDateChoosers();
-        deptCombBox.setSelectedIndex(0);
+        deptComboBox.setSelectedIndex(0);
     }
 
     public boolean rollValidity(String stdRoll) {
@@ -147,12 +147,11 @@ public class stdHallAdmission extends javax.swing.JFrame {
         entryDateChooser = new com.toedter.calendar.JDateChooser();
         clearBtn = new javax.swing.JButton();
         submitBtn = new javax.swing.JButton();
-        deptCombBox = new javax.swing.JComboBox<>();
+        deptComboBox = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         batchTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(760, 561));
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -231,9 +230,9 @@ public class stdHallAdmission extends javax.swing.JFrame {
             }
         });
 
-        deptCombBox.setBackground(new java.awt.Color(204, 204, 204));
-        deptCombBox.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
-        deptCombBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CE", "CSE", "EECE", "ME", "AE", "IPE", "NAME", "EWCE", "PME", "BME", "ARCHI" }));
+        deptComboBox.setBackground(new java.awt.Color(204, 204, 204));
+        deptComboBox.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        deptComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CE", "CSE", "EECE", "ME", "AE", "IPE", "NAME", "EWCE", "PME", "BME", "ARCHI" }));
 
         jLabel8.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel8.setText("Batch");
@@ -260,7 +259,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
                     .addComponent(stdRollTxt, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(roomNoTxt, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(deptCombBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deptComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
@@ -287,7 +286,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(deptCombBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deptComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(batchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
@@ -337,11 +336,11 @@ public class stdHallAdmission extends javax.swing.JFrame {
         // TODO add your handling code here:
         String stdName = stdNameTxt.getText().toString().trim();
         String stdRoll = stdRollTxt.getText().toString().trim();
-        String stdDept = deptCombBox.getSelectedItem().toString().trim();
+        String stdDept =deptComboBox.getSelectedItem().toString().trim();
         String stdBatch = batchTxt.getText().toString().trim();
         String stdRoomNo = roomNoTxt.getText().toString().trim();
-        Integer entryDate = Integer.parseInt(formatDate.format(entryDateChooser.getDate()));
-        String stdContactNo = "";
+        int entryDate = Integer.parseInt(formatDate.format(entryDateChooser.getDate()));
+        String stdContactNo = contactNoTxt.getText().toString().trim();
 
         if (stdName.equals("")) {
             JOptionPane.showMessageDialog(null, "Enter Student's Name", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
@@ -353,15 +352,15 @@ public class stdHallAdmission extends javax.swing.JFrame {
             if (rollValidity(stdRoll)) {
                 try {
                     int hallId = generateHallid();
-                    ps = conn.prepareStatement("INSERT INTO stuinfo (hallid, roll, name, dept, batch, roomno, entrydate, contno) VALUES (?,?,?,?,?,?,?,?)");
+                    ps = conn.prepareStatement("INSERT INTO stuinfo (hallid, roll, name, dept, batch,entrydate, contno, roomno) VALUES (?,?,?,?,?,?,?,?)");
                     ps.setInt(1, hallId);
                     ps.setString(2, stdRoll);
                     ps.setString(3, stdName);
                     ps.setString(4, stdDept);
-                    ps.setString(5, stdBatch);
-                    ps.setString(6, stdRoomNo);
-                    ps.setInt(7, entryDate);
-                    ps.setString(8, stdContactNo);
+                    ps.setInt(5, Integer.parseInt(stdBatch));
+                    ps.setInt(6, entryDate);
+                    ps.setString(7, stdContactNo);
+                    ps.setString(8, stdRoomNo);
                     ps.execute();
 
                     ps.close();
@@ -418,7 +417,7 @@ public class stdHallAdmission extends javax.swing.JFrame {
     private javax.swing.JTextField batchTxt;
     private javax.swing.JButton clearBtn;
     private javax.swing.JTextField contactNoTxt;
-    private javax.swing.JComboBox<String> deptCombBox;
+    private javax.swing.JComboBox<String> deptComboBox;
     private com.toedter.calendar.JDateChooser entryDateChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
