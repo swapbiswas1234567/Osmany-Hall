@@ -39,9 +39,7 @@ public class OMMS {
         //NSItemView st=new NSItemView();
         //StoreInForm st = new StoreInForm();
         //StoreOutItem st =new StoreOutItem();
-        //Dashboard st= new Dashboard();
-        //stdIndBillStat st = new stdIndBillStat();
-        stdHallAdmission st = new stdHallAdmission();
+        Dashboard st= new Dashboard();
         st.setVisible(true);
 
     }
