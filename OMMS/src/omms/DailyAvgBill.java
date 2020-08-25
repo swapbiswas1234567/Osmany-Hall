@@ -50,8 +50,6 @@ public class DailyAvgBill {
           
          // System.out.println(previous.get("Rice").amount);
           calculatestoreddailybill(fromdate,todate);  //calculate stored bill
-          //System.out.println(billMap.get(20200723).bf);
-          
           calculatenonstoreddailybill(fromdate,todate); //add nonstored bill
 //          for(int i=0; i<billMap.get(20200813).item.size(); i++){
 //              System.out.println(billMap.get(20200813).item.get(i).name+" "+billMap.get(20200813).item.get(i).avgprice+" "+
@@ -59,9 +57,6 @@ public class DailyAvgBill {
 //          }
           //System.out.println(billMap.get(todate).bf);
           calculateavg(fromdate,todate); // divide total bill by total meal on
-          //System.out.println(billMap.get(20200816).bf);
-          //tmpfoodbill(20200816,20200820,1490);
-          //System.out.println(tmpfood.get(20200819));
           return billMap;
           
     }
