@@ -31,7 +31,12 @@ public class OMMS {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-
+        //StoreOutItem st = new StoreOutItem();
+        //CreateGroup st= new CreateGroup();
+        //ItemGrpAssign st= new ItemGrpAssign();
+        Dashboard st= new Dashboard();
+        st.setVisible(true);
+        
     }
 
 }

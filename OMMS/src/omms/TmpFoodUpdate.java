@@ -5,7 +5,6 @@
  */
 package omms;
 
-import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -88,7 +87,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
            
            
            select = Boolean.valueOf(model.getValueAt(i,0).toString());
-           //.println(select+" "+i);
+           //System.out.println(select+" "+i);
            //System.out.println(select);
            if( select){
                
@@ -102,7 +101,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                 dateserial = Integer.parseInt(formatter.format(date));
                 hallid = Integer.parseInt(strhallid);
                 }
-                catch(NumberFormatException | ParseException e){
+                catch(Exception e){
                     JOptionPane.showMessageDialog(null, "Date parsing "
                             + "failed in delete row", "Data parse error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -137,14 +136,14 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                     return;
                 }
                 
-                commonfortable();
+               
                
            }
-           
+            
            
            //System.out.print(select);
        }
-       
+       commonfortable();
        
        
     }
@@ -161,6 +160,9 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         String stryear = Integer.toString(year);
         yeartxt.setText(stryear);
+        
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        monthcombo.setSelectedIndex(month);
         
         dec = new DecimalFormat("#0.000");
         model = updatetable.getModel();
@@ -213,13 +215,13 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
                 date = formatter.parse(rs.getString(5));
                 strdate = formatter1.format(date);
                 }
-                catch(ParseException e){
+                catch(Exception e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             
-                
+                //System.out.println(strdate);
                 Object o [] = {false,rs.getInt(1), rs.getInt(2), rs.getString(3),rs.getInt(4),
                     strdate,rs.getDouble(6),rs.getString(7)};
                 tablemodel.addRow(o);
@@ -253,14 +255,14 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
             psmt.setString(1, serial);
             psmt.setInt(2, hallid);
             rs = psmt.executeQuery();
-            System.out.println(serial);
+            //System.out.println(serial);
             while(rs.next()){
-                System.out.println(rs.getString(1));
+                //System.out.println(rs.getString(1));
                 try{
                 date = formatter.parse(rs.getString(5));
                 strdate = formatter1.format(date);
                 }
-                catch(ParseException e){
+                catch(Exception e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -296,7 +298,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
         try{
             serial = Integer.parseInt(stryear);
         }
-        catch(NumberFormatException e){
+        catch(Exception e){
             JOptionPane.showMessageDialog(null, "year format error","Date insert error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -311,8 +313,9 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
         
         
         if( serial > 200000 && !stryear.equals("") && strhallid.equals("")){
-            //System.out.println(serial);
+            //System.out.println(stryear);
             updatetablemonth(stryear);
+            
         }
         else if( serial > 200000 && !stryear.equals("") && !strhallid.equals("")){
             //System.out.println(serial);
@@ -332,7 +335,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "invalid year","Date insert error", JOptionPane.ERROR_MESSAGE);
         }
         
-        
+        //System.out.println("called");
     }
     
 

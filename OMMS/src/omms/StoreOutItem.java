@@ -172,9 +172,14 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
             //System.out.println("called "+remaining);
            
-            available = Double.parseDouble(amount);
-            remainingval = Double.parseDouble(remaining);
-            avgprice = Double.parseDouble(avg);
+            try{
+                available = Double.parseDouble(amount);
+                remainingval = Double.parseDouble(remaining);
+                avgprice = Double.parseDouble(avg);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null,"amount paring error in set out table","Date Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             
             if( available <= 0 || available > remainingval){
                 JOptionPane.showMessageDialog(null,"Invalid amount","Data Error",JOptionPane.ERROR_MESSAGE);
@@ -555,31 +560,28 @@ public class StoreOutItem extends javax.swing.JFrame {
     
     // count the available amount of a item from arraylist 
     public Double countprevAvailableitem(int serial, String item){
-        Double available= 0.00, totalamount=0.00 , totalprice = 0.00;
+        Double available= 0.00, prevavailable=0.00 , totalprice=0.00, totalamount=0.00;
         avg =0.00;
         
         
         try{
-            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,serial from storeinout where item =? and serial <= ? ");
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,serial from storeinout where item =? and serial <= ? order by serial");
             psmt.setString(1, item);
             psmt.setInt(2, serial);
             rs = psmt.executeQuery();
             
             while(rs.next()){
-                available =available+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
-                //System.out.println("called "+available+" "+rs.getDouble(1));
-                totalamount = totalamount + rs.getDouble(1);
-                totalprice = totalprice + rs.getDouble(5);
-                //System.out.println(available);
-                if(available == 0 && rs.getInt(6) != serial){
-                   totalamount = 0.00;
-                   totalprice =0.00;
-                }
+                
+                //available =available+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
+                //System.out.println(prevavailable*avg+" int amount "+rs.getDouble(5));
+                totalprice = (prevavailable*avg)+(rs.getDouble(5));
+                totalamount = prevavailable+rs.getDouble(1);
+                avg = totalprice/totalamount;
+               //System.out.println(totalprice+" "+totalamount);
+                prevavailable =prevavailable+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
             }
             //System.out.println(totalamount +" "+totalprice);
-            if(totalprice != 0.0 && totalamount != 0.0){
-                avg = totalprice/totalamount;
-            }
+            
             
             psmt.close();
             rs.close();
@@ -590,7 +592,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         }
         
         //System.out.println(available);
-        return available;
+        return prevavailable;
     }
     
     public Double databaseAvailable(int serial, String item){
@@ -600,7 +602,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         
         
         try{
-            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner from storeinout where item =?");
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner from storeinout where item =? order by serial");
             psmt.setString(1, item);
             rs = psmt.executeQuery();
             while(rs.next()){
@@ -758,7 +760,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         if(databaseserial != 0){
             if( status.equals("Breakfast")){
                 try{
-                    psmt = conn.prepareStatement("UPDATE storeinout SET bf= ? WHERE serial = ? and item = ?");
+                    psmt = conn.prepareStatement("UPDATE storeinout SET bf= ?, bfgrp=0 WHERE serial = ? and item = ?");
                     psmt.setDouble(1, amount);
                     psmt.setInt(2, serial);
                     psmt.setString(3, itemname);
@@ -772,7 +774,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
             else if( status.equals("Lunch")){
                 try{
-                    psmt = conn.prepareStatement("UPDATE storeinout SET lunch= ? WHERE serial = ? and item = ? ");
+                    psmt = conn.prepareStatement("UPDATE storeinout SET lunch= ?,lunchgrp=0 WHERE serial = ? and item = ? ");
                     psmt.setDouble(1, amount);
                     psmt.setInt(2, serial);
                     psmt.setString(3, itemname);
@@ -787,7 +789,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             
             else if( status.equals("Dinner")){
                 try{
-                    psmt = conn.prepareStatement("UPDATE storeinout SET dinner= ? WHERE serial = ? and item = ?");
+                    psmt = conn.prepareStatement("UPDATE storeinout SET dinner= ?,dinnergrp=0 WHERE serial = ? and item = ?");
                     psmt.setDouble(1, amount);
                     psmt.setInt(2, serial);
                     psmt.setString(3, itemname);
@@ -806,7 +808,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         else{
             if(status.equals("Breakfast")){
                 try{
-                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,0,0,'###',?,0,0)");
+                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values (?,?,0,0,'###',?,0,0,0,'','')");
                 psmt.setInt(1,serial);
                 psmt.setString(2, itemname);
                 psmt.setDouble(3, amount);
@@ -819,7 +821,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
             else if(status.equals("Lunch")){
                 try{
-                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,0,0,'###',0,?,0)");
+                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values (?,?,0,0,'###',0,?,0,'',0,'')");
                 psmt.setInt(1,serial);
                 psmt.setString(2, itemname);
                 psmt.setDouble(3, amount);
@@ -832,7 +834,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             }
             else if(status.equals("Dinner")){
                 try{
-                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,0,0,'###',0,0,?)");
+                psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values (?,?,0,0,'###',0,0,?,'','',0)");
                 psmt.setInt(1,serial);
                 psmt.setString(2, itemname);
                 psmt.setDouble(3, amount);
