@@ -62,3 +62,60 @@ String value = tm.getValueAt(row, column).toString();
 Frame f=this;     
 Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/cart.png"));    
 f.setIconImage(icon);
+
+
+### Resiging image and image to icon
+
+ImageIcon icon = new ImageIcon("D:\\cse-mist\\201714030.jpg");
+Image scaleImage = icon.getImage().getScaledInstance(128,128,Image.SCALE_DEFAULT);
+icon = new ImageIcon(scaleImage);
+jLabel2.setIcon(icon);
+
+### File chosser
+[Inside the jbtn action performed]
+
+JFIleChooser chooser = new JFileChooser();
+chooser = showOpenDialog(null);
+File f = chooser.getSelectedFile();
+String filename = f.getAbsolutePath();
+jTextField.setText(filename);
+
+
+### Converting image to bytes
+
+String filename = "" [global declaration];
+int s = 0 [global declaration];
+byte[] person_image = null [global declaration];  
+ 
+
+-> inside the btn action performed 
+
+JFIleChooser chooser = new JFileChooser();
+chooser = showOpenDialog(null);
+File f = chooser.getSelectedFile();
+String filename = f.getAsolutePath();
+jTextField.setText(filename);
+
+try{
+	File image = new File(filename);
+	FileInputStream fis = new FileInputStream(image);
+	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+	byte[] buf = new byte[1024];
+	for(int readNum; (readNum = fis.read(buf))!= -1; ){
+		bos.write(buf,0,readNum);	
+	}
+
+	person_image = bos.toByteArray();
+
+
+} catch (Exception e){
+	
+}
+
+-> now to insert into database 
+
+ps.setBytes(17, person_image)
+
+
+
