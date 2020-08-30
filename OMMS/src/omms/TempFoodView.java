@@ -5,6 +5,7 @@
  */
 package omms;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -54,6 +55,12 @@ public class TempFoodView extends javax.swing.JFrame {
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
         closeBtn();
         //setTempFoodViewTable();
+        JTextFieldDateEditor dtedit;
+        dtedit = (JTextFieldDateEditor) fromDateChooser.getDateEditor();
+        dtedit.setEditable(false);
+        JTextFieldDateEditor dtedit1;
+        dtedit1 = (JTextFieldDateEditor) toDateChooser.getDateEditor();
+        dtedit.setEditable(false);
     }
 
     /*
