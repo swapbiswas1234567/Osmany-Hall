@@ -5,18 +5,6 @@
  */
 package omms;
 
-import com.itextpdf.text.DocumentException;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author Ajmir
@@ -30,7 +18,13 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
+        ItemGrpAssign st= new ItemGrpAssign();
+        //CreateGroup st = new CreateGroup();
+        //Dashboard st = new Dashboard();
+        st.setVisible(true);
+        
+        
     }
 
 }

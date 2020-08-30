@@ -91,7 +91,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
     
     public void changegrp(){
         int selectedrow =-1, selectedindx =-1, dateserial=0;
-        String strdate = "", state="", item="";
+        String strdate = "", state="", item="", type="";
         Date date =null;
         
         
@@ -101,6 +101,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
             strdate = model.getValueAt(selectedrow, 1).toString();
             state = model.getValueAt(selectedrow, 5).toString();
             item = model.getValueAt(selectedrow, 2).toString();
+            type = model.getValueAt(selectedrow, 4).toString();
             
             try{
                 date = formatter1.parse(strdate);
@@ -110,7 +111,9 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                 return;
             }
             
-            switch (state) {
+            if(type.equals("Stored Item")){
+                
+                switch (state) {
                 case "Breakfast":
                     try{
                         psmt = conn.prepareStatement("update storeinout set bfgrp=? where serial=? and item= ?");
@@ -152,6 +155,23 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                     break;
                 default:
                     break;
+                }
+            }
+            else if(type.equals("NonStored Item")){
+                //System.out.println("called");
+                
+                try{
+                    psmt = conn.prepareStatement("update nonstoreditem SET grp=? where serial=? and name=?");
+                    psmt.setInt(1, selectedindx);
+                    psmt.setInt(2, dateserial);
+                    psmt.setString(3, item.toLowerCase());
+                    psmt.execute();
+                    psmt.close();
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Failed to update nostoreditem grp", "Data update error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }   settable();
+                
             }
             
         }
@@ -218,6 +238,30 @@ public class ItemGrpAssign extends javax.swing.JFrame {
         return unit;
     }
     
+    
+    public String nonstoreditemunit(String name){
+        String unit="";
+        
+        try{
+            psmt = conn.prepareStatement("select unit from nonstoreditemlist where name=?");
+            psmt.setString(1, name);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                unit = rs.getString(1);
+                //System.out.println(item+" "+bf+" "+bfgrp);
+            }
+            psmt.close();
+            rs.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
+        
+        return unit;
+    }
+    
+    
     public String findgrp(int dateserial , int grpserial, String state){
         String grp="";
         
@@ -247,7 +291,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
         
         int dateserial=0, bfgrp=-1, lunchgrp=-1, dinnergrp=-1,serial=1 ,totalrow=-1 ,allgrp=-1;
         Double bf=0.0, lunch=0.0,dinner=0.0, amount=0.0;
-        String strdate="", item="", unit="", grp="";
+        String strdate="", item="", unit="", grp="",type="";
         tablemodel = (DefaultTableModel) grptable.getModel();
         
         try{
@@ -292,9 +336,36 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                     rs.close();
                     
                 }catch(SQLException e){
-                    JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Failed to fetch data searchdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
                     
-                }   break;
+                }
+                
+                
+                try{
+                    psmt = conn.prepareStatement("select * from nonstoreditem where serial = ? and state='breakfast' ");
+                    psmt.setInt(1, dateserial);
+                    rs = psmt.executeQuery();
+                    while(rs.next()){
+                        item = rs.getString(2);
+                        bf= rs.getDouble(3);
+                        bfgrp = rs.getInt(7);
+                        Object o [] = {serial,strdate,item,bf,"NonStored Item", state,bfgrp};
+                        tablemodel.addRow(o);
+                        serial++;
+                    }
+                    psmt.close();
+                    rs.close();
+
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Failed to fetch nonstored data searchdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                
+                
+                
+                
+                break;
             case "Lunch":
                 //System.out.println(dateserial);
                 try{
@@ -326,7 +397,34 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                 }catch(SQLException e){
                     JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
                     return;
-                }   break;
+                }  
+                
+                
+                
+                try{
+                    psmt = conn.prepareStatement("select * from nonstoreditem where serial = ? and state='lunch' ");
+                    psmt.setInt(1, dateserial);
+                    rs = psmt.executeQuery();
+                    while(rs.next()){
+                        item = rs.getString(2);
+                        lunch= rs.getDouble(3);
+                        lunchgrp = rs.getInt(7);
+                        Object o [] = {serial,strdate,item,lunch,"NonStored Item", state,lunchgrp};
+                        tablemodel.addRow(o);
+                        serial++;
+                    }
+                    psmt.close();
+                    rs.close();
+
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Failed to fetch nonstored data searchdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                
+                
+                
+                break;
             case "Dinner":
                 //System.out.println(dateserial);
                 try{
@@ -358,29 +456,76 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                 }catch(SQLException e){
                     JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
                     return;
-                }   break;
+                }   
+                
+                
+                try{
+                    psmt = conn.prepareStatement("select * from nonstoreditem where serial = ? and state='dinner' ");
+                    psmt.setInt(1, dateserial);
+                    rs = psmt.executeQuery();
+                    while(rs.next()){
+                        item = rs.getString(2);
+                        dinner= rs.getDouble(3);
+                        dinnergrp = rs.getInt(7);
+                        Object o [] = {serial,strdate,item,dinner,"NonStored Item", state,dinnergrp};
+                        tablemodel.addRow(o);
+                        serial++;
+                    }
+                    psmt.close();
+                    rs.close();
+
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Failed to fetch nonstored data searchdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                break;
             default:
                 break;
         }
         
+        
+        
+        
         totalrow = model.getRowCount();
         for(int i=0; i<totalrow; i++){
-            amount = Double.parseDouble(model.getValueAt(i, 3).toString());
-            allgrp = Integer.parseInt(model.getValueAt(i, 6).toString());
-            //System.out.println(model.getValueAt(i, 6).toString());
-            item = model.getValueAt(i, 2).toString();
-            unit = itemunit(item);
-            unit = Double.toString(amount) +" "+unit; // adding unit with amount
-            model.setValueAt(unit, i, 3);
-            if(allgrp != 0){
-                grp = findgrp(dateserial,allgrp,state);
-                grp = grp.substring(0, 1).toUpperCase() + grp.substring(1);
-                model.setValueAt(grp, i, 6);
+            type = model.getValueAt(i, 4).toString();
+            if(type.equals("Stored Item")){
+                
+                amount = Double.parseDouble(model.getValueAt(i, 3).toString());
+                allgrp = Integer.parseInt(model.getValueAt(i, 6).toString());
+                //System.out.println(model.getValueAt(i, 6).toString());
+                item = model.getValueAt(i, 2).toString();
+                unit = itemunit(item);
+                unit = Double.toString(amount) +" "+unit; // adding unit with amount
+                model.setValueAt(unit, i, 3);
+                if(allgrp != 0){
+                    grp = findgrp(dateserial,allgrp,state);
+                    grp = grp.substring(0, 1).toUpperCase() + grp.substring(1);
+                    model.setValueAt(grp, i, 6);
+                }
+                else if(allgrp == 0){
+                    model.setValueAt("All", i, 6);
+                }
+                
             }
-            else if(allgrp == 0){
-                model.setValueAt("All", i, 6);
+            else if(type.equals("NonStored Item")){
+                amount = Double.parseDouble(model.getValueAt(i, 3).toString());
+                allgrp = Integer.parseInt(model.getValueAt(i, 6).toString());
+                item = model.getValueAt(i, 2).toString();
+                unit = nonstoreditemunit(item);
+                unit = Double.toString(amount) +" "+unit; // adding unit with amount
+                model.setValueAt(unit, i, 3);
+                if(allgrp != 0){
+                    grp = findgrp(dateserial,allgrp,state);
+                    grp = grp.substring(0, 1).toUpperCase() + grp.substring(1);
+                    model.setValueAt(grp, i, 6);
+                }
+                else if(allgrp == 0){
+                    model.setValueAt("All", i, 6);
+                }
+                
             }
-            
         }
         
         

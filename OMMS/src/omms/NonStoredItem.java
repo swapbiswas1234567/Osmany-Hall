@@ -497,7 +497,7 @@ public class NonStoredItem extends javax.swing.JFrame {
             
             
             try{
-                psmt = conn.prepareStatement("insert into nonstoreditem (serial,name,amount,price, memono,state) values (?,?,?,?,?,?)");
+                psmt = conn.prepareStatement("insert into nonstoreditem (serial,name,amount,price, memono,state,grp) values (?,?,?,?,?,?,0)");
                 psmt.setInt(1, dateserial);
                 psmt.setString(2, name);
                 psmt.setDouble(3, totalamount);
