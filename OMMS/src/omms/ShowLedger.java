@@ -93,25 +93,22 @@ public class ShowLedger extends javax.swing.JFrame {
     }
     
     public Double[] getpreviousavailable(int dateserial, String itemname){
-        Double []available = new Double[3];
+        Double []available = new Double[2];
+        Double total=0.0, amount=0.0;
         //System.out.println(dateserial);
         available[0]= 0.00;
         available[1] = 0.00;
-        available[2] = 0.00;
         
         try{
-            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price from storeinout where item =? and serial < ?");
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price from storeinout where item =? and serial < ? order by serial");
             psmt.setString(1, itemname);
             psmt.setInt(2, dateserial);
             rs = psmt.executeQuery();
             while(rs.next()){
+                total = (available[0]*available[1])+rs.getDouble(5);
+                amount = available[0]+rs.getDouble(1);
+                available[1] = total/amount;
                 available[0] =available[0]+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
-                available[1] = available[1]+rs.getDouble(1);
-                available[2]= available[2]+rs.getDouble(5);
-                if(available[0] == 0){
-                    available[1] = 0.00;
-                    available[2]= 0.00;
-                }
             }
             //System.out.println(available[1]);
             psmt.close();
@@ -120,6 +117,7 @@ public class ShowLedger extends javax.swing.JFrame {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for"
                     + " previous avaialable", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
         }
         
         
@@ -175,11 +173,10 @@ public class ShowLedger extends javax.swing.JFrame {
     public void setledgertable(Date from, Date to, String item){
         //System.out.println(from+" "+to+" "+item);
         int fromserial = 0, toserial = 0, count=2;
-        Double lastavg=0.00, lastavl=0.00 , fromavailable=0.00;
-        Double prevavailable[] =new Double[3];
+        Double lastavg=0.00, lastavl=0.00 , fromavailable=0.00, totalprice=0.0, totalamount=0.0;
+        Double prevavailable[] =new Double[2];
         prevavailable[0] = 0.00;
         prevavailable[1] =0.00;
-        prevavailable[2] =0.00;
         String strdate = "";
         Date date=null;
         tablemodel = (DefaultTableModel) ledgertable.getModel();
@@ -194,7 +191,7 @@ public class ShowLedger extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
         prevavailable = getpreviousavailable(fromserial, item);
-        //System.out.println(prevavailable[0]+" "+prevavailable[1]+" "+prevavailable[2]);
+        //System.out.println(prevavailable[0]+" "+prevavailable[1]);
         
         fromavailable = prevavailable[0];
         try{
@@ -213,21 +210,18 @@ public class ShowLedger extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                 }
-                //System.out.println(prevavailable[0]);
+                //System.out.println(prevavailable[0]+" "+prevavailable[1]+rs.getDouble(6));
+                totalprice = (prevavailable[0]*prevavailable[1])+rs.getDouble(6);
+                totalamount = prevavailable[0]+rs.getDouble(2);
+                prevavailable[1] = totalprice/totalamount;
+                //System.out.println(rs.getInt(1)+" "+totalprice+" "+totalamount);
                 lastavl = prevavailable[0] +rs.getDouble(2)-(rs.getDouble(3)+rs.getDouble(4)+rs.getDouble(5));
-                prevavailable[1] =  prevavailable[1] + rs.getDouble(2);
-                prevavailable[2] =  prevavailable[2] + rs.getDouble(6);
                 //System.out.println("serial "+rs.getInt(1)+"prev available: "+prevavailable[0]+"last available: "+lastavl+"avg price: "+prevavailable[1]);
-                lastavg = prevavailable[2]/prevavailable[1];
                 
-                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),lastavl,dec.format(lastavg),rs.getString(7)};
+                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),lastavl,dec.format(prevavailable[1]),rs.getString(7)};
                 tablemodel.addRow(o);
                 prevavailable[0] = lastavl;
                 
-                if(lastavl == 0){
-                    prevavailable[1] =0.00;
-                    prevavailable[2] = 0.00;
-                }
                 flag=true;
             }
             psmt.close();
@@ -434,6 +428,7 @@ public class ShowLedger extends javax.swing.JFrame {
         ledgertable.setRowHeight(26);
         ledgertable.setSelectionBackground(new java.awt.Color(232, 57, 97));
         ledgertable.setSelectionForeground(new java.awt.Color(240, 240, 240));
+        ledgertable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(ledgertable);
         if (ledgertable.getColumnModel().getColumnCount() > 0) {
             ledgertable.getColumnModel().getColumn(2).setMinWidth(110);

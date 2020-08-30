@@ -297,7 +297,7 @@ public class DailyAvgBill {
         String name="";
         //System.out.println(name+" "+dateserial);
         try{
-            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,item,serial from storeinout where serial < ? and item =?");
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,item,serial from storeinout where serial < ? and item =? order by serial");
             psmt.setInt(1, dateserial);
             psmt.setString(2, item);
             rs = psmt.executeQuery();

@@ -30,20 +30,6 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        // NSItemView st=new NSItemView();
-        //StoreInForm st = new StoreInForm();
-        //Dashboard st = new Dashboard();
-        //TempFoodView st = new TempFoodView();
-        //TempFoodUpdate st = new TempFoodUpdate();
-        //NSItemView st=new NSItemView();
-        //StoreInForm st = new StoreInForm();
-        //StoreOutItem st =new StoreOutItem();
-        //Dashboard st= new Dashboard();
-        //stdIndBillStat st = new stdIndBillStat();
-        //stdHallAdmission st = new stdHallAdmission();
-        stdInfoUpdate st = new stdInfoUpdate();
-        st.setVisible(true);
 
     }
 

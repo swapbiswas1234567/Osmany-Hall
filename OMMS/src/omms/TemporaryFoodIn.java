@@ -209,11 +209,11 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
                 psmt.close();
                 
                
-                }  
-                catch(SQLException e){
-                    JOptionPane.showMessageDialog(null, "insertion error"
-                            + " in temp food", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-                }
+            }  
+            catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "insertion error"
+                        + " in temp food", "Data insertion error", JOptionPane.ERROR_MESSAGE);
+            }
             
             
             
