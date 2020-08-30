@@ -5,6 +5,7 @@
  */
 package omms;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
@@ -22,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -54,6 +56,9 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         //setDateChoosers(); // setting todays date to the date chooser
         nameTxt.requestFocus();
         //closeBtn();
+        JTextFieldDateEditor dtedit;
+        dtedit = (JTextFieldDateEditor) dobDateChooser.getDateEditor();
+        dtedit.setEditable(false);
     }
 
     /*
@@ -115,25 +120,27 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
-        filename = f.getAbsolutePath();
-        try {
-            File image = new File(filename);
-            FileInputStream fis = new FileInputStream(image);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        if (f != null) {
+            filename = f.getAbsolutePath();
+            try {
+                File image = new File(filename);
+                FileInputStream fis = new FileInputStream(image);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-            byte[] buf = new byte[1024];
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
+                byte[] buf = new byte[1024];
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum);
+                }
+
+                person_image = bos.toByteArray();
+                ImageIcon imgic = new ImageIcon(person_image);
+                Image scaleImg = imgic.getImage().getScaledInstance(256, 256, Image.SCALE_DEFAULT);
+                imgic = new ImageIcon(scaleImg);
+                showImageLbl.setIcon(imgic);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error Fetching Image", "Image", JOptionPane.ERROR_MESSAGE);
             }
-
-            person_image = bos.toByteArray();
-            ImageIcon imgic = new ImageIcon(person_image);
-            Image scaleImg = imgic.getImage().getScaledInstance(256, 256, Image.SCALE_DEFAULT);
-            imgic = new ImageIcon(scaleImg);
-            showImageLbl.setIcon(imgic);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error Fetching Image", "Image", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -186,8 +193,9 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                 permAddTxt.setText(rs.getString(14));
                 presAddTxt.setText(rs.getString(15));
                 roomNoTxt.setText(rs.getString(16));
-                if ((rs.getBytes("image")) != null) {
-                    showImage(rs.getBytes("image"));
+                person_image = rs.getBytes("image");
+                if (person_image != null) {
+                    showImage(person_image);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Hall Id can't be found", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
@@ -312,6 +320,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         showImageLbl = new javax.swing.JLabel();
         attachFileBtn = new javax.swing.JButton();
         updateBtn1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -499,12 +508,23 @@ public class stdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
+        jButton1.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/trash_01.png"))); // NOI18N
+        jButton1.setText("Remove Image");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(100, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -516,7 +536,6 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dobDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(fNameTxt)
@@ -524,7 +543,10 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                                     .addComponent(permAddTxt)
                                     .addComponent(presAddTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(attachFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(attachFileBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(dobDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -566,7 +588,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(updateBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(373, 373, 373))
+                .addGap(362, 362, 362))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -630,10 +652,13 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                         .addGap(36, 36, 36)
                         .addComponent(showImageLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(attachFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(30, 30, 30)
+                        .addComponent(attachFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(50, 50, 50)
                 .addComponent(updateBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGap(37, 37, 37))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -704,6 +729,30 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_updateBtn1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (!searchTxt.getText().equals("Enter Hall Id") || hallId != 0) {
+            if (person_image != null) {
+                person_image = null;
+                try {
+                    ps = conn.prepareStatement("UPDATE stuinfo SET image = ? WHERE hallid = ?");
+                    ps.setBytes(1, person_image);
+                    ps.setInt(2, hallId);
+                    ps.execute();
+                    ps.close();
+                    showImageLbl.setText("Add Image");
+                    showImageLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/landscape.png")));
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Can't remove the image!!!", "Database Upadate Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No image selected!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -715,11 +764,11 @@ public class stdInfoUpdate extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-
-                }
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(stdInfoUpdate.class
@@ -755,6 +804,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> deptComboBox;
     private com.toedter.calendar.JDateChooser dobDateChooser;
     private javax.swing.JTextField fNameTxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

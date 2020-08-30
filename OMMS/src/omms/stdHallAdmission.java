@@ -5,6 +5,7 @@
  */
 package omms;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -53,6 +54,9 @@ public class stdHallAdmission extends javax.swing.JFrame {
         setDateChoosers(); // setting todays date to the date chooser
         stdNameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
         closeBtn();
+        JTextFieldDateEditor dtedit;
+        dtedit = (JTextFieldDateEditor) entryDateChooser.getDateEditor();
+        dtedit.setEditable(false);
     }
 
     /*
