@@ -19,9 +19,9 @@ public class OMMS {
      */
     public static void main(String[] args) {
         
-        ItemGrpAssign st= new ItemGrpAssign();
-        //CreateGroup st = new CreateGroup();
+        
         //Dashboard st = new Dashboard();
+        StdnGrpAssign st= new StdnGrpAssign();
         st.setVisible(true);
         
         

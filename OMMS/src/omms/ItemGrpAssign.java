@@ -198,7 +198,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
         try{
             psmt = conn.prepareStatement("select name from grp where date= ? and state=?");
             psmt.setInt(1, dateserial);
-            psmt.setString(2, state);
+            psmt.setString(2, state.toLowerCase());
             rs = psmt.executeQuery();
             while(rs.next()){
                 grpname = rs.getString(1);
@@ -269,7 +269,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
             psmt = conn.prepareStatement("select name from grp where date=? and serial=? and state=?");
             psmt.setInt(1, dateserial);
             psmt.setInt(2, grpserial);
-            psmt.setString(3, state);
+            psmt.setString(3, state.toLowerCase());
             rs = psmt.executeQuery();
             while(rs.next()){
                 grp = rs.getString(1);

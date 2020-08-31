@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -111,8 +112,8 @@ public class CreateGroup extends javax.swing.JFrame {
         try{
             psmt = conn.prepareStatement("select serial FROM grp where date=? and name = ? and state = ?");
             psmt.setInt(1, dateserial);
-            psmt.setString(2, name);
-            psmt.setString(3, state);
+            psmt.setString(2, name.toLowerCase());
+            psmt.setString(3, state.toLowerCase(Locale.ITALY));
             rs = psmt.executeQuery();
             while(rs.next()){
                 //System.gtiout.println(rs.getInt(1));
@@ -264,9 +265,9 @@ public class CreateGroup extends javax.swing.JFrame {
             try{
                 psmt = conn.prepareStatement("insert into grp(date, name, serial, state) VALUES( ?, ?, ?, ?)");
                 psmt.setInt(1, dateserial);
-                psmt.setString(2, name);
+                psmt.setString(2, name.toLowerCase());
                 psmt.setInt(3, serial);
-                psmt.setString(4, state);
+                psmt.setString(4, state.toLowerCase());
                 psmt.execute();
                 psmt.close();
             }  
