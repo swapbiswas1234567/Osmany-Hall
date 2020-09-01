@@ -30,8 +30,8 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        stdInfoUpdate st = new stdInfoUpdate();
-        //Dashboard st =  new Dashboard();
+        //stdInfoUpdate st = new stdInfoUpdate();
+        Dashboard st =  new Dashboard();
         //deleteGroup st = new deleteGroup();
         //stdHallAdmission st = new stdHallAdmission();
         st.setVisible(true);

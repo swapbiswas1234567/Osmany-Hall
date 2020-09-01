@@ -8,6 +8,7 @@ package omms;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
@@ -473,6 +474,11 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                 searchTxtFocusLost(evt);
             }
         });
+        searchTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                searchTxtKeyPressed(evt);
+            }
+        });
 
         searchBtn.setBackground(new java.awt.Color(0, 153, 153));
         searchBtn.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
@@ -706,7 +712,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
             setStuInfo(hallId);
         } else {
             clearAll();
-            JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);            
+            JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
@@ -727,7 +733,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
     private void updateBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtn1ActionPerformed
         // TODO add your handling code here:
         // TODO add your handling code here:
-        if (!searchTxt.getText().equals("Enter Hall Id") || hallId != 0 ) {
+        if (!searchTxt.getText().equals("Enter Hall Id") || hallId != 0) {
             updateStdInfo();
         } else {
             JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
@@ -752,6 +758,20 @@ public class stdInfoUpdate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void searchTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTxtKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!searchTxt.getText().equals("Enter Hall Id") && !searchTxt.getText().equals("")) {
+                clearAll();
+                hallId = Integer.parseInt(searchTxt.getText().toString().trim());
+                setStuInfo(hallId);
+            } else {
+                clearAll();
+                JOptionPane.showMessageDialog(null, "Enter a hall id!!!", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_searchTxtKeyPressed
 
     /**
      * @param args the command line arguments
