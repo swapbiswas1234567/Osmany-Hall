@@ -10,14 +10,12 @@ package omms;
  * @author Ajmir
  */
 public class PreviousValue {
-    Double amount;
-    Double price;
-    Double available;
+    Double avgprice;
+    Double prevavailable;
     
-    PreviousValue(Double amount, Double price, Double available){
-        this.amount = amount;
-        this.price = price;
-        this.available = available;
+    PreviousValue(Double price, Double available){
+        this.avgprice = price;
+        this.prevavailable = available;
     }
     
 }

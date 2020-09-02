@@ -238,7 +238,7 @@ public class CreateGroup extends javax.swing.JFrame {
             try{
             psmt = conn.prepareStatement("select max(serial) from grp where date = ? and state = ?");
             psmt.setInt(1, dateserial);
-            psmt.setString(2, state);
+            psmt.setString(2, state.toLowerCase());
             rs = psmt.executeQuery();
             while(rs.next()){
                 //System.gtiout.println(rs.getInt(1));

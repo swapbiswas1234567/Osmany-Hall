@@ -177,9 +177,42 @@ public class MealSheet extends javax.swing.JFrame {
         
     }
     
+    public int[] search1stgrp(int dateserial){
+        int i=0;
+        int []grp = new int[3];
+        grp[0] =0;
+        grp[1]=0;
+        grp[2]=0;
+        
+        try{
+                psmt = conn.prepareStatement("select min(serial),state FROM grp where date =? GROUP by state");
+                psmt.setInt(1, dateserial);
+                rs = psmt.executeQuery();
+                while(rs.next()){
+                    //System.out.print(rs.getInt(1));
+                    if(rs.getString(2).equals("breakfast")){
+                        grp[0] = rs.getInt(1);
+                    }
+                    else if(rs.getString(2).equals("lunch")){
+                        grp[1] = rs.getInt(1);
+                    }
+                    else if(rs.getString(2).equals("dinner")){
+                        grp[2] = rs.getInt(1);
+                    }
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Error while deleting "
+                        + "unnecessary data", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                
+            }
+        //System.out.println(grp[2]);
+        return grp;
+    }
+    
     
     public void onall(Date date){
-        int totalrow =-1, dateserial=0, hallid=0, bf=1, lunch=1,dinner=1;
+        int totalrow =-1, dateserial=0, hallid=0, bf=1, lunch=1,dinner=1, grpserial=0;
+        int []grp = new int[3];
         totalrow = offmodel.getRowCount();
         
          try{
@@ -190,7 +223,10 @@ public class MealSheet extends javax.swing.JFrame {
                     + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        //System.out.println(totalrow);
+        
+        grp = search1stgrp(dateserial);
+        //System.out.println(grpserial);
+        
         int interval = totalrow/100;
         int count =1;
         
@@ -204,12 +240,15 @@ public class MealSheet extends javax.swing.JFrame {
             }
             
             try{
-                psmt = conn.prepareStatement("insert into mealsheet (hallid, date, breakfast,lunch,dinner) values(?,?,?,?,?)");
+                psmt = conn.prepareStatement("insert into mealsheet (hallid, date, breakfast,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values(?,?,?,?,?,?,?,?)");
                 psmt.setInt(1, hallid);
                 psmt.setInt(2, dateserial);
                 psmt.setInt(3, bf);
                 psmt.setInt(4, lunch);
                 psmt.setInt(5, dinner);
+                psmt.setInt(6, grp[0]);
+                psmt.setInt(7, grp[1]);
+                psmt.setInt(8, grp[2]);
                 
                 psmt.execute();
                 psmt.close();
@@ -487,6 +526,7 @@ public class MealSheet extends javax.swing.JFrame {
     public void setupdate(int selectedrow, Date date){
         String bf="", lunch="", dinner="";
         int dateserial =0, hallid=0, inbf=0,indinner=0, inlunch=0;
+        int []grp = new int[3];
         
         bf= bftxt.getText().trim();
         lunch= lunchtxt.getText().trim();
@@ -520,14 +560,19 @@ public class MealSheet extends javax.swing.JFrame {
 //            onmodel.setValueAt(bf, selectedrow, 4);
 //            onmodel.setValueAt(lunch, selectedrow, 5);
 //            onmodel.setValueAt(dinner, selectedrow, 6);
-
+            
+            grp = search1stgrp(dateserial);
+            
             try{
-                psmt = conn.prepareStatement("update mealsheet set breakfast=?,lunch=?, dinner=? where hallid=? and date = ?");
+                psmt = conn.prepareStatement("update mealsheet set breakfast=?,lunch=?, dinner=?,bfgrp=?,lunchgrp=?,dinnergrp=? where hallid=? and date = ?");
                 psmt.setInt(1, Integer.parseInt(bf));
                 psmt.setInt(2, Integer.parseInt(lunch));
                 psmt.setInt(3, Integer.parseInt(dinner));
-                psmt.setInt(4, hallid);
-                psmt.setInt(5, dateserial);
+                psmt.setInt(4, grp[0]);
+                psmt.setInt(5, grp[1]);
+                psmt.setInt(6, grp[2]);
+                psmt.setInt(7, hallid);
+                psmt.setInt(8, dateserial);
                 psmt.execute();
                 psmt.close();
                     
@@ -549,6 +594,8 @@ public class MealSheet extends javax.swing.JFrame {
         else{
             JOptionPane.showMessageDialog(null, "Invalid input enter value than -1 ", "Data update error", JOptionPane.ERROR_MESSAGE);
         }
+        updategrp();
+ 
     }
     
     
@@ -723,6 +770,7 @@ public class MealSheet extends javax.swing.JFrame {
     
     public void updateofftable(int selectedrow, int dateserial){
         int hallid= 0, bf=1, lunch=1, dinner=1;
+        int []grp= new int[3];
         boolean check=false;
         Date date = null;
         
@@ -744,14 +792,19 @@ public class MealSheet extends javax.swing.JFrame {
             return;
         }
         
+        grp = search1stgrp(dateserial);
+        
         if(check){
             try{
-                psmt = conn.prepareStatement("insert into mealsheet (hallid, date, breakfast,lunch,dinner) values(?,?,?,?,?)");
+                psmt = conn.prepareStatement("insert into mealsheet (hallid, date, breakfast,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values(?,?,?,?,?,?,?,?)");
                 psmt.setInt(1, hallid);
                 psmt.setInt(2, dateserial);
                 psmt.setInt(3, bf);
                 psmt.setInt(4, lunch);
                 psmt.setInt(5, dinner);
+                psmt.setInt(6, grp[0]);
+                psmt.setInt(7, grp[1]);
+                psmt.setInt(8, grp[2]);
                 
                 psmt.execute();
                 psmt.close();
@@ -767,6 +820,40 @@ public class MealSheet extends javax.swing.JFrame {
             setontable(date);
             selectonupdate(Integer.toString(hallid));
         }
+    }
+    
+    public void updategrp(){
+        try{
+                psmt = conn.prepareStatement("update mealsheet SET bfgrp=0 WHERE breakfast=0");
+                psmt.execute();
+                psmt.close();
+                    
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Data updating errpr"
+                    + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        try{
+                psmt = conn.prepareStatement("update mealsheet SET lunchgrp=0 WHERE lunch=0");
+                psmt.execute();
+                psmt.close();
+                    
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Data updating errpr"
+                    + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        try{
+                psmt = conn.prepareStatement("update mealsheet SET dinnergrp=0 WHERE dinner=0");
+                psmt.execute();
+                psmt.close();
+                    
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Data updating errpr"
+                    + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
     }
     
     
@@ -1464,6 +1551,7 @@ public class MealSheet extends javax.swing.JFrame {
         if(date != null){
             offallbreakfast(date);
             deleteunnecessarydate();
+            updategrp();
             clearbothtable();
             setofftable(date);
             setontable(date);
@@ -1480,6 +1568,7 @@ public class MealSheet extends javax.swing.JFrame {
         if(date != null){
             offalllunch(date);
             deleteunnecessarydate();
+            updategrp();
             clearbothtable();
             setofftable(date);
             setontable(date);
@@ -1498,6 +1587,7 @@ public class MealSheet extends javax.swing.JFrame {
         if(date != null){
             offallldinner(date);
             deleteunnecessarydate();
+            updategrp();
             clearbothtable();
             setofftable(date);
             setontable(date);
