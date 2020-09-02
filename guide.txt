@@ -1,121 +1,140 @@
 ###Variable Declarations
 
-Connection conn;
-PreparedStatement psmt;
-ResultSet rs;
-DefaultTableModel tm;
-int selectedRow;
-DecimalFormat df = new DecimalFormat("####0.000");
+	Connection conn;
+	PreparedStatement psmt;
+	ResultSet rs;
+	DefaultTableModel tm;
+	int selectedRow;
+	DecimalFormat df = new DecimalFormat("####0.000");
 
 ###Set Look and Feel: Google
 
 ###Table Init
 
-tm = (DefaultTableModel)tableName.getModel();
-tm.setRowCount(0);
+	tm = (DefaultTableModel)tableName.getModel();
+	tm.setRowCount(0);
 
 ###Cursor Focus
 editTextName.requestFocusInWindow();
 
 ###Date Chooser Date Set:
 
-Date date = new Date();
-dateChooser.setDate(date);
-JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
-editor.setEditable(false);
-editor = (JTextFieldDateEditor) dateChooserUpdate.getDateEditor();
-editor.setEditable(false);
+	Date date = new Date();
+	dateChooser.setDate(date);
+	JTextFieldDateEditor editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+	editor.setEditable(false);
+	editor = (JTextFieldDateEditor) dateChooserUpdate.getDateEditor();
+	editor.setEditable(false);
 
-###Input Dialog
-String itemName = null;
-itemName = JOptionPane.showInputDialog("Input Dialog Header");
+	###Input Dialog
+	String itemName = null;
+	itemName = JOptionPane.showInputDialog("Input Dialog Header");
 
-if(itemName == null){
-	JOptionPane.showMessageDialog(null, "No Item Entered!", "Alert!", JOptionPane.ERROR_MESSAGE); 
-	return;
+	if(itemName == null){
+		JOptionPane.showMessageDialog(null, "No Item Entered!", "Alert!", JOptionPane.ERROR_MESSAGE); 
+		return;
 }
 
 ###JOptionPane
-JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.ERROR_MESSAGE);
-JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.INFORMATION_MESSAGE);  
+	JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.ERROR_MESSAGE);
+	JOptionPane.showMessageDialog(null, "Body!", "Header!", JOptionPane.INFORMATION_MESSAGE);  
 
 ###Converting Date Object to String
-
-Date date = dateChooser.getDate();
-Format formatter = new SimpleDateFormat("yyyy-MM-dd");  ///yyyy-MM-dd: 2019-01-07      MMM d,yyyy: 1 Jan, 2019
-String DATE = formatter.format(date);
+	Date date = dateChooser.getDate();
+	Format formatter = new SimpleDateFormat("yyyy-MM-dd");  ///yyyy-MM-dd: 2019-01-07      MMM d,yyyy: 1 Jan, 2019
+	String DATE = formatter.format(date);
 
 ###Table Add
-Object o[] = {string1, string2, string3};
-tm.addRow(o);
+	Object o[] = {string1, string2, string3};
+	tm.addRow(o);
 
 ###Remove Table Selection
-tableName.getSelectionModel().clearSelection();   ///tableController = -1
+	tableName.getSelectionModel().clearSelection();   ///tableController = -1
 
 ###Row Count
-int len = tm.getRowCount();
+	int len = tm.getRowCount();
 
 ###Getting Value From Table
-String value = tm.getValueAt(row, column).toString();
+	String value = tm.getValueAt(row, column).toString();
 
 ###Setting Icon Image
-Frame f=this;     
-Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/cart.png"));    
-f.setIconImage(icon);
+	Frame f=this;     
+	Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagepackage/cart.png"));    
+	f.setIconImage(icon);
+
+
+### Date text field disable
+	JTextFieldDateEditor dtedit;
+	dtedit = (JTextFieldDateEditor) fromdatechooser.getDateEditor();
+	dtedit.setEditable(false);
+
+
+### Retriving image from database || Bytes to Image
+
+	ImageIcon imgic = null;
+	ps = conn.preparedStatement(query);
+	ps.executeQuery();
+	if(rs.next()){
+		byte[] imagedata = rs.getBytes("column_name_on_database_of_image");
+		imgic = new ImageIcon(imagedata);
+		jLbl.setIcon(imgic); 
+	}
 
 
 ### Resiging image and image to icon
 
-ImageIcon icon = new ImageIcon("D:\\cse-mist\\201714030.jpg");
-Image scaleImage = icon.getImage().getScaledInstance(128,128,Image.SCALE_DEFAULT);
-icon = new ImageIcon(scaleImage);
-jLabel2.setIcon(icon);
+	ImageIcon icon = new ImageIcon("D:\\cse-mist\\201714030.jpg");
+	Image scaleImage = icon.getImage().getScaledInstance(128,128,Image.SCALE_DEFAULT);
+	icon = new ImageIcon(scaleImage);
+	jLabel2.setIcon(icon);
+
+
 
 ### File chosser
-[Inside the jbtn action performed]
+	[Inside the jbtn action performed]
 
-JFIleChooser chooser = new JFileChooser();
-chooser = showOpenDialog(null);
-File f = chooser.getSelectedFile();
-String filename = f.getAbsolutePath();
-jTextField.setText(filename);
+	JFIleChooser chooser = new JFileChooser();
+	chooser.showOpenDialog(null);
+	File f = chooser.getSelectedFile();
+	String filename = f.getAbsolutePath();
+	jTextField.setText(filename);
 
 
 ### Converting image to bytes
 
-String filename = "" [global declaration];
-int s = 0 [global declaration];
-byte[] person_image = null [global declaration];  
- 
+	//global declaration
+	String filename = "" ;
+	int s = 0;
+	byte[] person_image = null;  
+	//global declaration
 
--> inside the btn action performed 
+	// inside the btn action performed 
 
-JFIleChooser chooser = new JFileChooser();
-chooser = showOpenDialog(null);
-File f = chooser.getSelectedFile();
-String filename = f.getAsolutePath();
-jTextField.setText(filename);
+	JFIleChooser chooser = new JFileChooser();
+	chooser.showOpenDialog(null);
+	File f = chooser.getSelectedFile();
+	String filename = f.getAsolutePath();
+	jTextField.setText(filename);
 
-try{
-	File image = new File(filename);
-	FileInputStream fis = new FileInputStream(image);
-	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	try{
+		File image = new File(filename);
+		FileInputStream fis = new FileInputStream(image);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-	byte[] buf = new byte[1024];
-	for(int readNum; (readNum = fis.read(buf))!= -1; ){
-		bos.write(buf,0,readNum);	
+		byte[] buf = new byte[1024];
+		for(int readNum; (readNum = fis.read(buf))!= -1; ){
+			bos.write(buf,0,readNum);	
+		}
+
+		person_image = bos.toByteArray();
+
+
+	} catch (Exception e){
+		
 	}
+	// Now to insert into database 
 
-	person_image = bos.toByteArray();
-
-
-} catch (Exception e){
-	
-}
-
--> now to insert into database 
-
-ps.setBytes(17, person_image)
+	ps.setBytes(17, person_image)
 
 
 

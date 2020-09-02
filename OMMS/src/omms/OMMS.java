@@ -18,11 +18,6 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Dashboard st = new Dashboard();
-        //StdnGrpAssign st= new StdnGrpAssign();
-        DailyAvgBill st= new DailyAvgBill();
-        st.setbill(20200720 , 20200729);
-        //st.setVisible(true);
 
     }
 
