@@ -46,11 +46,13 @@ public class DailyAvgBill {
           for(Map.Entry mapelement : previous.entrySet()){
               String key = (String) mapelement.getKey();
               //System.out.println(key+" "+previous.get(key).amount);
-              previousavgprice(20200727,key);  // calculate the previous avg price
+              previousavgprice(20200720,key);  // calculate the previous avg price
           }
           
          //System.out.println(" "+previous.get("Rice").avgprice+" "+previous.get("Rice").prevavailable);
-//          calculatestoreddailybill(fromdate,todate);  //calculate stored bill
+          storeditemdailycost(20200720,20200728);  //calculate stored bill
+          System.out.println(billMap.get(20200723).bf+" lunch "+billMap.get(20200723).lunch+" dinner "+billMap.get(20200723).dinner);
+          
 //          calculatenonstoreddailybill(fromdate,todate); //add nonstored bill
 //          for(int i=0; i<billMap.get(20200813).item.size(); i++){
 //              System.out.println(billMap.get(20200813).item.get(i).name+" "+billMap.get(20200813).item.get(i).avgprice+" "+
@@ -61,6 +63,8 @@ public class DailyAvgBill {
           return billMap;
           
     }
+    
+    
     
 
     
@@ -83,13 +87,61 @@ public class DailyAvgBill {
     
     
     public void storeditemdailycost(int fromdate,int todate){
+        Double prevavailable=0.00, avgprice=0.00,totalamount=0.0, totalprice=0.0, bfbill=0.00, lunchbill=0.00, dinnerbill=0.00;
+        String name="";
+        int date=0;
         
+        try{
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price,item,serial from storeinout where serial >= ? and serial<= ? order by serial");
+            psmt.setInt(1, fromdate);
+            psmt.setInt(2, todate);
+            rs = psmt.executeQuery();
+            //System.out.println(name+" "+dateserial);
+            while(rs.next()){
+                try{
+                    name = rs.getString(6);
+                    prevavailable = previous.get(name).prevavailable;
+                    avgprice = previous.get(name).avgprice;
+                }
+                catch(Exception e){
+                    JOptionPane.showMessageDialog(null, "name not found in hashmap", "stored daily calculation", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                totalprice =(prevavailable*avgprice)+rs.getDouble(5);
+                totalamount = prevavailable + rs.getDouble(1);
+                avgprice = totalprice/totalamount;
+                //System.out.println(avgprice+" "+totalprice+" "+totalamount);
+                previous.get(name).prevavailable = totalamount-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
+                previous.get(name).avgprice = avgprice;
+                
+                bfbill = rs.getDouble(2)*avgprice;
+                lunchbill = rs.getDouble(3)*avgprice;
+                dinnerbill = rs.getDouble(4) * avgprice;
+                //System.out.println(bfbill+" "+lunchbill+" "+dinnerbill);
+                date = rs.getInt(7);
+                if(billMap.containsKey(date)){
+                    billMap.get(date).bf += bfbill;
+                    billMap.get(date).lunch += lunchbill;
+                    billMap.get(date).dinner += dinnerbill;
+                }
+                else{
+                    billMap.put(date, new BillAmount(bfbill,lunchbill,dinnerbill));
+                }
+                billMap.get(date).item.add(new DailyItem(name,rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),avgprice));
+                
+            }
+            //previous.put(name, new PreviousValue(totalamount,totalprice));
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to calculate dailybill", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     
     
     public void previousavgprice(int dateserial, String item){
-        Double available= 0.00, prevavailable=0.00 , totalprice=0.00, totalamount=0.00, avg =0.00;
+        Double prevavailable=0.00 , totalprice=0.00, totalamount=0.00, avg =0.00;
         
         
         

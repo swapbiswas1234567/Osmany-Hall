@@ -18,7 +18,8 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        DailyAvgBill st= new DailyAvgBill();
+        st.setbill(20200720 , 20200728);
     }
 
 }
