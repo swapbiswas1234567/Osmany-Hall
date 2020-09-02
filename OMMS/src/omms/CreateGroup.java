@@ -254,7 +254,7 @@ public class CreateGroup extends javax.swing.JFrame {
             }
             
             if(serial == 0){
-                serial =1;
+                serial = 1;
             }
             else{
                 serial++;
