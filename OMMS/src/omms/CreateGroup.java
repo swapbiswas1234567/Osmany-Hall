@@ -16,6 +16,10 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -108,8 +112,8 @@ public class CreateGroup extends javax.swing.JFrame {
         try{
             psmt = conn.prepareStatement("select serial FROM grp where date=? and name = ? and state = ?");
             psmt.setInt(1, dateserial);
-            psmt.setString(2, name);
-            psmt.setString(3, state);
+            psmt.setString(2, name.toLowerCase());
+            psmt.setString(3, state.toLowerCase(Locale.ITALY));
             rs = psmt.executeQuery();
             while(rs.next()){
                 //System.gtiout.println(rs.getInt(1));
@@ -261,9 +265,9 @@ public class CreateGroup extends javax.swing.JFrame {
             try{
                 psmt = conn.prepareStatement("insert into grp(date, name, serial, state) VALUES( ?, ?, ?, ?)");
                 psmt.setInt(1, dateserial);
-                psmt.setString(2, name);
+                psmt.setString(2, name.toLowerCase());
                 psmt.setInt(3, serial);
-                psmt.setString(4, state);
+                psmt.setString(4, state.toLowerCase());
                 psmt.execute();
                 psmt.close();
             }  
@@ -320,6 +324,8 @@ public class CreateGroup extends javax.swing.JFrame {
     }
     
     
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -367,6 +373,11 @@ public class CreateGroup extends javax.swing.JFrame {
         jLabel2.setText("Date");
 
         createdatechooser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        createdatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                createdatechooserPropertyChange(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -374,6 +385,11 @@ public class CreateGroup extends javax.swing.JFrame {
         jLabel3.setText("Name");
 
         createnametxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        createnametxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createnametxtActionPerformed(evt);
+            }
+        });
 
         createbtn.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         createbtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/add-button.png"))); // NOI18N
@@ -391,6 +407,11 @@ public class CreateGroup extends javax.swing.JFrame {
 
         createcombo.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         createcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        createcombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createcomboActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -452,6 +473,11 @@ public class CreateGroup extends javax.swing.JFrame {
         jLabel5.setText("Date");
 
         updatedatechooser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        updatedatechooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                updatedatechooserPropertyChange(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -459,6 +485,11 @@ public class CreateGroup extends javax.swing.JFrame {
         jLabel6.setText("Name");
 
         updatenametxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        updatenametxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updatenametxtActionPerformed(evt);
+            }
+        });
 
         updatebtn.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         updatebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update meal.png"))); // NOI18N
@@ -476,6 +507,11 @@ public class CreateGroup extends javax.swing.JFrame {
 
         updatecombo.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         updatecombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        updatecombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updatecomboActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -598,6 +634,7 @@ public class CreateGroup extends javax.swing.JFrame {
         //System.out.println(state);
         if(!name.equals("")){
             jtableinsert(date,name,state);
+            createnametxt.setText("");
         }
         else{
             JOptionPane.showMessageDialog(null,"name is empty","Data insertion Error",JOptionPane.ERROR_MESSAGE);
@@ -612,6 +649,7 @@ public class CreateGroup extends javax.swing.JFrame {
         selectedrow = grptable.getSelectedRow();
         if(selectedrow >=0){
             setupdatefield(selectedrow);
+            updatenametxt.requestFocus();
         }
         
     }//GEN-LAST:event_grptableMouseClicked
@@ -637,8 +675,58 @@ public class CreateGroup extends javax.swing.JFrame {
 
     private void saveandexitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveandexitActionPerformed
         // TODO add your handling code here:
-        saveandexit();
+        //saveandexit();
+        if( model.getRowCount() > 0){
+            int responce = JOptionPane.showConfirmDialog(this,"Do you want to save the data ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (responce == JOptionPane.YES_OPTION){
+                try {
+                    saveandexit();
+                    
+                    JFrame frame = this;
+                    Dashboard das = new Dashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"No item is inserted on the table","Table item not found",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_saveandexitActionPerformed
+
+    private void createnametxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createnametxtActionPerformed
+        // TODO add your handling code here:
+        createbtn.doClick();
+    }//GEN-LAST:event_createnametxtActionPerformed
+
+    private void updatenametxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatenametxtActionPerformed
+        // TODO add your handling code here:
+        updatebtn.doClick();
+    }//GEN-LAST:event_updatenametxtActionPerformed
+
+    private void createdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_createdatechooserPropertyChange
+        // TODO add your handling code here:
+        createnametxt.requestFocus();
+    }//GEN-LAST:event_createdatechooserPropertyChange
+
+    private void createcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createcomboActionPerformed
+        // TODO add your handling code here:
+        createnametxt.requestFocus();
+    }//GEN-LAST:event_createcomboActionPerformed
+
+    private void updatedatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_updatedatechooserPropertyChange
+        // TODO add your handling code here:
+        updatenametxt.requestFocus();
+    }//GEN-LAST:event_updatedatechooserPropertyChange
+
+    private void updatecomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatecomboActionPerformed
+        // TODO add your handling code here:
+        updatenametxt.requestFocus();
+    }//GEN-LAST:event_updatecomboActionPerformed
 
     /**
      * @param args the command line arguments

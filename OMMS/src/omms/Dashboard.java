@@ -67,6 +67,14 @@ public class Dashboard extends javax.swing.JFrame {
         tempfoodview = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         createmealsheet = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        studentadmission = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        studentinfoupdate = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        creategroup = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        groupitem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -189,6 +197,54 @@ public class Dashboard extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
+        jMenu4.setText("Hall Admission");
+        jMenu4.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+
+        studentadmission.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
+        studentadmission.setText("Student Admission");
+        studentadmission.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentadmissionActionPerformed(evt);
+            }
+        });
+        jMenu4.add(studentadmission);
+        jMenu4.add(jSeparator7);
+
+        studentinfoupdate.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
+        studentinfoupdate.setText("Student Info Update");
+        studentinfoupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentinfoupdateActionPerformed(evt);
+            }
+        });
+        jMenu4.add(studentinfoupdate);
+
+        jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Grouping");
+        jMenu5.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+
+        creategroup.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
+        creategroup.setText("Create Group");
+        creategroup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creategroupActionPerformed(evt);
+            }
+        });
+        jMenu5.add(creategroup);
+        jMenu5.add(jSeparator8);
+
+        groupitem.setFont(new java.awt.Font("Bell MT", 0, 14)); // NOI18N
+        groupitem.setText("Group Item");
+        groupitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                groupitemActionPerformed(evt);
+            }
+        });
+        jMenu5.add(groupitem);
+
+        jMenuBar1.add(jMenu5);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -285,6 +341,35 @@ public class Dashboard extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_createmealsheetActionPerformed
 
+    private void studentinfoupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentinfoupdateActionPerformed
+        // TODO add your handling code here:
+        stdInfoUpdate ms= new stdInfoUpdate();
+        ms.setVisible(true);
+        dispose();
+        
+    }//GEN-LAST:event_studentinfoupdateActionPerformed
+
+    private void studentadmissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentadmissionActionPerformed
+        // TODO add your handling code here:
+        stdHallAdmission ms= new stdHallAdmission();
+        ms.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_studentadmissionActionPerformed
+
+    private void creategroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creategroupActionPerformed
+        // TODO add your handling code here:
+        CreateGroup ms= new CreateGroup();
+        ms.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_creategroupActionPerformed
+
+    private void groupitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupitemActionPerformed
+        // TODO add your handling code here:
+        ItemGrpAssign ms= new ItemGrpAssign();
+        ms.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_groupitemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -321,11 +406,15 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem creategroup;
     private javax.swing.JMenuItem createmealsheet;
+    private javax.swing.JMenuItem groupitem;
     private javax.swing.JLabel imagelbl;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
@@ -333,12 +422,16 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JMenuItem ledgerbtn;
     private javax.swing.JMenuItem nonstorebtn;
     private javax.swing.JMenuItem nonstoreupdatebtn;
     private javax.swing.JMenuItem storeinbtn;
     private javax.swing.JMenuItem storeoutbtn;
     private javax.swing.JMenuItem storeupdatebtn;
+    private javax.swing.JMenuItem studentadmission;
+    private javax.swing.JMenuItem studentinfoupdate;
     private javax.swing.JMenuItem tempfoodinbtn;
     private javax.swing.JMenuItem tempfoodview;
     private javax.swing.JMenu tmpfoodbtn;

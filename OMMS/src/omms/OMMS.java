@@ -5,18 +5,6 @@
  */
 package omms;
 
-import com.itextpdf.text.DocumentException;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author Ajmir
@@ -31,8 +19,8 @@ public class OMMS {
      */
     public static void main(String[] args) {
         //stdInfoUpdate st = new stdInfoUpdate();
-        Dashboard st =  new Dashboard();
-        //deleteGroup st = new deleteGroup();
+        //Dashboard st =  new Dashboard();
+        deleteGroup st = new deleteGroup();
         //stdHallAdmission st = new stdHallAdmission();
         st.setVisible(true);
     }

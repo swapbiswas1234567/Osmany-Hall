@@ -12,21 +12,19 @@ package omms;
 public class DelGrpItem {
 
     String grpName;
-    String state;
-    int date;
-    
+    int itemCount;
+    int mealCount;
+    String itemList;
+            
     public DelGrpItem() {
-        grpName = null;
-        state = null;
-        date = 0;
+        
     }
     
     public DelGrpItem(String grpName, String state, int date) {
-        this.grpName = grpName;
-        this.state = state;
-        this.date = date;
-        System.out.println("Del Class " + grpName + " " + state + " " + date);
+   
     }
-    
-    
+   public void setValues(){
+       System.out.println("Set Values");
+   } 
+   
 }

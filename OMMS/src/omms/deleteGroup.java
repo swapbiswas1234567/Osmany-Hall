@@ -49,7 +49,6 @@ public class deleteGroup extends javax.swing.JFrame {
     public deleteGroup() {
         initComponents();
         initialize();
-
     }
 
     public void initialize() {
@@ -57,6 +56,7 @@ public class deleteGroup extends javax.swing.JFrame {
         setDateChoosers(); // setting todays date to the date chooser
         closeBtn();
         Tabledecoration();
+        model = deleteGroupTable.getModel();
         JTextFieldDateEditor dtedit;
         dtedit = (JTextFieldDateEditor) dateChoser.getDateEditor();
         dtedit.setEditable(false);
@@ -107,18 +107,92 @@ public class deleteGroup extends javax.swing.JFrame {
 
     }
 
+    public String grpIdToGrpName(int id, int date, String state) {
+        try {
+            PreparedStatement p = conn.prepareStatement("SELECT name FROM grp WHERE serial = ? AND state = ? AND date = ?");
+            p.setInt(1, id);
+            p.setString(2, state);
+            p.setInt(3, date);
+            ResultSet r = p.executeQuery();
+            String name = r.getString(1);
+
+            p.close();
+            r.close();
+            return name;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to convert group name from Id", "Database Error", JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
+    }
+
+    public void showItemList(String name, int row) {
+        Date date = dateChoser.getDate();
+        String state = stateComboBox.getSelectedItem().toString().toLowerCase();
+        int dateInt = Integer.parseInt(formatDate.format(date));
+        String showMsg = "Stored Items \n";
+        int flag = 0;
+
+        String str = "bfgrp";
+        if (state.equals("lunch")) {
+            str = "lunchgrp";
+        } else if (state.equals("dinner")) {
+            str = "dinnergrp";
+        }
+
+        try {
+            ps = conn.prepareStatement("SELECT item, bf, unit FROM storeinout sio JOIN storeditem si ON sio.item = si.name WHERE sio.serial = ? AND " + str + " = ?");
+            ps.setInt(1, dateInt);
+            ps.setInt(2, row);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                showMsg = showMsg.concat(rs.getString(1) + " - " + rs.getString(2) + " " + rs.getString(3) + "\n");
+                flag++;
+            }
+            if (flag == 0) {
+                showMsg = showMsg.concat("No Items\n");
+            }
+            flag = 0;
+            //JOptionPane.showMessageDialog(null, showMsg, "Item Details", JOptionPane.INFORMATION_MESSAGE);
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch Stored Items data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        showMsg = showMsg.concat("\nNon Stored Items\n");
+        try {
+            ps = conn.prepareStatement("SELECT name, amount, unit FROM nonstoreditem nsi JOIN nonstoreditemlist nsil USING(name) WHERE nsi.serial = ? AND grp = ? AND state = ?");
+            ps.setInt(1, dateInt);
+            ps.setInt(2, row);
+            ps.setString(3, state);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                showMsg = showMsg.concat(rs.getString(1) + " - " + rs.getString(2) + " " + rs.getString(3) + "\n");
+                flag++;
+            }
+
+            if (flag == 0) {
+                showMsg = showMsg.concat("No Items\n");
+            }
+            
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch Nonsoted Items data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(null, showMsg, "Item Details", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
     public void setDeleteTable() {
         Date date = dateChoser.getDate();
         String state = stateComboBox.getSelectedItem().toString().toLowerCase();
         int dateInt = Integer.parseInt(formatDate.format(date));
 
-        //System.out.println("In the Set table");
-        //System.out.println("Date " + dateInt + " State " + state);
-        //String[] grpNames;
-        ArrayList<String> grpNames = new ArrayList<String>();
-        int noOfGrps = 0;
-        HashMap<String, DelGrpItem> itemSearch = new HashMap<String, DelGrpItem>();
-
+        ArrayList<Integer> grpIds = new ArrayList<>();
         int serial = 0;
 
         tablemodel = (DefaultTableModel) deleteGroupTable.getModel();
@@ -127,79 +201,106 @@ public class deleteGroup extends javax.swing.JFrame {
         }
 
         try {
-            //Extracting Group Names
-//            ps = conn.prepareStatement("SELECT COUNT(name) FROM grp WHERE date = ? AND state = ?");
-//            ps.setInt(1, dateInt);
-//            ps.setString(2, state);
-//            rs = ps.executeQuery();
-//            int groupCount = 0;
-//            groupCount = rs.getInt(1);
-//            if (groupCount != 0) {
-//                grpNames = new String[groupCount];
-//                ps.close();
-//                rs.close();
-//            } else {
-//                ps.close();
-//                rs.close();
-//                return;
-//            }
-
-            ps = conn.prepareStatement("SELECT name FROM grp WHERE date = ? AND state = ?");
+            ps = conn.prepareStatement("SELECT serial FROM grp WHERE date = ? AND state = ?");
             ps.setInt(1, dateInt);
             ps.setString(2, state);
             rs = ps.executeQuery();
-            //System.out.println("Date " + dateInt + " State " + state);
             while (rs.next()) {
-                //String st = ;
-                grpNames.add(rs.getString(1));
-                //System.out.println("Items \n" + grpNames[noOfGrps] + "No of items: " + noOfGrps);
-                noOfGrps++;
+                grpIds.add(rs.getInt(1));
             }
             ps.close();
             rs.close();
-            //System.out.println(grpNames + " " + grpNames.size());
-            if (noOfGrps == 0) {
-                return;
-            }
-
-            itemSearch.put(grpNames.get(0), new DelGrpItem(grpNames.get(0), state, dateInt));
-//            //Extracting Non Stored Item Names
-//            ps = conn.prepareStatement("SELECT COUNT(nonstoreditem.name) FROM grp JOIN nonstoreditem ON grp.date = nonstoreditem.serial WHERE grp.date = ? AND grp.state = ? AND grp.name = ?");
-//            ps.setInt(1, dateInt);
-//            ps.setString(2, state);
-//            ps.setString(3, grpNames[0]);
-//            rs = ps.executeQuery();
-//            groupCount = 0;
-//            groupCount = rs.getInt(1);
-//            System.out.println("Non Stored " + groupCount);
-//            if (groupCount != 0) {
-//                nonStoredItems = new String[groupCount];
-//                ps.close();
-//                rs.close();
-//            } else {
-//                ps.close();
-//                rs.close();
-//                return;
-//            }
-//
-//            ps = conn.prepareStatement("SELECT nonstoreditem.name FROM grp JOIN nonstoreditem ON grp.date = nonstoreditem.serial WHERE grp.date = ? AND grp.state = ? AND grp.name = ?");
-//            ps.setInt(1, dateInt);
-//            ps.setString(2, state);
-//            ps.setString(3, grpNames[0]);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                nonStoredItems[noOfNonStroredItems] = rs.getString(1);
-//                System.out.println("Items \n" + nonStoredItems[noOfNonStroredItems] + " No of items: " + noOfNonStroredItems);
-//                noOfNonStroredItems++;
-//            }
-//            ps.close();
-//            rs.close();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
-            //return;
+            return;
         }
 
+        String str = "bfgrp";
+        if (state.equals("lunch")) {
+            str = "lunchgrp";
+        } else if (state.equals("dinner")) {
+            str = "dinnergrp";
+        }
+        for (int i = 0; i < grpIds.size(); i++) {
+            int items = 0;
+            int mealCount = 0;
+            try {
+                ps = conn.prepareStatement("SELECT COUNT(item) FROM storeinout WHERE serial = ? AND " + str + " = ?");
+                ps.setInt(1, dateInt);
+                ps.setInt(2, grpIds.get(i));
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    items += rs.getInt(1);
+                }
+                ps.close();
+                rs.close();
+
+                PreparedStatement psNonStored = conn.prepareStatement("SELECT COUNT(name) FROM nonstoreditem WHERE serial = ? AND state = ? AND grp = ?");
+                psNonStored.setInt(1, dateInt);
+                psNonStored.setString(2, state);
+                psNonStored.setInt(3, grpIds.get(i));
+                ResultSet rsNonStored = psNonStored.executeQuery();
+                while (rsNonStored.next()) {
+                    items += rsNonStored.getInt(1);
+                }
+                psNonStored.close();
+                rsNonStored.close();
+
+                PreparedStatement psMealCount = conn.prepareStatement("SELECT COUNT(hallid) FROM mealsheet WHERE date = ? AND " + str + " = ?");
+                psMealCount.setInt(1, dateInt);
+                psMealCount.setInt(2, grpIds.get(i));
+                ResultSet rsMealCount = psMealCount.executeQuery();
+                while (rsMealCount.next()) {
+                    mealCount = rsMealCount.getInt(1);
+                }
+                psMealCount.close();
+                rsMealCount.close();
+                serial++;
+                Object o[] = {serial, grpIdToGrpName(i + 1, dateInt, state), items, mealCount};
+                tablemodel.addRow(o);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Database", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
     }
+    
+    public void deleteGroups(){
+        Date date = dateChoser.getDate();
+        String state = stateComboBox.getSelectedItem().toString().toLowerCase();
+        int dateInt = Integer.parseInt(formatDate.format(date));
+        
+        try {
+            ps = conn.prepareStatement("DELETE FROM grp WHERE date = ? AND state = ? ");
+            ps.setInt(1, dateInt);
+            ps.setString(2, state);
+            
+            ps.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch data from grp table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+        String str = "bfgrp";
+        if (state.equals("lunch")) {
+            str = "lunchgrp";
+        } else if (state.equals("dinner")) {
+            str = "dinnergrp";
+        }
+        
+        try {
+            ps = conn.prepareStatement("UPDATE storeinout SET " + str + " = 0 WHERE serial = ? AND " + str + " > 0");
+            ps.setInt(1, dateInt);
+            
+            ps.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch data from grp table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -248,6 +349,11 @@ public class deleteGroup extends javax.swing.JFrame {
 
         stateComboBox.setFont(new java.awt.Font("Bell MT", 0, 24)); // NOI18N
         stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        stateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stateComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Bell MT", 0, 24)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -283,6 +389,11 @@ public class deleteGroup extends javax.swing.JFrame {
         deleteGroupTable.setSelectionForeground(new java.awt.Color(240, 240, 240));
         deleteGroupTable.setShowVerticalLines(false);
         deleteGroupTable.getTableHeader().setReorderingAllowed(false);
+        deleteGroupTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteGroupTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(deleteGroupTable);
         if (deleteGroupTable.getColumnModel().getColumnCount() > 0) {
             deleteGroupTable.getColumnModel().getColumn(0).setMinWidth(150);
@@ -356,6 +467,21 @@ public class deleteGroup extends javax.swing.JFrame {
             setDeleteTable();
         }
     }//GEN-LAST:event_dateChoserPropertyChange
+
+    private void stateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateComboBoxActionPerformed
+        // TODO add your handling code here:
+        setDeleteTable();
+    }//GEN-LAST:event_stateComboBoxActionPerformed
+
+    private void deleteGroupTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteGroupTableMouseClicked
+        // TODO add your handling code here:
+        int i = -1;
+        i = deleteGroupTable.getSelectedRow();
+        if (i >= 0) {
+            String st = model.getValueAt(i, 1).toString();
+            showItemList(st, i + 1);
+        }
+    }//GEN-LAST:event_deleteGroupTableMouseClicked
 
     /**
      * @param args the command line arguments

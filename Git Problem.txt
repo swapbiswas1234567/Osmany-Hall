@@ -1,3 +1,30 @@
 -> LF RF Problem
 
 cmd - git config core.autocrlf true
+
+-> Merge problem
+
+git checkout --ours -- osmanyhall.db
+git add -f osmanyhall.db
+
+git checkout --ours -- OMMS/dist/OMMS.jar
+git add -f OMMS/dist/OMMS.jar
+
+git checkout --ours -- OMMS/src/omms/OMMS.java
+git add -f OMMS/src/omms/OMMS.java
+
+
+
+
+git checkout --ours -- OMMS/src/omms/stdHallAdmission.form
+git add -f -- OMMS/src/omms/stdHallAdmission.form
+
+git checkout --ours -- OMMS/src/omms/stdHallAdmission.java
+git add -f -- OMMS/src/omms/stdHallAdmission.java
+
+git checkout --ours -- OMMS/src/omms/deleteGroup.form
+git add -f -- OMMS/src/omms/deleteGroup.form
+
+git checkout --ours -- OMMS/src/omms/deleteGroup.java
+git add -f -- OMMS/src/omms/deleteGroup.java
+
