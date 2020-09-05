@@ -103,139 +103,139 @@ public class stdIndBillStat extends javax.swing.JFrame {
  
     }
     
-    public boolean checkhallid(String hallid){
-        boolean exist=false;
-        try{
-            psmt = conn.prepareStatement("select roll,name,dept,hallid from stuinfo where hallid= ?");
-            psmt.setString(1, hallid);
-            rs = psmt.executeQuery();
-            while(rs.next()){
-                exist= true;
-                namelbl.setText(rs.getString(2));
-                rolllbl.setText(rs.getString(1));
-                deptlbl.setText(rs.getString(3));
-            }
-            psmt.close();
-            rs.close();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-        }
-        return exist;
-    }
-    
-    
-    public int checkroll(String roll){
-        int hallid=0;
-        try{
-            psmt = conn.prepareStatement("select hallid,roll,name,dept from stuinfo where roll= ?");
-            psmt.setString(1, roll);
-            rs = psmt.executeQuery();
-            while(rs.next()){
-                hallid = rs.getInt(1);
-                namelbl.setText(rs.getString(3));
-                rolllbl.setText(rs.getString(2));
-                deptlbl.setText(rs.getString(4));
-            }
-            psmt.close();
-            rs.close();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-        }
-        return hallid;
-    }
-    
-    public void mealstatus(int fromdate, int todate, int hallid){
-        Map<Integer, BillAmount> billmap = new HashMap<>();
-        Map<Integer, DailyMealState> mealsheet = new HashMap<>();
-        Map<Integer, Double> tmpbill = new HashMap<>();
-        tablemodel = (DefaultTableModel) billtable.getModel();
-        Date date=null;
-        String strdate="";
-        int bf=0, lunch=0, dinner=0, key=0;
-        Double bfbill=0.0, lunchbill=0.0, dinnerbill=0.0, temporary=0.00, total=0.0;
-        
-        DailyAvgBill db= new DailyAvgBill();
-        SingleStdntBill st= new SingleStdntBill();
-        
-        billmap=db.setbill(fromdate, todate);
-        tmpbill = db.tmpfoodbill(fromdate, todate, hallid);
-        mealsheet = st.meal(fromdate, todate, hallid);
-        
-        int reminder=0;
-        List keys = new ArrayList(billmap.keySet());
-        Collections.sort(keys);
-        
-        
-        for(int i=0 ;i<keys.size(); i++){
-            //System.out.println(keys.get(i));
-            key = Integer.parseInt(keys.get(i).toString());
-            try{
-                date =formatter1.parse(Integer.toString(key));
-                strdate = formatter.format(date);
-            }catch(ParseException e){
-                JOptionPane.showMessageDialog(null, "Date convertion error", "convertion error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            //System.out.println(mealsheet.containsKey(i)+" "+keys);
-            
-            if(mealsheet.containsKey(key) && !tmpbill.containsKey(key)){
-                //System.out.println(key);
-                bf=mealsheet.get(key).bf;
-                lunch = mealsheet.get(key).lunch;
-                dinner = mealsheet.get(key).dinner;
-                
-                bfbill = billmap.get(key).bf*bf;
-                lunchbill = billmap.get(key).lunch*lunch;
-                dinnerbill = billmap.get(key).dinner * dinner;
-                
-                total = (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill);
-                
-                Object o []={strdate,bf,lunch,dinner, dec.format(bfbill), dec.format(lunchbill),
-                    dec.format(dinnerbill),0.00,dec.format(total)};
-                tablemodel.addRow(o);
-            }
-            else if(mealsheet.containsKey(key) && tmpbill.containsKey(key)){
-                //System.out.println(key);
-                bf=mealsheet.get(key).bf;
-                lunch = mealsheet.get(key).lunch;
-                dinner = mealsheet.get(key).dinner;
-                
-                bfbill = billmap.get(key).bf;
-                lunchbill = billmap.get(key).lunch;
-                dinnerbill = billmap.get(key).dinner;
-                temporary = tmpbill.get(key);
-                
-                total = (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill)+temporary;
-                
-                Object o []={strdate,bf,lunch,dinner, dec.format(bfbill), dec.format(lunchbill),
-                    dec.format(dinnerbill),dec.format(temporary),dec.format(total)};
-                tablemodel.addRow(o);
-            }
-            else if( !mealsheet.containsKey(key) && tmpbill.containsKey(key)){
-                //System.out.println(key);
-                bfbill = billmap.get(key).bf;
-                lunchbill = billmap.get(key).lunch;
-                dinnerbill = billmap.get(key).dinner;
-                temporary = tmpbill.get(key);
-                
-                total = temporary;
-                
-                Object o []={strdate, 0, 0, 0, dec.format(bfbill), dec.format(lunchbill),
-                    dec.format(dinnerbill),dec.format(temporary),dec.format(total)};
-                tablemodel.addRow(o);
-            }
-        }
-        //st.generatebill(billmap, mealsheet);
-        
-        total=0.00;
-        for(int i=0; i<model.getRowCount(); i++){
-            total += Double.parseDouble(model.getValueAt(i, 8).toString());
-            
-        }
-        grandtotaltxt.setText(dec.format(total));
-    }
-    
+//    public boolean checkhallid(String hallid){
+//        boolean exist=false;
+//        try{
+//            psmt = conn.prepareStatement("select roll,name,dept,hallid from stuinfo where hallid= ?");
+//            psmt.setString(1, hallid);
+//            rs = psmt.executeQuery();
+//            while(rs.next()){
+//                exist= true;
+//                namelbl.setText(rs.getString(2));
+//                rolllbl.setText(rs.getString(1));
+//                deptlbl.setText(rs.getString(3));
+//            }
+//            psmt.close();
+//            rs.close();
+//        }catch(SQLException e){
+//            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+//        }
+//        return exist;
+//    }
+//    
+//    
+//    public int checkroll(String roll){
+//        int hallid=0;
+//        try{
+//            psmt = conn.prepareStatement("select hallid,roll,name,dept from stuinfo where roll= ?");
+//            psmt.setString(1, roll);
+//            rs = psmt.executeQuery();
+//            while(rs.next()){
+//                hallid = rs.getInt(1);
+//                namelbl.setText(rs.getString(3));
+//                rolllbl.setText(rs.getString(2));
+//                deptlbl.setText(rs.getString(4));
+//            }
+//            psmt.close();
+//            rs.close();
+//        }catch(SQLException e){
+//            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+//        }
+//        return hallid;
+//    }
+//    
+//    public void mealstatus(int fromdate, int todate, int hallid){
+//        Map<Integer, BillAmount> billmap = new HashMap<>();
+//        Map<Integer, DailyMealState> mealsheet = new HashMap<>();
+//        Map<Integer, Double> tmpbill = new HashMap<>();
+//        tablemodel = (DefaultTableModel) billtable.getModel();
+//        Date date=null;
+//        String strdate="";
+//        int bf=0, lunch=0, dinner=0, key=0;
+//        Double bfbill=0.0, lunchbill=0.0, dinnerbill=0.0, temporary=0.00, total=0.0;
+//        
+//        DailyAvgBill db= new DailyAvgBill();
+//        SingleStdntBill st= new SingleStdntBill();
+//        
+//        billmap=db.setbill(fromdate, todate);
+//        tmpbill = db.tmpfoodbill(fromdate, todate, hallid);
+//        mealsheet = st.meal(fromdate, todate, hallid);
+//        
+//        int reminder=0;
+//        List keys = new ArrayList(billmap.keySet());
+//        Collections.sort(keys);
+//        
+//        
+//        for(int i=0 ;i<keys.size(); i++){
+//            //System.out.println(keys.get(i));
+//            key = Integer.parseInt(keys.get(i).toString());
+//            try{
+//                date =formatter1.parse(Integer.toString(key));
+//                strdate = formatter.format(date);
+//            }catch(ParseException e){
+//                JOptionPane.showMessageDialog(null, "Date convertion error", "convertion error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//
+//            //System.out.println(mealsheet.containsKey(i)+" "+keys);
+//            
+//            if(mealsheet.containsKey(key) && !tmpbill.containsKey(key)){
+//                //System.out.println(key);
+//                bf=mealsheet.get(key).bf;
+//                lunch = mealsheet.get(key).lunch;
+//                dinner = mealsheet.get(key).dinner;
+//                
+//                bfbill = billmap.get(key).bf*bf;
+//                lunchbill = billmap.get(key).lunch*lunch;
+//                dinnerbill = billmap.get(key).dinner * dinner;
+//                
+//                total = (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill);
+//                
+//                Object o []={strdate,bf,lunch,dinner, dec.format(bfbill), dec.format(lunchbill),
+//                    dec.format(dinnerbill),0.00,dec.format(total)};
+//                tablemodel.addRow(o);
+//            }
+//            else if(mealsheet.containsKey(key) && tmpbill.containsKey(key)){
+//                //System.out.println(key);
+//                bf=mealsheet.get(key).bf;
+//                lunch = mealsheet.get(key).lunch;
+//                dinner = mealsheet.get(key).dinner;
+//                
+//                bfbill = billmap.get(key).bf;
+//                lunchbill = billmap.get(key).lunch;
+//                dinnerbill = billmap.get(key).dinner;
+//                temporary = tmpbill.get(key);
+//                
+//                total = (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill)+temporary;
+//                
+//                Object o []={strdate,bf,lunch,dinner, dec.format(bfbill), dec.format(lunchbill),
+//                    dec.format(dinnerbill),dec.format(temporary),dec.format(total)};
+//                tablemodel.addRow(o);
+//            }
+//            else if( !mealsheet.containsKey(key) && tmpbill.containsKey(key)){
+//                //System.out.println(key);
+//                bfbill = billmap.get(key).bf;
+//                lunchbill = billmap.get(key).lunch;
+//                dinnerbill = billmap.get(key).dinner;
+//                temporary = tmpbill.get(key);
+//                
+//                total = temporary;
+//                
+//                Object o []={strdate, 0, 0, 0, dec.format(bfbill), dec.format(lunchbill),
+//                    dec.format(dinnerbill),dec.format(temporary),dec.format(total)};
+//                tablemodel.addRow(o);
+//            }
+//        }
+//        //st.generatebill(billmap, mealsheet);
+//        
+//        total=0.00;
+//        for(int i=0; i<model.getRowCount(); i++){
+//            total += Double.parseDouble(model.getValueAt(i, 8).toString());
+//            
+//        }
+//        grandtotaltxt.setText(dec.format(total));
+//    }
+//    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -470,71 +470,71 @@ public class stdIndBillStat extends javax.swing.JFrame {
 
     private void shwobtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shwobtnActionPerformed
         // TODO add your handling code here:
-        String strid="";
-        int id=0, hallid=0;
-        strid = idtxt.getText().trim();
-        Date from=null, to=null;
-        int fromdate=0, todate=0;
-        
-        
-        from = fromdatechooser.getDate();
-        to = todatechooser.getDate();
-        
-        
-        try{
-            fromdate = Integer.parseInt(formatter1.format(from));
-            todate = Integer.parseInt(formatter1.format(to));
-        }
-        catch(Exception e ){
-            JOptionPane.showMessageDialog(null, "date conversion error", "Error Occured!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        tablemodel = (DefaultTableModel) billtable.getModel();
-        if(tablemodel.getColumnCount() > 0){
-            tablemodel.setRowCount(0);
-        }
-        
-        if (fromdate > todate){
-            JOptionPane.showMessageDialog(null, "From date must be smaller than Todate", "Date error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-       
-        
-        
-        if(checkhallid(strid)){
-            //System.out.println("called");
-            try{
-            id= Integer.parseInt(strid);
-            }
-            catch(Exception e ){
-                JOptionPane.showMessageDialog(null, "Enter a valid hallid", "Error Occured!", JOptionPane.ERROR_MESSAGE);
-                namelbl.setText("");
-                rolllbl.setText("");
-                deptlbl.setText("");
-                return;
-            }
-            mealstatus(fromdate,todate, id);
-        }
-        else{
-            hallid = checkroll(strid);
-            //System.out.println(hallid);
-            if(hallid != 0){
-                mealstatus(fromdate,todate, hallid);
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "id does not exist", "Error Occured!", JOptionPane.ERROR_MESSAGE);
-                namelbl.setText("");
-                rolllbl.setText("");
-                deptlbl.setText("");
-                return;
-            }
-        }
-        
-        System.out.println(tablemodel.getRowCount());
-        if(tablemodel.getRowCount() <= 0){
-            JOptionPane.showMessageDialog(null, "No data exist for the given date", "Error Occured!", JOptionPane.ERROR_MESSAGE);
-        }
+//        String strid="";
+//        int id=0, hallid=0;
+//        strid = idtxt.getText().trim();
+//        Date from=null, to=null;
+//        int fromdate=0, todate=0;
+//        
+//        
+//        from = fromdatechooser.getDate();
+//        to = todatechooser.getDate();
+//        
+//        
+//        try{
+//            fromdate = Integer.parseInt(formatter1.format(from));
+//            todate = Integer.parseInt(formatter1.format(to));
+//        }
+//        catch(Exception e ){
+//            JOptionPane.showMessageDialog(null, "date conversion error", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        
+//        tablemodel = (DefaultTableModel) billtable.getModel();
+//        if(tablemodel.getColumnCount() > 0){
+//            tablemodel.setRowCount(0);
+//        }
+//        
+//        if (fromdate > todate){
+//            JOptionPane.showMessageDialog(null, "From date must be smaller than Todate", "Date error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//       
+//        
+//        
+//        if(checkhallid(strid)){
+//            //System.out.println("called");
+//            try{
+//            id= Integer.parseInt(strid);
+//            }
+//            catch(Exception e ){
+//                JOptionPane.showMessageDialog(null, "Enter a valid hallid", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+//                namelbl.setText("");
+//                rolllbl.setText("");
+//                deptlbl.setText("");
+//                return;
+//            }
+//            mealstatus(fromdate,todate, id);
+//        }
+//        else{
+//            hallid = checkroll(strid);
+//            //System.out.println(hallid);
+//            if(hallid != 0){
+//                mealstatus(fromdate,todate, hallid);
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(null, "id does not exist", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+//                namelbl.setText("");
+//                rolllbl.setText("");
+//                deptlbl.setText("");
+//                return;
+//            }
+//        }
+//        
+//        System.out.println(tablemodel.getRowCount());
+//        if(tablemodel.getRowCount() <= 0){
+//            JOptionPane.showMessageDialog(null, "No data exist for the given date", "Error Occured!", JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_shwobtnActionPerformed
 
     private void idtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idtxtActionPerformed

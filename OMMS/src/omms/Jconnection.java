@@ -19,7 +19,7 @@ public class Jconnection {
             //Class.forName("com.mysql.jdbc.Driver");
             Class.forName("org.sqlite.JDBC"); // name of the database we are connecting with
             
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:..\\osmanyhall.db"); // location of the database 
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhall.db"); // location of the database 
             //System.out.println("Connected");
             return conn;
         }catch(Exception e){

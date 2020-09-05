@@ -12,20 +12,18 @@ import java.util.ArrayList;
  * @author Ajmir
  */
 public class BillAmount {
-    Double bf;
-    Double lunch;
-    Double dinner;
+    ArrayList<Double> bfbill;
+    ArrayList<Double> lunchbill;
+    ArrayList<Double> dinnerbill;
     ArrayList<DailyItem> item;
     
-    BillAmount(Double bf, Double lunch, Double dinner){
-        this.bf = bf;
-        this.lunch = lunch;
-        this.dinner = dinner;
+    BillAmount(){
+        bfbill = new ArrayList<>();
+        lunchbill = new ArrayList<>();
+        dinnerbill = new ArrayList<>();
         item = new ArrayList<>();
     }
     
-    public void setbf(Double bf){
-        this.bf = bf;
-    }
+    
     
 }

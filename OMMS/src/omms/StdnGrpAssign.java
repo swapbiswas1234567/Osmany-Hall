@@ -996,24 +996,28 @@ public class StdnGrpAssign extends javax.swing.JFrame {
             flag1=0;
             setgrp(date,state);
             
-            if(grpcombo.getItemCount() <= 0){
-                //System.out.println("called");
-                return;
-            }
-            flag1=1;
             tablemodel = (DefaultTableModel) alltable.getModel();
             if(tablemodel.getColumnCount() > 0){
                 tablemodel.setRowCount(0);
             }
-        
-            grpname = grpcombo.getSelectedItem().toString();
-            grpserial = grpcombo.getSelectedIndex();
-            setalltable(date,state,grpname,grpserial+1);
+            
             
             tablemodel = (DefaultTableModel) singletable.getModel();
             if(tablemodel.getColumnCount() > 0){
                 tablemodel.setRowCount(0);
             }
+            
+            if(grpcombo.getItemCount() <= 0){
+                //System.out.println("called");
+                return;
+            }
+            flag1=1;
+        
+            grpname = grpcombo.getSelectedItem().toString();
+            grpserial = grpcombo.getSelectedIndex();
+            setalltable(date,state,grpname,grpserial+1);
+            
+            
             
             setsingletable(date,state,grpname,grpserial+1);
             singleidtxt.requestFocus();
