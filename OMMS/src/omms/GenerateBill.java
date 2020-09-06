@@ -107,66 +107,66 @@ public class GenerateBill extends javax.swing.JFrame {
     
     
     public void calculatebill(int fromdate, int todate){
-        SingleStdntBill st= new SingleStdntBill();
-        DailyAvgBill db= new DailyAvgBill();
-        Map<Integer, BillAmount> billmap = new HashMap<>();
-        tablemodel = (DefaultTableModel) billtbl.getModel();
-        Double bill=0.00, tmpbill=0.0, prevbill=0.0,totalbill=0.0;
-        int hallid=0,serial=1;
-        String roll="",name="",room="",strtotal="";
+//        SingleStdntBill st= new SingleStdntBill();
+//        DailyAvgBill db= new DailyAvgBill();
+//        Map<Integer, BillAmount> billmap = new HashMap<>();
+//        tablemodel = (DefaultTableModel) billtbl.getModel();
+//        Double bill=0.00, tmpbill=0.0, prevbill=0.0,totalbill=0.0;
+//        int hallid=0,serial=1;
+//        String roll="",name="",room="",strtotal="";
+//        
+//        billmap = db.setbill(fromdate, todate);
         
-        billmap = db.setbill(fromdate, todate);
-        
-        //System.out.println(bill);
-        try{
-            psmt = conn.prepareStatement("select hallid,roll,name,roomno from stuinfo ORDER by hallid");
-            rs = psmt.executeQuery();
-            while(rs.next()){
-                hallid = rs.getInt(1);
-                roll = rs.getString(2);
-                name = rs.getString(3);
-                room = rs.getString(4);
-                
-                bill =st.monthlybill(billmap, fromdate, todate, hallid);
-                tmpbill = st.monthlytmpfoodbill(fromdate, todate,hallid);
-                bill = bill+tmpbill;
-                prevbill = st.previousbill(hallid);
-                
-                if(prevbill > 0){
-                    
-                    totalbill = bill+prevbill;
-                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
-                    0,0,0,prevbill,0,dec.format(totalbill)};
-                    tablemodel.addRow(o);
-                }
-                else if(prevbill < 0){
-                    prevbill =prevbill* -1;
-                    totalbill = bill-prevbill;
-                    if(totalbill <0){
-                        totalbill*=-1;
-                        strtotal = dec.format(totalbill)+"(Extra)";
-                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
-                        0,0,0,0.0,prevbill,strtotal};
-                        tablemodel.addRow(o);
-                    }
-                    else{
-                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
-                        0,0,0,0.0,prevbill,dec.format(totalbill)};
-                        tablemodel.addRow(o);
-                    }
-                }
-                else{
-                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
-                    0,0,0,0.0,0.0,dec.format(bill)};
-                    tablemodel.addRow(o);
-                }
-                serial++;
-            }
-            psmt.close();
-            rs.close();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-        }
+//        //System.out.println(bill);
+//        try{
+//            psmt = conn.prepareStatement("select hallid,roll,name,roomno from stuinfo ORDER by hallid");
+//            rs = psmt.executeQuery();
+//            while(rs.next()){
+//                hallid = rs.getInt(1);
+//                roll = rs.getString(2);
+//                name = rs.getString(3);
+//                room = rs.getString(4);
+//                
+//                bill =st.monthlybill(billmap, fromdate, todate, hallid);
+//                tmpbill = st.monthlytmpfoodbill(fromdate, todate,hallid);
+//                bill = bill+tmpbill;
+//                prevbill = st.previousbill(hallid);
+//                
+//                if(prevbill > 0){
+//                    
+//                    totalbill = bill+prevbill;
+//                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
+//                    0,0,0,prevbill,0,dec.format(totalbill)};
+//                    tablemodel.addRow(o);
+//                }
+//                else if(prevbill < 0){
+//                    prevbill =prevbill* -1;
+//                    totalbill = bill-prevbill;
+//                    if(totalbill <0){
+//                        totalbill*=-1;
+//                        strtotal = dec.format(totalbill)+"(Extra)";
+//                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
+//                        0,0,0,0.0,prevbill,strtotal};
+//                        tablemodel.addRow(o);
+//                    }
+//                    else{
+//                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
+//                        0,0,0,0.0,prevbill,dec.format(totalbill)};
+//                        tablemodel.addRow(o);
+//                    }
+//                }
+//                else{
+//                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
+//                    0,0,0,0.0,0.0,dec.format(bill)};
+//                    tablemodel.addRow(o);
+//                }
+//                serial++;
+//            }
+//            psmt.close();
+//            rs.close();
+//        }catch(SQLException e){
+//            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+//        }
         
     }
     
