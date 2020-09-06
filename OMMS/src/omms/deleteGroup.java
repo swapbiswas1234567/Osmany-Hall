@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -125,7 +127,7 @@ public class deleteGroup extends javax.swing.JFrame {
         }
     }
 
-    public void showItemList(String name, int row) {
+    public void showItemList(int row) {
         Date date = dateChoser.getDate();
         String state = stateComboBox.getSelectedItem().toString().toLowerCase();
         int dateInt = Integer.parseInt(formatDate.format(date));
@@ -156,7 +158,7 @@ public class deleteGroup extends javax.swing.JFrame {
             ps.close();
             rs.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch Stored Items data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to fetch Stored Items data from Database to ShowItem", "Database Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -175,14 +177,14 @@ public class deleteGroup extends javax.swing.JFrame {
             if (flag == 0) {
                 showMsg = showMsg.concat("No Items\n");
             }
-            
+
             ps.close();
             rs.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch Nonsoted Items data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to fetch Nonsoted Items data from Database to ShowItem", "Database Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         JOptionPane.showMessageDialog(null, showMsg, "Item Details", JOptionPane.INFORMATION_MESSAGE);
 
     }
@@ -210,8 +212,8 @@ public class deleteGroup extends javax.swing.JFrame {
             }
             ps.close();
             rs.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetch data from grp table of Database  to setTable", "Database Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -260,47 +262,63 @@ public class deleteGroup extends javax.swing.JFrame {
                 tablemodel.addRow(o);
 
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Database", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Failed to fetch Item Counting for setTable from Database", "Database ERROR", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
     }
-    
-    public void deleteGroups(){
+
+    public void deleteGroups() {
         Date date = dateChoser.getDate();
         String state = stateComboBox.getSelectedItem().toString().toLowerCase();
         int dateInt = Integer.parseInt(formatDate.format(date));
-        
         try {
             ps = conn.prepareStatement("DELETE FROM grp WHERE date = ? AND state = ? ");
             ps.setInt(1, dateInt);
             ps.setString(2, state);
-            
+            ps.execute();
             ps.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch data from grp table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to delete data from grp table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
+
         String str = "bfgrp";
         if (state.equals("lunch")) {
             str = "lunchgrp";
         } else if (state.equals("dinner")) {
             str = "dinnergrp";
         }
-        
+
         try {
             ps = conn.prepareStatement("UPDATE storeinout SET " + str + " = 0 WHERE serial = ? AND " + str + " > 0");
             ps.setInt(1, dateInt);
-            
+            ps.execute();
             ps.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to fetch data from grp table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to update data from StoreInOut table of Database", "Database Deletion Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
+        try {
+            ps = conn.prepareStatement("UPDATE nonstoreditem SET grp = 0 WHERE serial = ? AND state = ?");
+            ps.setInt(1, dateInt);
+            ps.setString(2, state);
+            ps.execute();
+            ps.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to update Nonsoted Items data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            ps = conn.prepareStatement("UPDATE mealsheet SET " + str + " = 0 WHERE date = ?");
+            ps.setInt(1, dateInt);
+            ps.execute();
+            ps.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to update MealSheet data from Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -365,6 +383,11 @@ public class deleteGroup extends javax.swing.JFrame {
         deleteBtn.setForeground(new java.awt.Color(255, 255, 255));
         deleteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/delete_.png"))); // NOI18N
         deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
 
         deleteGroupTable.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         deleteGroupTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -478,10 +501,27 @@ public class deleteGroup extends javax.swing.JFrame {
         int i = -1;
         i = deleteGroupTable.getSelectedRow();
         if (i >= 0) {
-            String st = model.getValueAt(i, 1).toString();
-            showItemList(st, i + 1);
+            showItemList(i + 1);
         }
     }//GEN-LAST:event_deleteGroupTableMouseClicked
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        // TODO add your handling code here:
+        if (model.getRowCount() > 0) {
+            int responce = JOptionPane.showConfirmDialog(this, "Do you want to delete these data ?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (responce == JOptionPane.YES_OPTION) {
+                try {
+                    deleteGroups();
+                    setDeleteTable();
+                } catch (Exception ex) {
+                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No item is available on the table", "Table item not found", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
     /**
      * @param args the command line arguments

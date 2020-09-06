@@ -246,6 +246,9 @@
               <Font name="Bell MT" size="18" style="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stdNameTxtActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="stdRollTxt">
           <Properties>

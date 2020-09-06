@@ -107,9 +107,7 @@ public class StoreInForm extends javax.swing.JFrame {
         selectedRow = -1;
         this.setTitle("STORE INPUT");
         quantityIn_txt.requestFocusInWindow();
-        dec = new DecimalFormat("#0.000");
-        
-        
+        dec = new DecimalFormat("#0.000");        
         
     }
    

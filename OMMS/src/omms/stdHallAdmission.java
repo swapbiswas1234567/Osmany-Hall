@@ -216,6 +216,11 @@ public class stdHallAdmission extends javax.swing.JFrame {
         jLabel7.setText("Contact No");
 
         stdNameTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        stdNameTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stdNameTxtActionPerformed(evt);
+            }
+        });
 
         stdRollTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
 
@@ -451,6 +456,10 @@ public class stdHallAdmission extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error Fetching Image", "Image", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_attachFileBtnActionPerformed
+
+    private void stdNameTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stdNameTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stdNameTxtActionPerformed
 
     /**
      * @param args the command line arguments

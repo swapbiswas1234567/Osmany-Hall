@@ -5,6 +5,8 @@
  */
 package omms;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author Ajmir
@@ -17,8 +19,12 @@ public class OMMS {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
+        //deleteGroup st = new deleteGroup();
+        //Login st = new Login();
+        //Dashboard st = new Dashboard();
+        NewDashboard st = new NewDashboard();
+        st.setVisible(true);       
     }
 
 }
