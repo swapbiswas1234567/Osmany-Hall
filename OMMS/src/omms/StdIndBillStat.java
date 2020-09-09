@@ -32,7 +32,7 @@ import javax.swing.table.TableModel;
  *
  * @author Asus
  */
-public class stdIndBillStat extends javax.swing.JFrame {
+public class StdIndBillStat extends javax.swing.JFrame {
     
     Connection conn = null;
     PreparedStatement psmt = null;
@@ -46,7 +46,7 @@ public class stdIndBillStat extends javax.swing.JFrame {
     /**
      * Creates new form stdIndBillStat
      */
-    public stdIndBillStat() {
+    public StdIndBillStat() {
         initComponents();
         billtabledecoration();
         initialize();
@@ -559,20 +559,21 @@ public class stdIndBillStat extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(stdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(stdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(stdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(stdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdIndBillStat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new stdIndBillStat().setVisible(true);
+                new StdIndBillStat().setVisible(true);
             }
         });
     }

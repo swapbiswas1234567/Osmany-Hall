@@ -79,23 +79,24 @@ public class StoreOutItem extends javax.swing.JFrame {
         comboindex1 = updateCombobox.getSelectedIndex();
         String unit1 = setupdatetunit(comboindex1);
         updateunit.setText(unit1);
-        
-        
+        closeBtn();
+    }
+    
+    public void closeBtn() {
         JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                try{
-                    Dashboard das = new Dashboard();
+                try {
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        
     }
     
     
@@ -1313,6 +1314,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void insertdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_insertdatechooserPropertyChange
@@ -1421,7 +1423,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                     insert();
                     
                     JFrame frame = this;
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();

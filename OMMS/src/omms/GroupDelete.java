@@ -31,7 +31,7 @@ import javax.swing.table.TableModel;
  *
  * @author Asus
  */
-public class deleteGroup extends javax.swing.JFrame {
+public class GroupDelete extends javax.swing.JFrame {
 
     Connection conn = null;
     PreparedStatement ps = null;
@@ -48,9 +48,10 @@ public class deleteGroup extends javax.swing.JFrame {
     /**
      * Creates new form deleteGroup
      */
-    public deleteGroup() {
+    public GroupDelete() {
         initComponents();
         initialize();
+        closeBtn();
     }
 
     public void initialize() {
@@ -73,7 +74,7 @@ public class deleteGroup extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
@@ -482,6 +483,7 @@ public class deleteGroup extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void dateChoserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateChoserPropertyChange
@@ -541,27 +543,30 @@ public class deleteGroup extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(deleteGroup.class
+            java.util.logging.Logger.getLogger(GroupDelete.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(deleteGroup.class
+            java.util.logging.Logger.getLogger(GroupDelete.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(deleteGroup.class
+            java.util.logging.Logger.getLogger(GroupDelete.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(deleteGroup.class
+            java.util.logging.Logger.getLogger(GroupDelete.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new deleteGroup().setVisible(true);
+                new GroupDelete().setVisible(true);
             }
         });
     }

@@ -8,12 +8,15 @@ package omms;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -24,7 +27,7 @@ import javax.swing.table.TableModel;
  *
  * @author Ajmir
  */
-public class ItemGrpAssign extends javax.swing.JFrame {
+public class GroupItemAssign extends javax.swing.JFrame {
     
     Connection conn = null;
     PreparedStatement psmt = null;
@@ -38,12 +41,30 @@ public class ItemGrpAssign extends javax.swing.JFrame {
     /**
      * Creates new form ItemGrpAssign
      */
-    public ItemGrpAssign() {
+    public GroupItemAssign() {
         initComponents();
         Tabledecoration();
         inittialization();
         flag=1;
         settable();
+        closeBtn();
+    }
+    
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    NewDashboard das = new NewDashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     
     
@@ -710,6 +731,7 @@ public class ItemGrpAssign extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void datechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_datechooserPropertyChange
@@ -746,20 +768,21 @@ public class ItemGrpAssign extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ItemGrpAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupItemAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ItemGrpAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupItemAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ItemGrpAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupItemAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ItemGrpAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupItemAssign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ItemGrpAssign().setVisible(true);
+                new GroupItemAssign().setVisible(true);
             }
         });
     }

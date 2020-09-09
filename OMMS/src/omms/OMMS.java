@@ -23,7 +23,11 @@ public class OMMS {
         //deleteGroup st = new deleteGroup();
         //Login st = new Login();
         //Dashboard st = new Dashboard();
-        NewDashboard st = new NewDashboard();
+        //stdHallAdmission st = new stdHallAdmission();
+        //stdInfoUpdate st = new 
+        //NewDashboard st = new NewDashboard();
+        //MessBillView st = new MessBillView();
+        AccountPayment st = new AccountPayment();
         st.setVisible(true);       
     }
 

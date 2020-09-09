@@ -27,9 +27,6 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         //this.setBackground(new Color(0,0,0,0));frame.setUndecorated(true);
-        this.getContentPane().setBackground(new Color(1.0f, 1.0f, 1.0f, 0.0f));
-        this.setBackground(new Color(1.0f, 1.0f, 1.0f, 0.0f));
-        jPanel1.setBackground(new Color(0, 0, 0, 0));
         initialize();
     }
 
@@ -42,7 +39,7 @@ public class Login extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                 } catch (Exception e) {
@@ -55,7 +52,7 @@ public class Login extends javax.swing.JFrame {
     public void checkLoginValidity(){
         if (usernameTxt.getText().toString().trim().equals("abir") && passwordTxt.getText().toString().trim().equals("1234")) {
             try {
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     this.setVisible(false);
                 } catch (Exception e) {
@@ -158,14 +155,14 @@ public class Login extends javax.swing.JFrame {
 
         loginLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         loginLbl.setForeground(new java.awt.Color(255, 255, 255));
-        loginLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        loginLbl.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         loginLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/login.png"))); // NOI18N
         loginLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loginLblMouseClicked(evt);
             }
         });
-        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 520, 180, 80));
+        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 180, 80));
 
         rightLbl.setForeground(new java.awt.Color(255, 255, 255));
         rightLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -177,7 +174,7 @@ public class Login extends javax.swing.JFrame {
         leftLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/leftLbl.png"))); // NOI18N
         jPanel1.add(leftLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 0, 670, 760));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 770));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1280, 750));
 
         pack();
         setLocationRelativeTo(null);

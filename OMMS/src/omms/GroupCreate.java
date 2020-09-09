@@ -8,6 +8,8 @@ package omms;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +32,7 @@ import javax.swing.table.TableModel;
  *
  * @author Ajmir
  */
-public class CreateGroup extends javax.swing.JFrame {
+public class GroupCreate extends javax.swing.JFrame {
     
     
     Connection conn = null;
@@ -47,10 +49,28 @@ public class CreateGroup extends javax.swing.JFrame {
     /**
      * Creates new form CreateGroup
      */
-    public CreateGroup() {
+    public GroupCreate() {
         initComponents();
         Tabledecoration();
         inittialization();
+        closeBtn();
+    }
+    
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    NewDashboard das = new NewDashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
+                    conn.close();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     
     
@@ -621,6 +641,7 @@ public class CreateGroup extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void createbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createbtnActionPerformed
@@ -683,7 +704,7 @@ public class CreateGroup extends javax.swing.JFrame {
                     saveandexit();
                     
                     JFrame frame = this;
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
@@ -745,20 +766,21 @@ public class CreateGroup extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreateGroup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupCreate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreateGroup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupCreate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreateGroup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupCreate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreateGroup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GroupCreate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CreateGroup().setVisible(true);
+                new GroupCreate().setVisible(true);
             }
         });
     }

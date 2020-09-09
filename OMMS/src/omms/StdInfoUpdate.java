@@ -30,7 +30,7 @@ import javax.swing.UIManager;
  *
  * @author Asus
  */
-public class stdInfoUpdate extends javax.swing.JFrame {
+public class StdInfoUpdate extends javax.swing.JFrame {
 
     Connection conn = null;
     PreparedStatement ps = null;
@@ -47,9 +47,10 @@ public class stdInfoUpdate extends javax.swing.JFrame {
     /**
      * Creates new form stdInfoUpdate
      */
-    public stdInfoUpdate() {
+    public StdInfoUpdate() {
         initComponents();
         initialize();
+        closeBtn();
     }
 
     public void initialize() {
@@ -71,7 +72,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
@@ -686,6 +687,7 @@ public class stdInfoUpdate extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchTxtFocusGained
@@ -791,27 +793,28 @@ public class stdInfoUpdate extends javax.swing.JFrame {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(stdInfoUpdate.class
+            java.util.logging.Logger.getLogger(StdInfoUpdate.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(stdInfoUpdate.class
+            java.util.logging.Logger.getLogger(StdInfoUpdate.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(stdInfoUpdate.class
+            java.util.logging.Logger.getLogger(StdInfoUpdate.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(stdInfoUpdate.class
+            java.util.logging.Logger.getLogger(StdInfoUpdate.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new stdInfoUpdate().setVisible(true);
+                new StdInfoUpdate().setVisible(true);
             }
         });
     }

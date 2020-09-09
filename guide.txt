@@ -137,4 +137,16 @@ editTextName.requestFocusInWindow();
 	ps.setBytes(17, person_image)
 
 
+// Centerize the frame
 
+	Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+
+
+// JInternal Frame 
+	//-> window bar show off
+	this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+    
+    //-> Stop drag moving action
+    BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+    bi.setNorthPane(null);
