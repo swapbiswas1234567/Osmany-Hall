@@ -60,27 +60,25 @@ public class NonStoredItem extends javax.swing.JFrame {
         setinsertunit();
         seteditunit();
         flag=1;
-        
-        
+        insertmemotxt.requestFocus();
+        closeBtn();
+    }
+    public void closeBtn() {
         JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                try{
-                    Dashboard das = new Dashboard();
+                try {
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
             }
         });
-        
-        insertmemotxt.requestFocus();
     }
-    
     
     public void inittialization(){
         conn = Jconnection.ConnecrDb(); // set connection with database
@@ -980,6 +978,7 @@ public class NonStoredItem extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -1055,7 +1054,7 @@ public class NonStoredItem extends javax.swing.JFrame {
                     insert();
                     
                     JFrame frame = this;
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
