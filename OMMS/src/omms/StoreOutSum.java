@@ -5,29 +5,156 @@
  */
 package omms;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.io.FileOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
  * @author User
  */
 public class StoreOutSum extends javax.swing.JFrame {
-
-    /**
-     * Creates new form StoreOutSum
-     */
+    ///Variable declaration
+    Connection conn = null;
+    PreparedStatement psmt = null;
+    ResultSet rs = null;
+    DefaultTableModel tm = null;
+    StoredItem st ;
+    SimpleDateFormat formatter;
+    SimpleDateFormat formatter1;
+    SimpleDateFormat formatter2;
+    TableModel model;
+    DefaultTableModel tablemodel = null;
+    DecimalFormat dec;
+    int selectedRow;
+    DecimalFormat dec2;
+   
+    int flag;
+    PreparedStatement psmt1 = null;
+    ResultSet rs1 = null;
+    int ser=0;
+    
+    
     public StoreOutSum() {
         initComponents();
     }
 
+    
+    
+    
+    
+     ///Setting function of  for table to show non stored item
+    public void setItemtable(Date from, Date to, String item ){
+        
+        
+        int fromserial = 0, toserial = 0;
+      
+        String strdate = "";
+        ser=0;
+        Date date=null;
+        tm = (DefaultTableModel) store_tbl.getModel();
+       
+        try{
+            fromserial = Integer.parseInt(formatter1.format(from));
+            toserial = Integer.parseInt(formatter1.format(to));
+            
+            if(fromserial>toserial)
+            {
+                JOptionPane.showConfirmDialog(null, "Invalid Date","Date Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+        }
+        catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
+        }
+   
+            try{
+            if(item.equals("All")){
+            psmt = conn.prepareStatement("select  serial,item,inamount,price,memono from storeinout where serial>=? and serial<=? order by serial,item ;  ");
+            psmt.setInt(1, fromserial);
+            psmt.setInt(2, toserial);
+            rs = psmt.executeQuery();
+            }
+            else
+            {
+            psmt = conn.prepareStatement("select  serial,item,inamount,price,memono from storeinout where  serial>=? and serial<=? and item=? order by serial,item ;  ");
+            psmt.setInt(1, fromserial);
+            psmt.setInt(2, toserial);
+            psmt.setString(3, item);
+            rs = psmt.executeQuery();
+                
+            }
+            while(rs.next()){
+                
+                try{
+                date = formatter1.parse(rs.getString(1));
+                strdate = formatter2.format(date);
+                }
+                catch(ParseException e){
+                    JOptionPane.showMessageDialog(null, "Date Parse "
+                            + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                
+                    if(rs.getString(5).equals("###") && rs.getDouble(3)!=0.0){
+                
+                        ser++;
+                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+                        tm.addRow(o);
+                
+                    }
+                    else if(rs.getDouble(3)!=0.0){
+                           
+                        ser++;
+                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),rs.getString(5)};
+                        tm.addRow(o);
+                    
+                    }
+                
+                    
+                
+            }
+            psmt.close();
+            rs.close();
+            
+        
+        }
+           
+        
+       catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetch data for"
+                    + "set table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        } 
+        
+    }
+    
+   
+    
+    
+    
     
     
      /* intial data set*/
@@ -91,19 +218,38 @@ public class StoreOutSum extends javax.swing.JFrame {
              q.setAlignment(Element.ALIGN_CENTER);
              doc.add(q);
              
-             PdfPTable tbl =new PdfPTable(7);
+             //PdfPTable tbl =new PdfPTable(7);
              
              
              
              //Adding columns
-             tbl.addCell("Serial");
-             tbl.addCell("Date");
-             tbl.addCell("Item");
-             tbl.addCell("Quantity");
-             tbl.addCell("Price");
-             tbl.addCell("Average Price");
-             tbl.addCell("Memo");
-             
+//             tbl.addCell("Serial");
+//             tbl.addCell("Date");
+//             tbl.addCell("Item");
+//             tbl.addCell("Quantity");
+//             tbl.addCell("Price");
+//             tbl.addCell("Average Price");
+//             tbl.addCell("Memo");
+            String[] header = new String[] { "Ser", "Date", "Item",
+            "Quan", "Price","Avg","Memo" };
+            
+            
+            PdfPTable table = new PdfPTable(header.length);
+            table.setHeaderRows(1);
+            table.setWidths(new int[] { 3, 2, 4, 3, 2 });
+            table.setWidthPercentage(98);
+            table.setSpacingBefore(15);
+            table.setSplitLate(false);
+            
+            for (String columnHeader : header) {
+                PdfPCell headerCell = new PdfPCell();
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
+                headerCell.setPadding(8);
+                table.addCell(headerCell);
+            }
              
              
              for(int i=0; i<store_tbl.getRowCount(); i++){
@@ -116,17 +262,36 @@ public class StoreOutSum extends javax.swing.JFrame {
                  String avg= store_tbl.getValueAt(i,5).toString();
                  String mem= store_tbl.getValueAt(i,6).toString();
                  
+                 String[] content = new String[] { ser,Date,Item,Quan,pr,avg,mem};
+               
+                for (String text : content) {
+                    
+                   
+                    PdfPCell cell = new PdfPCell();
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                    cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
                  
-                 tbl.addCell(ser);
-                 tbl.addCell(Date);
-                 tbl.addCell(Item);
-                 tbl.addCell(Quan);
-                 tbl.addCell(pr);
-                 tbl.addCell(avg);
-                 tbl.addCell(mem);
+                 
+//                 tbl.addCell(ser);
+//                 tbl.addCell(Date);
+//                 tbl.addCell(Item);
+//                 tbl.addCell(Quan);
+//                 tbl.addCell(pr);
+//                 tbl.addCell(avg);
+//                 tbl.addCell(mem);
              }
+             doc.add(table);
+        doc.add(new Phrase("\n"));
+        LineSeparator separator = new LineSeparator();
+        separator.setPercentage(98);
+        separator.setLineColor(BaseColor.LIGHT_GRAY);
+        Chunk linebreak = new Chunk(separator);
+        doc.add(linebreak);
              
-             doc.add(tbl);
+        
         }
         catch(Exception e)
         {

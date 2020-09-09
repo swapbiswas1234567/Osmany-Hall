@@ -83,16 +83,14 @@
                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="pdf_btn" pref="65" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="todt_ch" pref="65" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel2" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                              <Component id="Item_cmb" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                              <Component id="jLabel3" alignment="3" min="-2" pref="63" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="fromdt_ch" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabel4" max="32767" attributes="0"/>
+                      <Component id="todt_ch" pref="65" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="Item_cmb" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="3" min="-2" pref="63" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="fromdt_ch" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel4" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="40" max="32767" attributes="0"/>
               </Group>

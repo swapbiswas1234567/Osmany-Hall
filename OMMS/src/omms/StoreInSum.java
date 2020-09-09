@@ -1,11 +1,16 @@
 package omms;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,7 +31,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
 
 public class StoreInSum extends javax.swing.JFrame {
     
@@ -281,32 +285,46 @@ public class StoreInSum extends javax.swing.JFrame {
             PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
              
                 doc.open();
-        
-            Paragraph p=new Paragraph("STORE IN REPORT \n\n\n");     
+            
+            Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
              
             p.setAlignment(Element.ALIGN_CENTER);
              
-             doc.add(p);
-             Date ddt=fromdt_ch.getDate();
-             Date dt=todt_ch.getDate();
+            doc.add(p);
+            Date ddt=fromdt_ch.getDate();
+            Date dt=todt_ch.getDate();
+            
+            
+            Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\t \t"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.UNDERLINE));           
+            q.setAlignment(Element.ALIGN_CENTER);
+            
+            doc.add(q);
+            
+            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+            total.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(total);
+            
+            Paragraph newline=new Paragraph("\n");
+            doc.add(newline);
              
-             Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\t \t"+"To :"+formatter2.format(dt).toString()+"\n\n");           
-             q.setAlignment(Element.ALIGN_CENTER);
-             doc.add(q);
-             
-             PdfPTable tbl =new PdfPTable(7);
-             
-             
-             
-             //Adding columns
-             tbl.addCell("Serial");
-             tbl.addCell("Date");
-             tbl.addCell("Item");
-             tbl.addCell("Quantity");
-             tbl.addCell("Price");
-             tbl.addCell("Average Price");
-             tbl.addCell("Memo");
-             
+            String[] header = new String[] { "Serial", "Date", "Name",
+            "Quantity", "Price","Avg Price","Memo" };
+            
+            PdfPTable table = new PdfPTable(header.length);
+            table.setHeaderRows(1);
+            table.setWidths(new int[] { 2, 3, 4, 3, 2,3,2 });
+            table.setWidthPercentage(98);
+            table.setSpacingBefore(15);
+            table.setSplitLate(false);
+            for (String columnHeader : header) {
+                PdfPCell headerCell = new PdfPCell();
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
+                headerCell.setPadding(8);
+                table.addCell(headerCell);
+            } 
              
              
              for(int i=0; i<store_tbl.getRowCount(); i++){
@@ -318,18 +336,27 @@ public class StoreInSum extends javax.swing.JFrame {
                  String pr= store_tbl.getValueAt(i,4).toString();
                  String avg= store_tbl.getValueAt(i,5).toString();
                  String mem= store_tbl.getValueAt(i,6).toString();
-                 
-                 
-                 tbl.addCell(ser);
-                 tbl.addCell(Date);
-                 tbl.addCell(Item);
-                 tbl.addCell(Quan);
-                 tbl.addCell(pr);
-                 tbl.addCell(avg);
-                 tbl.addCell(mem);
+                 String[] content = new String[] { ser, Date,
+                Item, Quan, pr,avg,mem };
+                
+                for (String text : content) {
+                    PdfPCell cell = new PdfPCell();
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL)));
+                    cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+
              }
+             doc.add(table);
+            doc.add(new Phrase("\n"));
+            LineSeparator separator = new LineSeparator();
+            separator.setPercentage(98);
+            separator.setLineColor(BaseColor.LIGHT_GRAY);
+            Chunk linebreak = new Chunk(separator);
+            doc.add(linebreak);
              
-             doc.add(tbl);
         }
         catch(Exception e)
         {
