@@ -4,6 +4,7 @@ package omms;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
+import static java.lang.Math.round;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,9 +35,12 @@ public class NSItemView extends javax.swing.JFrame {
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
     int selectedRow;
-    int flag=0;
+    DecimalFormat dec2;
+   
+    int flag;
     PreparedStatement psmt1 = null;
     ResultSet rs1 = null;
+    int ser=0;
     
    
 
@@ -47,6 +51,7 @@ public class NSItemView extends javax.swing.JFrame {
         itemcombo_set();
         dateNtableset();
         flag=1;
+        initialtbl();
     }
 
     
@@ -60,10 +65,10 @@ public class NSItemView extends javax.swing.JFrame {
         formatter = new SimpleDateFormat("dd-MM-yyyy");
         formatter1 = new SimpleDateFormat("yyyyMMdd");  
         formatter2 = new SimpleDateFormat("MMM dd,yyyy");
+        dec2 = new DecimalFormat("#0.00");
+        
         selectedRow = -1;
-        this.setTitle("Non Store Item View");
-        
-        
+        this.setTitle("Non Stored Item View");
         
     }
     
@@ -71,12 +76,12 @@ public class NSItemView extends javax.swing.JFrame {
     ///Table decoration
     
     public void tabledecoration(){
-        nsview_tbl.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 18));
+        nsview_tbl.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 20));
         nsview_tbl.getTableHeader().setOpaque(false);
         nsview_tbl.getTableHeader().setBackground(new Color(32,136,203));
         nsview_tbl.getTableHeader().setForeground(new Color(255,255,255));
-        nsview_tbl.setRowHeight(25);
-        nsview_tbl.setFont(new Font("Segeo UI", Font.PLAIN, 14));
+        nsview_tbl.setRowHeight(30);
+        nsview_tbl.setFont(new Font("Segeo UI", Font.PLAIN, 18));
         
 
         DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
@@ -88,6 +93,7 @@ public class NSItemView extends javax.swing.JFrame {
         nsview_tbl.getColumnModel().getColumn(4).setCellRenderer(centerRender);
         nsview_tbl.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         nsview_tbl.getColumnModel().getColumn(6).setCellRenderer(centerRender);
+       nsview_tbl.getColumnModel().getColumn(7).setCellRenderer(centerRender);
        
         
     }
@@ -117,21 +123,43 @@ public class NSItemView extends javax.swing.JFrame {
        }
     }
 
+    /* intial data set*/
+    public void initialtbl()
+    {
+            
+        int len = -1;
+        Date from=null, to =null;
+        String item="";
+        String stat="";
+        from = frdt_ch.getDate();
+         to = todt_ch.getDate(); 
+ 
+       
+        tm = (DefaultTableModel) nsview_tbl.getModel();
+        if(tm.getColumnCount() > 0){
+            tm.setRowCount(0);
+        }
+        
+        if( from != null && to != null && flag==1){
+            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
+            stat= status_cmb.getSelectedItem().toString().toLowerCase();
+            setnsItemtable(from, to, item,stat);
+        }
+
+
+    }
     
     ///Setting function of  for table to show non stored item
     public void setnsItemtable(Date from, Date to, String item ,String status){
         
         
-        int fromserial = 0, toserial = 0, count=2;
-        Double prevavailable[] =new Double[2];
-        prevavailable[0] = 0.00;
-        prevavailable[1] =0.00;
+        int fromserial = 0, toserial = 0;
+      
         String strdate = "";
-        
+        ser=0;
         Date date=null;
         tm = (DefaultTableModel) nsview_tbl.getModel();
-        
-        
+       
         try{
             fromserial = Integer.parseInt(formatter1.format(from));
             toserial = Integer.parseInt(formatter1.format(to));
@@ -141,8 +169,12 @@ public class NSItemView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
    
-        try{
-            psmt = conn.prepareStatement("select  *from nonstoreditem where name =? and serial >= ? and serial <=? order by serial");
+        
+        if(status.equals("all"))
+        {
+         
+            try{
+            psmt = conn.prepareStatement("select  * from nonstoreditem where name=? and serial>=? AND serial <=? order by serial,CASE  WHEN state='breakfast' THEN 1 WHEN state='lunch' THEN 2 WHEN state='dinner' THEN 3 END");
             psmt.setString(1, item);
             psmt.setInt(2, fromserial);
             psmt.setInt(3, toserial);
@@ -159,33 +191,95 @@ public class NSItemView extends javax.swing.JFrame {
                 }
                 String X= firstupperCaseMaker(item);
                 String Y=firstupperCaseMaker(rs.getString(6));
-                if(status.equals(rs.getString(6))){
-                Object o [] = {strdate,X,rs.getDouble(3),0,rs.getDouble(4),Y,rs.getString(5)};
-                tm.addRow(o);
-                }
-                count=2;
+                 
+                
+                    if(rs.getString(5).equals("###")){
+                
+                        ser++;
+                        Object o [] = {ser,strdate,X,rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),Y,""};
+                        tm.addRow(o);
+                
+                    }
+                    else{
+                           
+                        ser++;
+                        Object o [] = {ser,strdate,X,rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),Y,rs.getString(5)};
+                        tm.addRow(o);
+                    
+                    }
+                
+                    
                 
             }
             psmt.close();
             rs.close();
             
+        
+        }
+            catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetch data for"
+                    + "set table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else{
+        try{
+            psmt = conn.prepareStatement("select  * from nonstoreditem where name=? and serial>=? AND serial <=? order by serial,CASE  WHEN state='breakfast' THEN 1 WHEN state='lunch' THEN 2 WHEN state='dinner' THEN 3 END");
+            psmt.setString(1, item);
+            psmt.setInt(2, fromserial);
+            psmt.setInt(3, toserial);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                
+                try{
+                date = formatter1.parse(rs.getString(1));
+                strdate = formatter2.format(date);
+                }
+                catch(ParseException e){
+                    JOptionPane.showMessageDialog(null, "Date Parse "
+                            + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
+                }
+                String X= firstupperCaseMaker(item);
+                String Y=firstupperCaseMaker(rs.getString(6));
+                 
+                if(status.equals(rs.getString(6))){
+                    if(rs.getString(5).equals("###")){
+                
+                        ser++;
+                        Object o [] = {ser,strdate,X,rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),Y,""};
+                        tm.addRow(o);
+                
+                    }
+                    else{
+                           
+                        ser++;
+                              Object o [] = {ser,strdate,X,rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),Y,rs.getString(5)};
+                  tm.addRow(o);
+                    
+                    }
+                }
+                    
+               
+                
+            }
+            psmt.close();
+            rs.close();
+            
+            
+            
            
            // setlbl(item,fromavailable.toString(),prevavailable[0].toString(),Integer.toString(tablemodel.getRowCount()));
-        }catch(SQLException e){
+      }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Failed to fetch data for"
                     + "set table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         } 
         
     }
-    
+    }
     
    public void dateNtableset()
     {
         tm=(DefaultTableModel)nsview_tbl.getModel();
         tm.setRowCount(0);
-        
-       
-        
         /***Date Setting**/
         Date date= new Date();
         frdt_ch.setDate(date);
@@ -208,6 +302,9 @@ public class NSItemView extends javax.swing.JFrame {
         
         return new String(c);
     }
+    
+   
+    
     
     
     
@@ -232,26 +329,26 @@ public class NSItemView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(208, 227, 229));
 
-        NSitem_lbl.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        NSitem_lbl.setFont(new java.awt.Font("Segoe UI", 1, 28)); // NOI18N
         NSitem_lbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         NSitem_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/nonstored.png"))); // NOI18N
         NSitem_lbl.setText("NON STORED ITEM VIEW");
 
-        frdt_ch.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        frdt_ch.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
         frdt_ch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 frdt_chPropertyChange(evt);
             }
         });
 
-        todt_ch.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        todt_ch.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
         todt_ch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 todt_chPropertyChange(evt);
             }
         });
 
-        nsitem_cmb.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        nsitem_cmb.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
         nsitem_cmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nsitem_cmbActionPerformed(evt);
@@ -263,27 +360,27 @@ public class NSItemView extends javax.swing.JFrame {
             }
         });
 
-        status_cmb.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        status_cmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner" }));
+        status_cmb.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
+        status_cmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Breakfast", "Lunch", "Dinner", "All" }));
         status_cmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 status_cmbActionPerformed(evt);
             }
         });
 
-        name_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        name_lbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         name_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/NSitem.png"))); // NOI18N
         name_lbl.setText("NAME");
 
-        status_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        status_lbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         status_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Statustime.png"))); // NOI18N
         status_lbl.setText("STATUS");
 
-        todt_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        todt_lbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         todt_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/from-to date.png"))); // NOI18N
         todt_lbl.setText("TO");
 
-        from_lbl.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        from_lbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         from_lbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/from-to date.png"))); // NOI18N
         from_lbl.setText("FROM");
 
@@ -292,70 +389,81 @@ public class NSItemView extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(NSitem_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(NSitem_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(500, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(from_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(frdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nsitem_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(from_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(frdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(todt_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nsitem_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(67, 67, 67)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(status_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                            .addComponent(todt_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(status_cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(todt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(status_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(status_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(500, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addComponent(NSitem_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(status_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(status_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nsitem_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(name_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(status_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nsitem_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(status_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(from_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(todt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(frdt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(todt_lbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(46, 46, 46))
+                    .addComponent(todt_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(frdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(from_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
-        nsview_tbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        nsview_tbl.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         nsview_tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Date", "Name", "Quantity", "Unit", "Price", "Status", "Memo"
+                "Serial", "Date", "Name", "Quantity", "Price", "Avg Price", "Status", "Memo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         nsview_tbl.setSelectionBackground(new java.awt.Color(232, 57, 97));
         nsview_tbl.setSelectionForeground(new java.awt.Color(240, 240, 240));
+        nsview_tbl.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(nsview_tbl);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1006, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -363,126 +471,31 @@ public class NSItemView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void frdt_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_frdt_chPropertyChange
-        int len = -1;
-        Date from=null, to =null;
-        String item="";
-        String stat="";
-        from = frdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-        
-        tm = (DefaultTableModel) nsview_tbl.getModel();
-        if(tm.getColumnCount() > 0){
-            tm.setRowCount(0);
-        }
-        
-        System.out.println(from);
-        if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
-            stat= status_cmb.getSelectedItem().toString().toLowerCase();
-            setnsItemtable(from, to, item,stat);
-        }
+    initialtbl();
 
     }//GEN-LAST:event_frdt_chPropertyChange
 
     private void todt_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_todt_chPropertyChange
-     int len = -1;
-        Date from=null, to =null;
-        String item="";
-        String stat="";
-         from = frdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-        
-        tm = (DefaultTableModel) nsview_tbl.getModel();
-        if(tm.getColumnCount() > 0){
-            tm.setRowCount(0);
-        }
-        
-        
-        if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
-            stat= status_cmb.getSelectedItem().toString().toLowerCase();
-           
-            setnsItemtable(from, to, item,stat);
-        }
+    initialtbl();
     }//GEN-LAST:event_todt_chPropertyChange
 
     private void nsitem_cmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nsitem_cmbActionPerformed
-        int len = -1;
-        Date from=null, to =null;
-        String item="";
-        String stat="";
-         from = frdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-        
-        tm = (DefaultTableModel) nsview_tbl.getModel();
-        if(tm.getColumnCount() > 0){
-            tm.setRowCount(0);
-        }
-        
-        
-        if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString();
-            stat= status_cmb.getSelectedItem().toString().toLowerCase();
-           
-            setnsItemtable(from, to, item,stat);
-        }
-
+        initialtbl();
     }//GEN-LAST:event_nsitem_cmbActionPerformed
 
     private void status_cmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_status_cmbActionPerformed
-        int len = -1;
-        Date from=null, to =null;
-        String item="";
-        String stat="";
-         from = frdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-        
-        tm = (DefaultTableModel) nsview_tbl.getModel();
-        if(tm.getColumnCount() > 0){
-            tm.setRowCount(0);
-        }
-        
-        System.out.println("called");
-        if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString().toLowerCase();
-            stat= status_cmb.getSelectedItem().toString().toLowerCase();
-           
-            setnsItemtable(from, to, item,stat);
-        }
+        initialtbl();
     }//GEN-LAST:event_status_cmbActionPerformed
 
     private void nsitem_cmbPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_nsitem_cmbPropertyChange
-        int len = -1;
-        Date from=null, to =null;
-        String item="";
-        String stat="";
-         from = frdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-        
-        tm = (DefaultTableModel) nsview_tbl.getModel();
-        if(tm.getColumnCount() > 0){
-            tm.setRowCount(0);
-        }
-        
-        
-        if( from != null && to != null && flag==1){
-            item = nsitem_cmb.getSelectedItem().toString();
-            stat= status_cmb.getSelectedItem().toString().toLowerCase();
-           
-            setnsItemtable(from, to, item,stat);
-        }
+       initialtbl(); 
     }//GEN-LAST:event_nsitem_cmbPropertyChange
 
     /**

@@ -37,9 +37,10 @@ public class StoreInForm extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
+    DecimalFormat dec2;
     int selectedRow;
+    int selectedRow2;
     int flag=0;
-    
     
     public StoreInForm() {
         initComponents();
@@ -108,6 +109,7 @@ public class StoreInForm extends javax.swing.JFrame {
         this.setTitle("STORE INPUT");
         quantityIn_txt.requestFocusInWindow();
         dec = new DecimalFormat("#0.000");
+        dec2 = new DecimalFormat("#0.00");
         
         
         
@@ -159,33 +161,24 @@ public class StoreInForm extends javax.swing.JFrame {
          try{
              String getDate =null;
              int dateserial =-1;
-             
-             System.out.println("AJmir " + Quantity);
-             
-             
              try{
                  getDate = formatter2.format(date);
                  dateserial = Integer.parseInt(formatter1.format(date));
-                 //System.out.println(getDate);
+                 
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, "Date error");
+                 JOptionPane.showMessageDialog(null, " Date error","Input Error",JOptionPane.ERROR_MESSAGE);
              }
              
               //quantity check
                if(checkLetter(Quantity) != true)
                  {
-                        JOptionPane.showMessageDialog(null, "Invalid Quantity Input");
+                        JOptionPane.showMessageDialog(null, "Enter Valid Input","Quantity Error",JOptionPane.ERROR_MESSAGE);
                         return;
                  }
                else if(Quantity.equals("")  )
                     {
-                        JOptionPane.showMessageDialog(null, "Quantity Field Empty");
-                        return; 
-                    }
-               if(checkLetter(Quantity) != true)
-                    {
-                        JOptionPane.showMessageDialog(null, "Quantity Wrong Input");
+                        JOptionPane.showMessageDialog(null, "Quantity Field is empty .","Quantity Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                  
@@ -194,7 +187,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     
                     if(qty ==0 )
                     {
-                        JOptionPane.showMessageDialog(null, " Quantity can not be 0");
+                        JOptionPane.showMessageDialog(null, " Quantity can not be 0","Quantity Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
@@ -204,14 +197,14 @@ public class StoreInForm extends javax.swing.JFrame {
                     //Price checking
                     if(checkLetter(price) != true)
                  {
-                        JOptionPane.showMessageDialog(null, "Invalid Price Input");
+                        JOptionPane.showMessageDialog(null, "Enter Valid Input","Price Error",JOptionPane.ERROR_MESSAGE);
                         return;
                  }
               
                     
                     if(price.equals("") )
                     {
-                        JOptionPane.showMessageDialog(null, "Price Field Empty");
+                        JOptionPane.showMessageDialog(null, "Price Field is empty .","Price Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                                        
@@ -219,18 +212,18 @@ public class StoreInForm extends javax.swing.JFrame {
                     
                     if(pr == 0 )
                     {
-                        JOptionPane.showMessageDialog(null, "Invalid Price");
+                        JOptionPane.showMessageDialog(null, "Price can not be 0 .","Price Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
                     int z =inputcheckDatabase(name,dateserial);
-                    //System.out.println(z);
+                    
                    if( inputCheckTable(name,getDate,-1)<0 && inputcheckDatabase(name,dateserial)>0)
                    {
                    
-                    
+                                   
                     tablemodel = (DefaultTableModel) Store_In_table.getModel();
-                    Object o [] = {name,dec.format(qty),dec.format(pr),memo,getDate};
+                    Object o [] = {name,dec.format(qty),dec2.format(pr),memo,getDate};
                     tablemodel.addRow(o);
                     Store_In_table.getSelectionModel().clearSelection();
                     selectedRow =-1;
@@ -241,25 +234,21 @@ public class StoreInForm extends javax.swing.JFrame {
                    }
                    else if(inputCheckTable(name,getDate,-1)>= 0 )
                    {
-                       JOptionPane.showMessageDialog(null, "Data is in the table");
+                       JOptionPane.showMessageDialog(null, "Data is in the table","Data Duplication",JOptionPane.ERROR_MESSAGE);
                    }
                    else if (inputcheckDatabase(name,dateserial)==-1 )
                    {
-                       JOptionPane.showMessageDialog(null, "Data is in the Database");
+                       JOptionPane.showMessageDialog(null, "Data is already inserted .","Data Duplication",JOptionPane.ERROR_MESSAGE );
                    }
-                   else if (inputcheckDatabase(name,dateserial)==2 )
+                   
+                   /*else if (inputcheckDatabase(name,dateserial)==2 )
                    {
                        JOptionPane.showMessageDialog(null, "Data is in the Database for Update");
-                   }
-                   
-                   
-                    
-             
-             
+                   }*/
          }
          catch(Exception e)
          {
-             JOptionPane.showMessageDialog(null, "Data is not insertable");
+             JOptionPane.showMessageDialog(null, "Data is not insertable","Input Error",JOptionPane.ERROR_MESSAGE);
          }
            
      }
@@ -269,8 +258,8 @@ public class StoreInForm extends javax.swing.JFrame {
   public void insertUpdate()
   {
       
-      int actvalue=0;
-       int totalrow = tm.getRowCount();
+        int actvalue=0;
+        int totalrow = tm.getRowCount();
         Double amount = 0.00;
         Double price=0.00;
         String itemname="";
@@ -278,40 +267,34 @@ public class StoreInForm extends javax.swing.JFrame {
         int serial=0;
         String tabledate = "";
         Date date;
-        
         double bf=0.0;
         double lunch =0.0;
         Double dinner = 0.0;
         int databaseserial = 0;
+        
+        
         for( int i=0; i<totalrow; i++){
-           itemname = tm.getValueAt(i, 0).toString();
-           amount = Double.parseDouble(tm.getValueAt(i, 1).toString());
-           price = Double.parseDouble(tm.getValueAt(i, 2).toString());
-           tabledate = tm.getValueAt(i, 4).toString();
-           memo=tm.getValueAt(i, 3).toString();
+           itemname = tm.getValueAt(i, 1).toString();
+           amount = Double.parseDouble(tm.getValueAt(i, 2).toString());
+           price = Double.parseDouble(tm.getValueAt(i, 3).toString());
+           tabledate = tm.getValueAt(i, 5).toString();
+           memo=tm.getValueAt(i, 4).toString();
            databaseserial = 0;
-           //System.out.println("Save button:"+itemname);
-          // System.out.println("Save button:"+amount);
-           //System.out.println("Save button:"+ tabledate);
-           
            
            try{
                date = formatter2.parse(tabledate);
                serial = Integer.parseInt(formatter1.format(date));
            }
            catch(NumberFormatException | ParseException e){
-               JOptionPane.showMessageDialog(null,"failed to convert"
+               JOptionPane.showMessageDialog(null,"Failed to save"
                        + "t data while inserting","Data Error",JOptionPane.ERROR_MESSAGE);
            }
            
         
-      actvalue=inputcheckDatabase(itemname,serial);
-      
       if( actvalue == 2)
       {
            try{
-                   //System.out.println("Execute update");
-                    psmt = conn.prepareStatement("UPDATE storeinout SET inamount= ? , price = ? ,memo=?  WHERE serial = ? and item = ?");
+                    psmt = conn.prepareStatement("UPDATE storeinout SET inamount = ? , price = ?, memono = ?  WHERE serial = ? and item = ? ;");
                     psmt.setDouble(1, amount);
                     psmt.setDouble(2, price);
                     psmt.setString(3, memo);
@@ -321,8 +304,8 @@ public class StoreInForm extends javax.swing.JFrame {
                     psmt.close();
                     
                 }catch(SQLException e){
-                    JOptionPane.showMessageDialog(null, "Data updating errpr"
-                            + "in save&exit button", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Data updating error"
+                            + "in save&exit button", "Data Fetch Error", JOptionPane.ERROR_MESSAGE);
                 }
           
       }
@@ -330,23 +313,27 @@ public class StoreInForm extends javax.swing.JFrame {
       {
       try{
                 //System.out.println("Execute insert");
-                    
-               psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner) values (?,?,?,?,?,0,0,0)");
+                    String vac="";
+               psmt = conn.prepareStatement("insert into storeinout (serial,item,inamount,price,memono,bf,lunch,dinner,bfgrp,lunchgrp,dinnergrp) values (?,?,?,?,?,0,0,0,?,?,?)");
                 psmt.setInt(1,serial);
                 psmt.setString(2, itemname);
                 psmt.setDouble(3, amount);
                 psmt.setDouble(4, price);
                 psmt.setString(5, memo);
+                psmt.setString(6, vac);
+                psmt.setString(7, vac);
+                psmt.setString(8, vac);
                 psmt.execute();
                 psmt.close();
                 }  
                 catch(SQLException e){
-                    JOptionPane.showMessageDialog(null, "Insert error", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Data Insert Error", "Data Fetch Error", JOptionPane.ERROR_MESSAGE);
                 }  
       }
   }
   }
- //Checking Anyother character else numbers
+ 
+//Checking Anyother character else numbers
     public  boolean checkLetter(String S)
     {
         int stlen = S.length();
@@ -372,11 +359,11 @@ public class StoreInForm extends javax.swing.JFrame {
     {
         int row = Store_In_table.getRowCount();
         int tbIndex = -1;
-        
+                   
         
         for(int i=0; i<row ; i++)
         {
-          if(tm.getValueAt(i,0).toString().trim().equals(Item) && tm.getValueAt(i,4).toString().trim().equals(Date) && i!= index ) 
+          if(tm.getValueAt(i,1).toString().trim().equals(Item) && tm.getValueAt(i,5).toString().trim().equals(Date) && i!= index ) 
         { 
              
        
@@ -395,9 +382,7 @@ public class StoreInForm extends javax.swing.JFrame {
     {
         Double quantity=0.00;
         Double cost = 0.00 ;
-        int date1=2022;
-       // System.out.println(date);
-       // System.out.println(name);
+        int date1=0;
         int val = 0;        
         
         try{
@@ -405,12 +390,10 @@ public class StoreInForm extends javax.swing.JFrame {
             psmt.setInt(1,date);
             psmt.setString(2,name);
             rs=psmt.executeQuery();
-           // System.out.println("Executed");
             while(rs.next())
             {
                 quantity =rs.getDouble(3);
                 date1=rs.getInt(1);
-                //System.out.println(quantity);
                               
             }    
         
@@ -420,12 +403,9 @@ public class StoreInForm extends javax.swing.JFrame {
         
         catch(Exception e)
         {
-            
+            JOptionPane.showMessageDialog(null,"Data Not Found","Data Fetch Error",JOptionPane.ERROR_MESSAGE );
         }
-        //System.out.println(quantity);
-        //System.out.println(date1);        
-        
-        
+       
         if (date1 ==date)
         {
                      if(quantity >0)
@@ -439,9 +419,6 @@ public class StoreInForm extends javax.swing.JFrame {
         }
         else if (date1 !=date)
             val= 1;
-        
-        
-       // System.out.println(val);        
         
             return val;
         
@@ -467,22 +444,22 @@ public class StoreInForm extends javax.swing.JFrame {
              try{
                  getDate = formatter2.format(date);
                  dateserial = Integer.parseInt(formatter1.format(date));
-                 //System.out.println(getDate);
+                 
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, "Date error");
+                 JOptionPane.showMessageDialog(null, "Date Error","Date Update Error",JOptionPane.ERROR_MESSAGE);
              }
              
               //quantity check
-                 if(Quantity.equals("") ||checkLetter(Quantity) != true)
+                 if(Quantity.equals("") != true)
                     {
-                        JOptionPane.showMessageDialog(null, "Quantity Field Empty");
+                        JOptionPane.showMessageDialog(null, "Quantity Field is empty .","Quantity Update Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                  
                  if(checkLetter(Quantity) != true)
                     {
-                        JOptionPane.showMessageDialog(null, "Quantity Wrong Input");
+                        JOptionPane.showMessageDialog(null, "Enter Valid Input","Quntity Update Error", JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
@@ -490,23 +467,19 @@ public class StoreInForm extends javax.swing.JFrame {
                     
                     if(qty ==0 )
                     {
-                        JOptionPane.showMessageDialog(null, "Quanity CAnnot be 0");
+                        JOptionPane.showMessageDialog(null, "Quanity Cannot be 0","Quantity Update Error", JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
-                    
-                    
-
                     //Price checking
-                    
                     if(price.equals(""))
                     {
-                        JOptionPane.showMessageDialog(null, "Price Field Empty");
+                        JOptionPane.showMessageDialog(null, "Price Field is empty .","Price Update Error",JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     if(checkLetter(price) != true)
                     {
-                        JOptionPane.showMessageDialog(null, "Price Wrong Input");
+                        JOptionPane.showMessageDialog(null, "Enter Valid Price","Price Update Error", JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
@@ -514,46 +487,36 @@ public class StoreInForm extends javax.swing.JFrame {
                     
                     if(pr == 0)
                     {
-                        JOptionPane.showMessageDialog(null, "Price Input Error 0");
+                        JOptionPane.showMessageDialog(null, "Price cannot be 0","Price Update Error", JOptionPane.ERROR_MESSAGE);
                         return; 
                     }
                     
                     int z =inputcheckDatabase(name,dateserial);
-                   //System.out.println(memo);
                    if( inputCheckTable(name,getDate,selectedRow)<0 && inputcheckDatabase(name,dateserial)>0)
                    {
                    
-//                    tablemodel = (DefaultTableModel) Store_In_table.getModel();
-//                    Object o [] = {name,qty,pr,0,getDate};
-//                    tablemodel.addRow(o);
                        
                        tm.setValueAt(name, selectedRow, 0);
                        tm.setValueAt(dec.format(qty), selectedRow,1);
-                       tm.setValueAt(dec.format(pr), selectedRow, 2);
+                       tm.setValueAt(dec2.format(pr), selectedRow, 2);
                        tm.setValueAt(memo, selectedRow, 3);
-                       tm.setValueAt(getDate, selectedRow, 4);
+                       tm.setValueAt(getDate, selectedRow,4);
                        
                        Store_In_table.getSelectionModel().clearSelection();
-                    selectedRow =-1;
-                    
-                    quantityUp_txt.setText("");
-                    priceUp_txt.setText("");
-                    memoUp_txt.setText("");
+                       selectedRow =-1;
+                       quantityUp_txt.setText("");
+                       priceUp_txt.setText("");
+                       memoUp_txt.setText("");
                    }
                    else if(inputCheckTable(name,getDate,-1)>= 0 )
                    {
-                       JOptionPane.showMessageDialog(null, "Data is in the table");
+                       JOptionPane.showMessageDialog(null, "Data is in the table","Data Update Error",JOptionPane.ERROR_MESSAGE);
                    }
                    else if (inputcheckDatabase(name,dateserial)==-1 )
                    {
-                       JOptionPane.showMessageDialog(null, date+" "+ "Data is in the Database");
+                       JOptionPane.showMessageDialog(null,"Data is in the Database","Data Update Error",JOptionPane.ERROR_MESSAGE);
                    }
-                   
-                   
-                   
-                    
-             
-             
+                  
          }
          catch(Exception e)
          {
@@ -566,12 +529,12 @@ public class StoreInForm extends javax.swing.JFrame {
     public void mouseClickSet()
     {
         selectedRow = Store_In_table.getSelectedRow();
+        
         String itemName = tm.getValueAt(selectedRow, 0).toString().trim();
         String quantity = tm.getValueAt(selectedRow, 1).toString().trim();
         String price = tm.getValueAt(selectedRow, 2).toString().trim();
         String DATE = tm.getValueAt(selectedRow, 4).toString().trim();
         String memo = tm.getValueAt(selectedRow,3).toString().trim();
-        //System.out.println(memo);
         
         int len = update_cmb.getItemCount();
 
@@ -590,20 +553,23 @@ public class StoreInForm extends javax.swing.JFrame {
             Date date = dt.parse(DATE); 
             dateUp_ch.setDate(date);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Problem!", JOptionPane.ERROR_MESSAGE); 
+            JOptionPane.showMessageDialog(null, "Date is not converted .", "Date Error", JOptionPane.ERROR_MESSAGE); 
         }
         quantityUp_txt.requestFocusInWindow();
     }
     
     //function for delete a selected table row
     public void deleteTableRow(){
+        
               if(selectedRow == -1){
             JOptionPane.showMessageDialog(null, "No row selected!", "Alert", JOptionPane.ERROR_MESSAGE); 
             return;
         }
         
         tm.removeRow(selectedRow);
+        
         selectedRow = -1;
+        
         input_cmb.setSelectedIndex(0);
         update_cmb.setSelectedIndex(0);
         quantityUp_txt.setText("");
@@ -629,17 +595,16 @@ public class StoreInForm extends javax.swing.JFrame {
       
         int option = JOptionPane.showConfirmDialog(null, message, "Create Item", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            //System.out.println(name.getText());
             
             addnewiteminlist(firstupperCaseMaker(name.getText().toLowerCase().trim()),unit.getText().toLowerCase().trim());  // save the item name and 
-            //unit in lower case
-        } else {
-            
+        } 
+        else {
+          return;    
         }
     }
    // adding new item in the database and also combobox 
     public void addnewiteminlist(String name, String unit){
-         String Name1= firstupperCaseMaker(name);         
+         String Name1= name;         
         if(!name.equals("") && !unit.equals("")){
             String item = null;
             try{
@@ -648,8 +613,7 @@ public class StoreInForm extends javax.swing.JFrame {
             rs = psmt.executeQuery();
             while(rs.next()){
                 item = rs.getString(1);
-                //System.out.println(item);
-            }
+                 }
             psmt.close();
             rs.close();
            
@@ -658,7 +622,7 @@ public class StoreInForm extends javax.swing.JFrame {
                         + "data checking in addnewiteminlist", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
             if(item != null){
-                JOptionPane.showMessageDialog(null, "item already exists", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Item already exists", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             }
             else{
                 try{
@@ -679,14 +643,14 @@ public class StoreInForm extends javax.swing.JFrame {
                 
                 }  
                 catch(SQLException e){
-                    JOptionPane.showMessageDialog(null, "add new item in list error", "Data insertion error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Add new item in list error", "Data Insertion error", JOptionPane.ERROR_MESSAGE);
                 }
             }
          
         
         }
         else{
-            JOptionPane.showMessageDialog(null, "Enter name and unit", "Data insertion error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Enter name and unit", "Data Insertion error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -704,8 +668,7 @@ public class StoreInForm extends javax.swing.JFrame {
             psmt.close();
             rs.close();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, ""
-                    + "failed to set the unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to set the unit of for Item", "Data Fetch error", JOptionPane.ERROR_MESSAGE);
             
         }
         return unit;
@@ -721,25 +684,24 @@ public class StoreInForm extends javax.swing.JFrame {
     public String comboIndxtoitem(int index){
         return update_cmb.getItemAt(index);
     }
+    
      public String setupdatetunit(int index){
         String unit="";
         String name = update_cmb.getItemAt(index);
-        //System.out.print(name);
+    
         try{
             psmt = conn.prepareStatement("select unit from storeditem where name = ?");
-            System.out.print("called");
             psmt.setString(1, name);
             rs = psmt.executeQuery();
             
             while(rs.next()){
-                
                 unit = rs.getString(1);
             }
             psmt.close();
             rs.close();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, ""
-                    + "failed to set the update unit of for item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    + "Failed to set the update unit of for Item", "Data Fetch Error", JOptionPane.ERROR_MESSAGE);
             
         }
        
@@ -869,7 +831,7 @@ public class StoreInForm extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(80, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1089,22 +1051,24 @@ public class StoreInForm extends javax.swing.JFrame {
             new String [] {
                 "Item", "Quantity", "Price", "Memo", "Date"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Store_In_table.setSelectionBackground(new java.awt.Color(232, 57, 97));
         Store_In_table.setSelectionForeground(new java.awt.Color(240, 240, 240));
+        Store_In_table.getTableHeader().setReorderingAllowed(false);
         Store_In_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Store_In_tableMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(Store_In_table);
-        if (Store_In_table.getColumnModel().getColumnCount() > 0) {
-            Store_In_table.getColumnModel().getColumn(0).setHeaderValue("Item");
-            Store_In_table.getColumnModel().getColumn(1).setHeaderValue("Quantity");
-            Store_In_table.getColumnModel().getColumn(2).setHeaderValue("Price");
-            Store_In_table.getColumnModel().getColumn(3).setHeaderValue("Memo");
-            Store_In_table.getColumnModel().getColumn(4).setHeaderValue("Date");
-        }
 
         savenexit_btn.setBackground(new java.awt.Color(204, 204, 255));
         savenexit_btn.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -1176,14 +1140,10 @@ public class StoreInForm extends javax.swing.JFrame {
           if ( flag ==1 ){
             
         int comboindex =-1;
-        
         comboindex = input_cmb.getSelectedIndex();  
         String unit = setInsertunit(comboindex);
         insertUnit.setText(unit);
         }
-      
-        
-          
         quantityIn_txt.requestFocusInWindow();
          
     }//GEN-LAST:event_input_cmbActionPerformed
@@ -1213,9 +1173,7 @@ public class StoreInForm extends javax.swing.JFrame {
         String price = priceUp_txt.getText().trim();
         Date date = dateUp_ch.getDate();
         String memo = memoUp_txt.getText().trim().toString();
-        //memo= memotxt.getText().trim();
-        
-        //System.out.print("called "+memo);
+     
         Updateset(name , quantity, price,date,memo);
         
     }//GEN-LAST:event_update_btnActionPerformed
