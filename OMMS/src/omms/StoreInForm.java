@@ -1114,8 +1114,6 @@ public class StoreInForm extends javax.swing.JFrame {
                     insertUpdate();
                     
                     JFrame frame = this;
-                    Dashboard das = new Dashboard();
-                    das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
                 } catch (SQLException ex) {

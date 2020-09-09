@@ -2,6 +2,14 @@ package omms;
 
 
 
+
+import java.sql.SQLException;
+
+/**
+ *
+ * @author Ajmir
+ */
+
 public class OMMS {
 
     //Connection con=null; 
@@ -11,16 +19,8 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //DailyAvgBill st= new DailyAvgBill();
-        //NSitemHistory st=new NSitemHistory();
-          //TemporaryHistory st= new TemporaryHistory();
-       //StoreInForm st =new StoreInForm();
-        // StoredItemOutUpdate st=new StoredItemOutUpdate(); 
-        //StoreOutHistory st=new StoreOutHistory();  
-        //NSItemView st=new NSItemView();
-       StoreInSum st=new StoreInSum();
-        
-       st.setVisible(true);
+        StoreInSum st = new StoreInSum();
+        st.setVisible(true);
     }
 
 }

@@ -64,25 +64,28 @@ public class MealSheet extends javax.swing.JFrame {
         Ontabledecoration();
         Offtabledecoration();
         inittialization();
-        
-        
+        closeBtn();
+    }
+    
+    /*
+        Seeting the cross button action to Dashboard
+     */
+    public void closeBtn() {
         JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                try{
-                    Dashboard das = new Dashboard();
+                try {
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
     }
-    
-    
 
     
     public void inittialization(){
@@ -1434,6 +1437,7 @@ public class MealSheet extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void sheetdatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_sheetdatePropertyChange

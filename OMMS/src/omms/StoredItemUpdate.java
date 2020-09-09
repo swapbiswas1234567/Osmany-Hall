@@ -57,23 +57,24 @@ public class StoredItemUpdate extends javax.swing.JFrame {
         name = itemcombobox.getSelectedItem().toString();
         setupdatetable(date,name);
         
-        
+        closeBtn();
+    }
+    
+    public void closeBtn() {
         JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                try{
-                    Dashboard das = new Dashboard();
+                try {
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        
-        
     }
     
     
@@ -424,6 +425,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void fromdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_fromdatechooserPropertyChange

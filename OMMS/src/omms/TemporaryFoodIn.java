@@ -32,7 +32,7 @@ import javax.swing.table.TableModel;
  * @author Ajmir
  */
 public class TemporaryFoodIn extends javax.swing.JFrame {
-    
+
     Connection conn = null;
     PreparedStatement psmt = null;
     ResultSet rs = null;
@@ -42,9 +42,7 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
-    int flag=0;
-    
-    
+    int flag = 0;
 
     /**
      * Creates new form TemporaryFoodIn
@@ -53,153 +51,143 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         initComponents();
         Tabledecoration();
         inittialization();
-        
+        closeBtn();
+    }
+    
+    public void closeBtn() {
         JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);        
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                try{
-                    Dashboard das = new Dashboard();
+                try {
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        
-    }
+    }    
     
+    
+    public boolean checkitemondatabase(int dateserial, int hallid) {
 
-    
-    
-    public boolean checkitemondatabase(int dateserial , int hallid){
-        
         //System.out.println(" "+dateserial+" "+hallid);
-        try{
+        try {
             psmt = conn.prepareStatement("select hallid from tempfood where hallid = ? and dateserial=?");
             psmt.setInt(1, hallid);
             psmt.setInt(2, dateserial);
             rs = psmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 //System.gtiout.println(rs.getInt(1));
                 psmt.close();
                 rs.close();
                 return true;
             }
-            
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
-        
-       return false; 
-        
+
+        return false;
+
     }
-    
-    
-     public boolean checkinjtable(String hallid, String date, int index){
+
+    public boolean checkinjtable(String hallid, String date, int index) {
         int totalrow = -1;
         totalrow = tempfoodtable.getRowCount();
         //System.out.println(hallid+" "+date);
-        for( int i=0; i<totalrow; i++){
-            if( model.getValueAt(i,0).toString().equals(hallid) && model.getValueAt(i, 4).toString().equals(date)
-                   && i!= index){
+        for (int i = 0; i < totalrow; i++) {
+            if (model.getValueAt(i, 0).toString().equals(hallid) && model.getValueAt(i, 4).toString().equals(date)
+                    && i != index) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
-    public void clearinsertfields(){
+
+    public void clearinsertfields() {
         inserthallid.setText("");
         insertbill.setText("");
         insertremarks.setText("");
     }
-     
-    public void clearupdate(){
+
+    public void clearupdate() {
         updatehallid.setText("");
         updatebill.setText("");
         updateremarks.setText("");
-    } 
-     
-    
-    public void deleterow(int selectedrow){
-        int responce = JOptionPane.showConfirmDialog(this,"Do You Want To Delete"
-                + " The Selected Row ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-        if (responce == JOptionPane.YES_OPTION){
+    }
+
+    public void deleterow(int selectedrow) {
+        int responce = JOptionPane.showConfirmDialog(this, "Do You Want To Delete"
+                + " The Selected Row ?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (responce == JOptionPane.YES_OPTION) {
             tablemodel = (DefaultTableModel) tempfoodtable.getModel();
             tablemodel.removeRow(selectedrow);
         }
-        
+
     }
-    
-    public void inittialization(){
+
+    public void inittialization() {
         conn = Jconnection.ConnecrDb(); // set connection with database
         formatter = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
         formatter1 = new SimpleDateFormat("MMM dd,yyyy");
-        Date todaysdate =new Date();
+        Date todaysdate = new Date();
         insertdatechooser.setDate(todaysdate);  // setting both datechooser todays date
         updatedatechooser.setDate(todaysdate);
-        
+
         JTextFieldDateEditor dtedit;
         dtedit = (JTextFieldDateEditor) insertdatechooser.getDateEditor();
         dtedit.setEditable(false);
-        
+
         JTextFieldDateEditor dtedit1;
         dtedit1 = (JTextFieldDateEditor) updatedatechooser.getDateEditor();
         dtedit1.setEditable(false);
-        
+
         dec = new DecimalFormat("#0.00");
         model = tempfoodtable.getModel();
-        
+
         inserthallid.requestFocus();
     }
-    
-    
-    
-    
-    public void insertdatabase(){
-        String hallid="", bill="", strdate="", remarks="";
-        int dateserial=0, id=0;
-        Double totalbill=0.00;
-        Date date=null;
+
+    public void insertdatabase() {
+        String hallid = "", bill = "", strdate = "", remarks = "";
+        int dateserial = 0, id = 0;
+        Double totalbill = 0.00;
+        Date date = null;
         int totalrow = tempfoodtable.getRowCount();
-        for( int i=0; i< totalrow; i++){
+        for (int i = 0; i < totalrow; i++) {
             hallid = model.getValueAt(i, 0).toString();
             bill = model.getValueAt(i, 5).toString();
             strdate = model.getValueAt(i, 4).toString();
             remarks = model.getValueAt(i, 6).toString();
             //System.out.println(hallid+" "+bill+" "+strdate);
-            
-            try{
+
+            try {
                 date = formatter1.parse(strdate);
                 dateserial = Integer.parseInt(formatter.format(date));
-               
-            }
-            catch(NumberFormatException | ParseException e){
+
+            } catch (NumberFormatException | ParseException e) {
                 JOptionPane.showMessageDialog(null, "date parsing error"
-                        + "while inserting data","date error", JOptionPane.ERROR_MESSAGE);
+                        + "while inserting data", "date error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            try{
-                
+
+            try {
+
                 totalbill = Double.parseDouble(bill);
                 id = Integer.parseInt(hallid);
                 //System.out.print(dateserial);
-            }
-            catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "bill/ hall id convertion error","date error", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "bill/ hall id convertion error", "date error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            
-            
+
             //System.out.println(dateserial+" "+id+" "+totalbill);
-            
-            try{
+            try {
                 psmt = conn.prepareStatement("insert into tempfood (hallid, dateserial, bill,remarks) values(?, ? ,?,?)");
                 psmt.setInt(1, id);
                 psmt.setInt(2, dateserial);
@@ -207,188 +195,157 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
                 psmt.setString(4, remarks);
                 psmt.execute();
                 psmt.close();
-                
-               
-            }  
-            catch(SQLException e){
+
+            } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "insertion error"
                         + " in temp food", "Data insertion error", JOptionPane.ERROR_MESSAGE);
             }
-            
-            
-            
+
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    public void settable(Date date,String hallid, String bill , String remarks){
-        String name="", strdate ="";
-        int room=0,roll=0, id=0, dateserial =0;
-        Double totalbill=0.00;
-        
-        try{
+
+    public void settable(Date date, String hallid, String bill, String remarks) {
+        String name = "", strdate = "";
+        int room = 0, roll = 0, id = 0, dateserial = 0;
+        Double totalbill = 0.00;
+
+        try {
             totalbill = Double.parseDouble(bill);
             id = Integer.parseInt(hallid);
-        }
-        catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Bill/ Hall Id type error", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
-        try{
+
+        try {
             strdate = formatter1.format(date);
             dateserial = Integer.parseInt(formatter.format(date));
-        }
-        catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "date formate error ", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
-        try{
+
+        try {
             psmt = conn.prepareStatement("select roll, name, roomno from stuinfo where hallid = ? ");
             psmt.setInt(1, id);
             rs = psmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 //System.gtiout.println(rs.getInt(1));
-               roll = rs.getInt(1);
-               name = rs.getString(2);
-               room = rs.getInt(3);
+                roll = rs.getInt(1);
+                name = rs.getString(2);
+                room = rs.getInt(3);
             }
             psmt.close();
             rs.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch"
                     + " hall id from database ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        boolean checkdatabase = checkitemondatabase(dateserial , id);
-        boolean tablecheck = checkinjtable(hallid,strdate,-1);
+
+        boolean checkdatabase = checkitemondatabase(dateserial, id);
+        boolean tablecheck = checkinjtable(hallid, strdate, -1);
         //System.out.println(tablecheck);
-        
-        if(roll != 0 && !name.equals("") && room!= 0 && !checkdatabase && !tablecheck && totalbill >0){
+
+        if (roll != 0 && !name.equals("") && room != 0 && !checkdatabase && !tablecheck && totalbill > 0) {
             //System.out.println(roll+" "+name);
             tablemodel = (DefaultTableModel) tempfoodtable.getModel();
-            Object o [] = {hallid, roll,name,room,strdate, dec.format(totalbill),remarks};
+            Object o[] = {hallid, roll, name, room, strdate, dec.format(totalbill), remarks};
             tablemodel.addRow(o);
-            
+
             clearinsertfields();
             inserthallid.requestFocus();
-            
+
             //updateRowHeights();
-            
-        }
-        else if(checkdatabase){
+        } else if (checkdatabase) {
             JOptionPane.showMessageDialog(null, "Data already inserted "
                     + "for same date", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(tablecheck){
+        } else if (tablecheck) {
             JOptionPane.showMessageDialog(null, "Same hall id date "
                     + "exist in JTable", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(totalbill <=0){
+        } else if (totalbill <= 0) {
             JOptionPane.showMessageDialog(null, "Invalid Bill", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Hall id doesnot exist"
                     + " enter correct hall id", "Data insertion error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
+
     }
-    
-    
-    public void updatefield(int selectedrow){
-        String strdate="", strhallid="", strbill="", remarks="";
-        Date date=null;
-        
-        strdate= model.getValueAt(selectedrow,4).toString();
+
+    public void updatefield(int selectedrow) {
+        String strdate = "", strhallid = "", strbill = "", remarks = "";
+        Date date = null;
+
+        strdate = model.getValueAt(selectedrow, 4).toString();
         strhallid = model.getValueAt(selectedrow, 0).toString();
         strbill = model.getValueAt(selectedrow, 5).toString();
         remarks = model.getValueAt(selectedrow, 6).toString();
-        
-        try{
+
+        try {
             date = formatter1.parse(strdate);
-        }
-        catch(ParseException e){
+        } catch (ParseException e) {
             JOptionPane.showMessageDialog(null, "Date Parse "
                     + "error in Updatefield", "Date parsing error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         updatedatechooser.setDate(date);
         updatehallid.setText(strhallid);
         updatebill.setText(strbill);
         updateremarks.setText(remarks);
     }
-    
-    
-    public void updatetable(int selectedrow){
-        String strdate="", strbill="", strhallid="", remarks="", name="";
-        Date date=null;
-        int dateserial=0, hallid=0, roll=0, room=0;
-        Double amount =0.00;
-        
+
+    public void updatetable(int selectedrow) {
+        String strdate = "", strbill = "", strhallid = "", remarks = "", name = "";
+        Date date = null;
+        int dateserial = 0, hallid = 0, roll = 0, room = 0;
+        Double amount = 0.00;
+
         date = updatedatechooser.getDate();
         strbill = updatebill.getText().trim();
         strhallid = updatehallid.getText().trim();
         remarks = updateremarks.getText().trim();
-        
-        try{
+
+        try {
             strdate = formatter1.format(date);
             dateserial = Integer.parseInt(formatter.format(date));
-           
-        }
-        catch(NumberFormatException e){
+
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "date formate error ", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        try{
+
+        try {
             amount = Double.parseDouble(strbill);
             hallid = Integer.parseInt(strhallid);
-        }
-        catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "hallid/amount format error", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
-        
-        try{
+
+        try {
             psmt = conn.prepareStatement("select roll, name, roomno from stuinfo where hallid = ? ");
             psmt.setInt(1, hallid);
             rs = psmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 //System.gtiout.println(rs.getInt(1));
-               roll = rs.getInt(1);
-               name = rs.getString(2);
-               room = rs.getInt(3);
+                roll = rs.getInt(1);
+                name = rs.getString(2);
+                room = rs.getInt(3);
             }
             psmt.close();
             rs.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch"
                     + " hall id from database ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
-        boolean checkdatabase = checkitemondatabase(dateserial , hallid);
-        boolean tablecheck = checkinjtable(strhallid,strdate, selectedrow);
-        
+
+        boolean checkdatabase = checkitemondatabase(dateserial, hallid);
+        boolean tablecheck = checkinjtable(strhallid, strdate, selectedrow);
+
         //System.out.println(checkdatabase+" "+tablecheck);
-        
-        if(roll != 0 && !name.equals("") && room!= 0 && !checkdatabase && !tablecheck && amount > 0){
+        if (roll != 0 && !name.equals("") && room != 0 && !checkdatabase && !tablecheck && amount > 0) {
             //System.out.println(roll+" "+name);
             model.setValueAt(strhallid, selectedrow, 0);
             model.setValueAt(roll, selectedrow, 1);
@@ -397,43 +354,33 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
             model.setValueAt(strdate, selectedrow, 4);
             model.setValueAt(dec.format(amount), selectedrow, 5);
             model.setValueAt(remarks, selectedrow, 6);
-            
+
             inserthallid.requestFocus();
             clearupdate();
             tempfoodtable.clearSelection();
             //updateRowHeights();
-            
-        }
-        else if(checkdatabase){
+
+        } else if (checkdatabase) {
             JOptionPane.showMessageDialog(null, "Data already inserted "
                     + "for same date", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(tablecheck){
+        } else if (tablecheck) {
             JOptionPane.showMessageDialog(null, "Same hall id date "
                     + "exist in JTable", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else if(amount <=0){
+        } else if (amount <= 0) {
             JOptionPane.showMessageDialog(null, "Invalid Bill", "Data insertion error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Hall id doesnot exist"
                     + " enter correct hall id", "Data insertion error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
-        
+
     }
-    
-    
-    public void Tabledecoration(){
+
+    public void Tabledecoration() {
         tempfoodtable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 14));
         tempfoodtable.getTableHeader().setOpaque(false);
-        tempfoodtable.getTableHeader().setBackground(new Color(32,136,203));
-        tempfoodtable.getTableHeader().setForeground(new Color(255,255,255));
+        tempfoodtable.getTableHeader().setBackground(new Color(32, 136, 203));
+        tempfoodtable.getTableHeader().setForeground(new Color(255, 255, 255));
         tempfoodtable.setRowHeight(25);
-        
 
         DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
         centerRender.setHorizontalAlignment(JLabel.CENTER);
@@ -444,14 +391,10 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         tempfoodtable.getColumnModel().getColumn(4).setCellRenderer(centerRender);
         tempfoodtable.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         tempfoodtable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
-        
+
         //TableColumn col = tempfoodtable.getColumnModel().getColumn(6);
         //col.setPreferredWidth();
-        
     }
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -553,7 +496,7 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -777,88 +720,85 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void insertbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertbtnActionPerformed
         // TODO add your handling code here:
-        Date date=null;
-        String hallid="", bill="", remarks="";
+        Date date = null;
+        String hallid = "", bill = "", remarks = "";
         date = insertdatechooser.getDate();
         hallid = inserthallid.getText().trim();
         bill = insertbill.getText().trim();
         remarks = insertremarks.getText().trim();
-        if( !hallid.equals("") && !bill.equals("")){
-            settable(date,hallid, bill, remarks);
-        }
-        else if(hallid.equals("")){
+        if (!hallid.equals("") && !bill.equals("")) {
+            settable(date, hallid, bill, remarks);
+        } else if (hallid.equals("")) {
             JOptionPane.showMessageDialog(null, "Hall id can't be empty", "Data insert error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if (bill.equals("")){
+        } else if (bill.equals("")) {
             JOptionPane.showMessageDialog(null, "bill can't be empty", "Data insert error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_insertbtnActionPerformed
 
     private void tempfoodtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tempfoodtableMouseClicked
         // TODO add your handling code here:
-        int selectedrow =-1;
+        int selectedrow = -1;
         //System.out.println(selectedrow+" called");
         selectedrow = tempfoodtable.getSelectedRow();
-        if(selectedrow >=0){
+        if (selectedrow >= 0) {
             updatefield(selectedrow);
         }
 //        else{
 //            JOptionPane.showMessageDialog(null, "Hall id can't be empty", "Data insert error", JOptionPane.ERROR_MESSAGE);
 //        }
-        
+
     }//GEN-LAST:event_tempfoodtableMouseClicked
 
     private void updatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatebtnActionPerformed
         // TODO add your handling code here:
-        int selectedrow =-1;
-        selectedrow= tempfoodtable.getSelectedRow();
-        
-        if( selectedrow >= 0){
+        int selectedrow = -1;
+        selectedrow = tempfoodtable.getSelectedRow();
+
+        if (selectedrow >= 0) {
             updatetable(selectedrow);
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "No row is selected", "Data insert error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_updatebtnActionPerformed
 
     private void deletebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletebtnActionPerformed
         // TODO add your handling code here:
-        int selectedrow =-1;
-        selectedrow= tempfoodtable.getSelectedRow();
-        
-        if( selectedrow >= 0){
+        int selectedrow = -1;
+        selectedrow = tempfoodtable.getSelectedRow();
+
+        if (selectedrow >= 0) {
             deleterow(selectedrow);
             clearupdate();
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "No row is selected", "Data delete error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deletebtnActionPerformed
 
     private void saveandexitbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveandexitbtnActionPerformed
         // TODO add your handling code here:
-        int responce = JOptionPane.showConfirmDialog(this,"Do you want to save"
-                + " the inserted items ?","Confirm",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-        
-        if (responce == JOptionPane.YES_OPTION){
+        int responce = JOptionPane.showConfirmDialog(this, "Do you want to save"
+                + " the inserted items ?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (responce == JOptionPane.YES_OPTION) {
             try {
-            // TODO add your handling code here:
-            insertdatabase();
-            JFrame frame = this;
-            Dashboard das = new Dashboard();
-            das.setVisible(true);
-            frame.setVisible(false);
-            conn.close();
+                // TODO add your handling code here:
+                insertdatabase();
+                JFrame frame = this;
+                NewDashboard das = new NewDashboard();
+                das.setVisible(true);
+                frame.setVisible(false);
+                conn.close();
             } catch (SQLException ex) {
                 Logger.getLogger(TemporaryFoodIn.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }//GEN-LAST:event_saveandexitbtnActionPerformed
 
     private void insertdatechooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_insertdatechooserPropertyChange
@@ -868,13 +808,13 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
 
     private void inserthallidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inserthallidActionPerformed
         // TODO add your handling code here:
-        
+
         insertbill.requestFocus();
     }//GEN-LAST:event_inserthallidActionPerformed
 
     private void insertbillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertbillActionPerformed
         // TODO add your handling code here:
-        
+
         insertremarks.requestFocus();
     }//GEN-LAST:event_insertbillActionPerformed
 

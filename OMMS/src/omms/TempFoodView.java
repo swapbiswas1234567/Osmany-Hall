@@ -72,7 +72,7 @@ public class TempFoodView extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
-                    Dashboard das = new Dashboard();
+                    NewDashboard das = new NewDashboard();
                     das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
@@ -106,6 +106,9 @@ public class TempFoodView extends javax.swing.JFrame {
         double totalBill = 0;
 
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
+        if (tablemodel.getColumnCount() > 0) {
+            tablemodel.setRowCount(0);
+        }
 
         try {
             strFromDate = formatDate.format(from);
@@ -169,6 +172,9 @@ public class TempFoodView extends javax.swing.JFrame {
         double totalBill = 0;
 
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
+        if (tablemodel.getColumnCount() > 0) {
+            tablemodel.setRowCount(0);
+        }
 
         try {
             strFromDate = formatDate.format(from);
@@ -414,6 +420,7 @@ public class TempFoodView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
@@ -428,6 +435,7 @@ public class TempFoodView extends javax.swing.JFrame {
 
         String todaysDate = formatDate.format(new Date()).trim();
         String temp = formatDate.format(fromDate).trim();
+        
         tablemodel = (DefaultTableModel) tempFoodViewTable.getModel();
         if (tablemodel.getColumnCount() > 0) {
             tablemodel.setRowCount(0);
