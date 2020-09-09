@@ -1112,7 +1112,7 @@ public class StoreInForm extends javax.swing.JFrame {
             if (responce == JOptionPane.YES_OPTION){
                 try {
                     insertUpdate();
-                    
+                    //Save close to dashboard
                     JFrame frame = this;
                     frame.setVisible(false);
                     conn.close();

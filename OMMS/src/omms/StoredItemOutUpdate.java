@@ -344,6 +344,8 @@ public class StoredItemOutUpdate extends javax.swing.JFrame {
          
          int serial =0;
          int delserial=0;
+         int deldate=0;
+         Date dt=new Date();
          String delname="", memo="";
          String stats="";
          
@@ -354,7 +356,8 @@ public class StoredItemOutUpdate extends javax.swing.JFrame {
         
          try{
             serial = Integer.parseInt(formatter1.format(date));
-        }
+            deldate= Integer.parseInt(formatter1.format(dt));
+         }
         catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Date Format is inavlid ","Date Parsing Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -378,7 +381,7 @@ public class StoredItemOutUpdate extends javax.swing.JFrame {
                 try{
                     
 
-                    psmt = conn.prepareStatement(" insert into storeinoutlog (id,serial,item,inamount,price,memono,bf,lunch,dinner,user,status) values(?,?,?,?,?,?,?,?,?,?,?) ");
+                    psmt = conn.prepareStatement(" insert into storeinoutlog (id,serial,item,inamount,price,memono,bf,lunch,dinner,user,status,deletedate) values(?,?,?,?,?,?,?,?,?,?,?,?) ");
                    
                     psmt.setInt(1, supid);
                     psmt.setInt(2, delserial);
@@ -391,7 +394,7 @@ public class StoredItemOutUpdate extends javax.swing.JFrame {
                     psmt.setDouble(9, dinner);
                     psmt.setString(10, UserLog.name);
                     psmt.setInt(11, sta);
-                    
+                    psmt.setInt(12, deldate);
                     System.out.println("called"+delserial+" "+delname+" "+inamount + ""+price+" "+memo+" "+bf+" "+lunch+" "+dinner);
                    
                     psmt.execute();

@@ -143,8 +143,10 @@ public class StoreInHistory extends javax.swing.JFrame {
         int fromserial = 0, toserial = 0;
       
         String strdate = "";
+        String strdate2 = "";
         ser=0;
         Date date=null;
+        Date dt=null;
         tm = (DefaultTableModel) store_log.getModel();
        
         try{
@@ -177,6 +179,9 @@ public class StoreInHistory extends javax.swing.JFrame {
                 try{
                 date = formatter1.parse(rs.getString(2));
                 strdate = formatter2.format(date);
+                dt = formatter1.parse(rs.getString(12));
+                strdate2 = formatter2.format(dt);
+                
                 }
                 catch(ParseException e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
@@ -187,14 +192,14 @@ public class StoreInHistory extends javax.swing.JFrame {
                     if(rs.getString(5).equals("###") ){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getDouble(4),rs.getDouble(5),rs.getString(5),rs.getString(10)};
+                        Object o [] = {ser,strdate,rs.getDouble(4),rs.getDouble(5),rs.getString(5),rs.getString(10),strdate2};
                         tm.addRow(o);
                 
                     }
                     else{
                            
                         ser++;
-                              Object o [] = {ser,strdate,rs.getDouble(4),rs.getDouble(5),"",rs.getString(10)};
+                              Object o [] = {ser,strdate,rs.getDouble(4),rs.getDouble(5),"",rs.getString(10),strdate2};
                         
                   tm.addRow(o);
                     

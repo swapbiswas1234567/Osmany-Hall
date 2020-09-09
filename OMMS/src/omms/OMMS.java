@@ -19,8 +19,12 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        StoreInSum st = new StoreInSum();
-        st.setVisible(true);
+        //StoreInSum st = new StoreInSum();
+        //StoreInForm st =new StoreInForm();
+        //StoreInHistory st =new StoreInHistory();
+         //StoredItemOutUpdate st= new StoredItemOutUpdate();
+        StoreOutHistory st= new StoreOutHistory();
+         st.setVisible(true);
     }
 
 }
