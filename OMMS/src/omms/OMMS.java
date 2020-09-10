@@ -21,13 +21,10 @@ public class OMMS {
     /**
      * @param args the command line arguments
      */
-    public static final String DEST = "G:\\New folder (2)\\pdfsplit_test.pdf";
-    public static void main(String[] args) throws DocumentException, IOException {
-        //StoreInSum st = new StoreInSum();
-        //st.setVisible(true);
-        File file = new File(DEST);
-        file.getParentFile().mkdirs();
-        new Test().gen(DEST);
+
+    public static void main(String[] args) {
+        //StoreInSum st= new StoreInSum();
+       
     }
 
 }

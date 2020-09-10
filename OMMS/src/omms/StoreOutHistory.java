@@ -89,7 +89,7 @@ public class StoreOutHistory extends javax.swing.JFrame {
         store_log.getColumnModel().getColumn(2).setCellRenderer(centerRender);
         store_log.getColumnModel().getColumn(3).setCellRenderer(centerRender);
         store_log.getColumnModel().getColumn(4).setCellRenderer(centerRender);
-        
+        store_log.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         
     }
 
@@ -144,8 +144,10 @@ public class StoreOutHistory extends javax.swing.JFrame {
         int fromserial = 0, toserial = 0;
       
         String strdate = "";
+        String strdate2 = "";
         ser=0;
         Date date=null;
+        Date dt=null;
         tm = (DefaultTableModel) store_log.getModel();
        
         try{
@@ -179,6 +181,9 @@ public class StoreOutHistory extends javax.swing.JFrame {
                 try{
                 date = formatter1.parse(rs.getString(2));
                 strdate = formatter2.format(date);
+                dt = formatter1.parse(rs.getString(12));
+                strdate2 = formatter2.format(dt);
+                
                 }
                 catch(ParseException e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
@@ -189,14 +194,14 @@ public class StoreOutHistory extends javax.swing.JFrame {
                     if(rs.getInt(11)==1 ){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getDouble(7),statsid(rs.getInt(11)),rs.getString(10)};
+                        Object o [] = {ser,strdate,rs.getDouble(7),statsid(rs.getInt(11)),rs.getString(10),strdate2};
                         tm.addRow(o);
                 
                     }
                     else if(rs.getInt(11)==2 ){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getDouble(8),statsid(rs.getInt(11)),rs.getString(10)};
+                        Object o [] = {ser,strdate,rs.getDouble(8),statsid(rs.getInt(11)),rs.getString(10),strdate2};
                         tm.addRow(o);
                 
                     }
@@ -204,7 +209,7 @@ public class StoreOutHistory extends javax.swing.JFrame {
                     else if(rs.getInt(11)==3 ){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getDouble(9),statsid(rs.getInt(11)),rs.getString(10)};
+                        Object o [] = {ser,strdate,rs.getDouble(9),statsid(rs.getInt(11)),rs.getString(10),strdate2};
                         tm.addRow(o);
                 
                     }
@@ -337,9 +342,7 @@ public String statsid(int status)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(71, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(140, 140, 140))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
@@ -347,8 +350,8 @@ public String statsid(int status)
                         .addGap(140, 140, 140)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
-                        .addComponent(fromdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(140, 140, 140)))
+                        .addComponent(fromdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(140, 140, 140)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -380,17 +383,17 @@ public String statsid(int status)
         store_log.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         store_log.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Serial", "Date", "Amount", "Status", "User"
+                "Serial", "Date", "Amount", "Status", "User", "Delete Date"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
