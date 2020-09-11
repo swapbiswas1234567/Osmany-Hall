@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package omms;
 
 import com.itextpdf.text.BaseColor;
@@ -17,6 +12,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,8 +23,12 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -59,19 +60,191 @@ public class StoreOutSum extends javax.swing.JFrame {
     
     public StoreOutSum() {
         initComponents();
+        initialize();
+        tabledecoration();
+        dateNtableset();
+        itemcombo_set();
+        flag=1;
+        initialtbl();
     }
 
+            /**Initializing Variable Function **/
+    public void initialize()
+    {
+        conn= Jconnection.ConnecrDb();
+        psmt=null;
+        rs=null;
+        formatter = new SimpleDateFormat("dd-MM-yyyy");
+        formatter1 = new SimpleDateFormat("yyyyMMdd");  
+        formatter2 = new SimpleDateFormat("MMM dd,yyyy");
+        dec2 = new DecimalFormat("#0.00");
+        
+        selectedRow = -1;
+        this.setTitle("Non Stored Item View");
+        
+    }
     
     
+    ///Table decoration
     
+    public void tabledecoration(){
+        store_tbl.getTableHeader().setFont(new java.awt.Font("Segeo UI", java.awt.Font.BOLD, 20));
+        store_tbl.getTableHeader().setOpaque(false);
+        store_tbl.getTableHeader().setBackground(new Color(32,136,203));
+        store_tbl.getTableHeader().setForeground(new Color(255,255,255));
+        store_tbl.setRowHeight(30);
+        store_tbl.setFont(new java.awt.Font("Segeo UI", java.awt.Font.PLAIN, 18));
+        
+
+        DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
+        centerRender.setHorizontalAlignment(JLabel.CENTER);
+        
+        store_tbl.getColumnModel().getColumn(0).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(1).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(2).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(3).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(4).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(5).setCellRenderer(centerRender);
+        store_tbl.getColumnModel().getColumn(6).setCellRenderer(centerRender);
+        
+        
+    }
+
+   public void dateNtableset()
+    {
+        tm=(DefaultTableModel)store_tbl.getModel();
+        tm.setRowCount(0);
+        /***Date Setting**/
+        Date date= new Date();
+        fromdt_ch.setDate(date);
+        todt_ch.setDate(date);
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) fromdt_ch.getDateEditor();
+        editor.setEditable(false);
+        editor = (JTextFieldDateEditor) todt_ch.getDateEditor();
+        editor.setEditable(false);
+        
+    }
+     
+    
+    
+    //Combo Name of item setting
+    public void itemcombo_set()
+    {
+        try{
+           psmt=conn.prepareStatement("select name from storeditem");
+           rs=psmt.executeQuery();
+           
+           while(rs.next())
+           {
+               String item = firstupperCaseMaker(rs.getString(1).toLowerCase());
+               Item_cmb.addItem(item);
+           }
+           
+           psmt.close();
+           rs.close();
+           
+       }
+       catch(Exception e)
+       {
+         JOptionPane.showMessageDialog(null, "No item found!", "An Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+            
+       }
+    }
+   
+    
+       
+    public Double[] getpreviousavailable(int dateserial, String itemname){
+        Double []available = new Double[2];
+        Double total=0.0, amount=0.0;
+        //System.out.println(dateserial);
+        available[0]= 0.00;
+        available[1] = 0.00;
+        
+        try{
+            psmt = conn.prepareStatement("select inamount,bf,lunch,dinner,price from storeinout where item =? and serial < ? order by serial");
+            psmt.setString(1, itemname);
+            psmt.setInt(2, dateserial);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                total = (available[0]*available[1])+rs.getDouble(5);
+                amount = available[0]+rs.getDouble(1);
+                available[1] = total/amount;
+                available[0] =available[0]+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
+            }
+            //System.out.println(available[1]);
+            psmt.close();
+            rs.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetch data for"
+                    + " previous avaialable", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
+        }
+        
+        
+        
+        return available;
+    }
+    
+    public Map<String, PreviousValue> allstoreditem(int fromdate){
+        Map<String, PreviousValue> previous;
+        previous = new HashMap<>();
+        try{
+            //System.out.println(fromdate+" called "+todate);
+            psmt = conn.prepareStatement("select DISTINCT name from storeditem");
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                previous.put(rs.getString(1), new PreviousValue(0.0,0.0));
+            }
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetchname of stored item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        return previous;
+    }
+    
+    
+    public Map<String, PreviousValue> allgetpreviousavailable(int dateserial, Map<String, PreviousValue> previous){
+        Double total=0.0, amount=0.0;
+        
+        
+        try{
+            psmt = conn.prepareStatement("select item,inamount,bf,lunch,dinner,price from storeinout where serial < ? order by serial,item");
+            psmt.setInt(1, dateserial);
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                total = (previous.get(rs.getString(1)).avgprice*previous.get(rs.getString(1)).prevavailable)+rs.getDouble(6);
+                amount =previous.get(rs.getString(1)).prevavailable +rs.getDouble(2);
+                previous.get(rs.getString(1)).avgprice = total/amount;
+                previous.get(rs.getString(1)).prevavailable =previous.get(rs.getString(1)).prevavailable+ rs.getDouble(2)-(rs.getDouble(3)+rs.getDouble(4)+rs.getDouble(5));
+            }
+            //System.out.println(available[1]);
+            psmt.close();
+            rs.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetch data for"
+                    + "all previous avaialable", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            
+        }
+        
+        return previous;
+    }
+    
+
     
      ///Setting function of  for table to show non stored item
     public void setItemtable(Date from, Date to, String item ){
         
-        
+        Map<String, PreviousValue> previous;
         int fromserial = 0, toserial = 0;
+        Double total=0.0, amount=0.0,bf=0.0,lunch=0.0,dinner=0.0;
+        Double []available = new Double[2];
+        available[0]= 0.00;
+        available[1] = 0.00;
       
-        String strdate = "";
+        String strdate = "",name="";
         ser=0;
         Date date=null;
         tm = (DefaultTableModel) store_tbl.getModel();
@@ -91,52 +264,101 @@ public class StoreOutSum extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
    
-            try{
+        try{
             if(item.equals("All")){
-            psmt = conn.prepareStatement("select  serial,item,inamount,price,memono from storeinout where serial>=? and serial<=? order by serial,item ;  ");
-            psmt.setInt(1, fromserial);
-            psmt.setInt(2, toserial);
-            rs = psmt.executeQuery();
+                previous = allstoreditem(fromserial);
+                previous = allgetpreviousavailable(fromserial, previous);
+                psmt = conn.prepareStatement("select  serial,item,inamount,price,memono,bf,lunch,dinner from storeinout where serial>=? and serial<=? order by serial,item ;  ");
+                psmt.setInt(1, fromserial);
+                psmt.setInt(2, toserial);
+                rs = psmt.executeQuery();
+                
+                while(rs.next()){
+                    
+                    try{
+                        date = formatter1.parse(rs.getString(1));
+                        strdate = formatter2.format(date);
+                    }
+                    catch(ParseException e){
+                        JOptionPane.showMessageDialog(null, "Date Parse "
+                                + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    String X="";
+                    name = rs.getString(2);
+                    X=getUnit(name);
+                    bf= rs.getDouble(6);
+                    lunch = rs.getDouble(7);
+                    dinner = rs.getDouble(8);
+                    //System.out.println(""+rs.getString(2)+" "+previous.get(rs.getString(2)).avgprice);
+                    total = (previous.get(name).avgprice*previous.get(name).prevavailable)+rs.getDouble(4);
+                    amount =previous.get(name).prevavailable +rs.getDouble(3);
+                    previous.get(name).avgprice = total/amount;
+                    previous.get(name).prevavailable =previous.get(name).prevavailable+ rs.getDouble(3)-(bf+lunch+dinner);
+
+                    if(rs.getString(5).equals("###") ){
+                        System.out.println(""+previous.get(name).avgprice);
+                        ser++;
+                        Object o[] = {ser,strdate,name,dec2.format(rs.getDouble(6)),dec2.format(bf),dec2.format(lunch),dec2.format(dinner),dec2.format(previous.get(name).avgprice),"c"};
+                        //Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(6))+" "+X,rs.getDouble(8)+" "+X,dec2.format(previous.get(rs.getString(2)).avgprice),""};
+                        tm.addRow(o);
+                
+                    }
+                    else {
+                           
+//                        ser++;
+//                        Object o [] = {ser,strdate,name,dec2.format(rs.getDouble(6)),dec2.format(rs.getDouble(7)),dec2.format(rs.getDouble(8)),dec2.format(previous.get(rs.getString(2)).avgprice),rs.getString(5)};
+//                        tm.addRow(o);
+                    
+                    }  
+                
+                }
             }
             else
-            {
-            psmt = conn.prepareStatement("select  serial,item,inamount,price,memono from storeinout where  serial>=? and serial<=? and item=? order by serial,item ;  ");
-            psmt.setInt(1, fromserial);
-            psmt.setInt(2, toserial);
-            psmt.setString(3, item);
-            rs = psmt.executeQuery();
-                
-            }
-            while(rs.next()){
+            {  
+                available = getpreviousavailable(fromserial, item);
+                psmt = conn.prepareStatement("select  serial,item,inamount,price,memono,bf,lunch,dinner from storeinout where  serial>=? and serial<=? and item=? order by serial,item ;  ");
+                psmt.setInt(1, fromserial);
+                psmt.setInt(2, toserial);
+                psmt.setString(3, item);
+                rs = psmt.executeQuery();
+                while(rs.next()){
                 
                 try{
-                date = formatter1.parse(rs.getString(1));
-                strdate = formatter2.format(date);
+                    date = formatter1.parse(rs.getString(1));
+                    strdate = formatter2.format(date);
                 }
                 catch(ParseException e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                 }
-                
-                
-                    if(rs.getString(5).equals("###") && rs.getDouble(3)!=0.0){
+                    String X="";
+                    X=getUnit(rs.getString(2));
+                    //System.err.println(""+rs.getDouble(4)+" "+rs.getDouble(3));
+                    total = (available[0]*available[1])+rs.getDouble(4);
+                    amount = available[0]+rs.getDouble(3);
+                    available[1] = total/amount;
+                    available[0] =available[0]+ rs.getDouble(3)-(rs.getDouble(6)+rs.getDouble(7)+rs.getDouble(8));
+                    
+                    if(rs.getString(5).equals("###") ){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+                        Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(6)),dec2.format(rs.getDouble(7)),dec2.format(rs.getDouble(8)),dec2.format(available[1]),""};
                         tm.addRow(o);
-                
                     }
-                    else if(rs.getDouble(3)!=0.0){
+                    else {
                            
                         ser++;
-                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),rs.getString(5)};
+                        Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(6)),dec2.format(rs.getDouble(7)),dec2.format(rs.getDouble(8)),dec2.format(available[1]),rs.getString(5)};
                         tm.addRow(o);
                     
                     }
                 
                     
                 
+                }
+                
             }
+           
             psmt.close();
             rs.close();
             
@@ -152,8 +374,20 @@ public class StoreOutSum extends javax.swing.JFrame {
     }
     
    
+   
+    //generate all
     
-    
+//    public void generateAll()
+//    {
+//        String strdate = "";
+//        ser=0;
+//        Date date=null;
+//        tm = (DefaultTableModel) store_tbl.getModel();
+//        
+//        
+//        
+//    }
+//    
     
     
     
@@ -183,7 +417,7 @@ public class StoreOutSum extends javax.swing.JFrame {
     
     }
     
-    //Generate pdf function
+//Generate pdf function
     public void genpdf()
     {
         String path="";
@@ -205,51 +439,46 @@ public class StoreOutSum extends javax.swing.JFrame {
             PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
              
                 doc.open();
-        
-            Paragraph p=new Paragraph("STORE IN REPORT \n\n\n");     
+            
+            Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
              
             p.setAlignment(Element.ALIGN_CENTER);
              
-             doc.add(p);
-             Date ddt=fromdt_ch.getDate();
-             Date dt=todt_ch.getDate();
-             
-             Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\t \t"+"To :"+formatter2.format(dt).toString()+"\n\n");           
-             q.setAlignment(Element.ALIGN_CENTER);
-             doc.add(q);
-             
-             //PdfPTable tbl =new PdfPTable(7);
-             
-             
-             
-             //Adding columns
-//             tbl.addCell("Serial");
-//             tbl.addCell("Date");
-//             tbl.addCell("Item");
-//             tbl.addCell("Quantity");
-//             tbl.addCell("Price");
-//             tbl.addCell("Average Price");
-//             tbl.addCell("Memo");
-            String[] header = new String[] { "Ser", "Date", "Item",
-            "Quan", "Price","Avg","Memo" };
+            doc.add(p);
+            Date ddt=fromdt_ch.getDate();
+            Date dt=todt_ch.getDate();
             
+            
+            Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\t \t"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.UNDERLINE));           
+            q.setAlignment(Element.ALIGN_CENTER);
+            
+            doc.add(q);
+            
+            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+            total.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(total);
+            
+            Paragraph newline=new Paragraph("\n");
+            doc.add(newline);
+             
+            String[] header = new String[] { "Serial", "Date", "Name",
+            "Quantity", "Price","Avg Price","Memo" };
             
             PdfPTable table = new PdfPTable(header.length);
             table.setHeaderRows(1);
-            table.setWidths(new int[] { 3, 2, 4, 3, 2 });
+            table.setWidths(new int[] { 2, 3, 4, 3, 2,3,2 });
             table.setWidthPercentage(98);
             table.setSpacingBefore(15);
             table.setSplitLate(false);
-            
             for (String columnHeader : header) {
                 PdfPCell headerCell = new PdfPCell();
-                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, Font.BOLD)));
-                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
                 headerCell.setPadding(8);
                 table.addCell(headerCell);
-            }
+            } 
              
              
              for(int i=0; i<store_tbl.getRowCount(); i++){
@@ -261,37 +490,27 @@ public class StoreOutSum extends javax.swing.JFrame {
                  String pr= store_tbl.getValueAt(i,4).toString();
                  String avg= store_tbl.getValueAt(i,5).toString();
                  String mem= store_tbl.getValueAt(i,6).toString();
-                 
-                 String[] content = new String[] { ser,Date,Item,Quan,pr,avg,mem};
-               
+                 String[] content = new String[] { ser, Date,
+                Item, Quan, pr,avg,mem };
+                
                 for (String text : content) {
-                    
-                   
                     PdfPCell cell = new PdfPCell();
-                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL)));
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL)));
                     cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell.setPadding(5);
                     table.addCell(cell);
                 }
-                 
-                 
-//                 tbl.addCell(ser);
-//                 tbl.addCell(Date);
-//                 tbl.addCell(Item);
-//                 tbl.addCell(Quan);
-//                 tbl.addCell(pr);
-//                 tbl.addCell(avg);
-//                 tbl.addCell(mem);
+
              }
              doc.add(table);
-        doc.add(new Phrase("\n"));
-        LineSeparator separator = new LineSeparator();
-        separator.setPercentage(98);
-        separator.setLineColor(BaseColor.LIGHT_GRAY);
-        Chunk linebreak = new Chunk(separator);
-        doc.add(linebreak);
+            doc.add(new Phrase("\n"));
+            LineSeparator separator = new LineSeparator();
+            separator.setPercentage(98);
+            separator.setLineColor(BaseColor.LIGHT_GRAY);
+            Chunk linebreak = new Chunk(separator);
+            doc.add(linebreak);
              
-        
         }
         catch(Exception e)
         {
@@ -300,8 +519,79 @@ public class StoreOutSum extends javax.swing.JFrame {
         
         doc.close();
     }
+        //get item unit
+   
     
-    //get item unit
+    
+    //Generate Unit
+    public String getUnit(String Item)
+    {
+       String X="";
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+       try{
+        ps=conn.prepareStatement("select unit from storeditem where name=?");
+        ps.setString(1, Item);
+        rs=ps.executeQuery();
+        X=rs.getString(1);
+        ps.close();
+        rs.close();
+        return X;
+       }
+       catch(Exception e)
+       {
+           JOptionPane.showMessageDialog(null,"Unit Fetch Error","Unit Error",JOptionPane.ERROR_MESSAGE);
+       }
+        
+        return "";
+     
+    }
+    
+    
+    //getTotalPrice 
+    public double totalprice()
+    {
+     int row=store_tbl.getRowCount();
+     double sum=0.0,z; 
+     for(int i=0;i<row;i++)
+      {
+          z=Double.parseDouble(store_tbl.getValueAt(i, 4).toString()) ;
+          sum=sum+z; 
+      }
+     
+     return sum;
+    }
+   
+    
+     //getTotalPrice 
+    public String totalquantity()
+    {
+     int row=store_tbl.getRowCount();
+     double sum=0.0,z;
+     String strquan="",part1="", part2="";
+     String Xw="";
+     for(int i=0;i<row;i++)
+      {
+          strquan = store_tbl.getValueAt(i, 3).toString();
+          String[] parts = strquan.split(" ");
+          part1 = parts[0];
+          part2 = parts[1];
+          
+          //System.out.println(""+part1+" \n"+part2);
+          try{
+          z=Double.parseDouble(part1) ;
+          sum=sum+z; 
+          }
+          catch(Exception e)
+          {
+              JOptionPane.showMessageDialog(null,"Quantity Parsing Error","Quantity Error", JOptionPane.ERROR_MESSAGE);
+          }
+          }
+       Xw=dec2.format(sum);
+       Xw=Xw+" "+part2;
+     return Xw;
+    }
+    
     
     public String firstupperCaseMaker(String s){
         int len = s.length();
@@ -330,7 +620,6 @@ public class StoreOutSum extends javax.swing.JFrame {
         pdf_btn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         store_tbl = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -391,57 +680,47 @@ public class StoreOutSum extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
+                .addContainerGap(43, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(Item_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(92, 92, 92)
+                .addGap(46, 46, 46)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(fromdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77)
+                .addGap(75, 75, 75)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
+                .addGap(66, 66, 66)
                 .addComponent(pdf_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(43, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fromdt_ch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Item_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(todt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pdf_btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(58, 58, 58))))
+                .addGap(64, 64, 64)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fromdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Item_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pdf_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(58, 144, Short.MAX_VALUE))
         );
 
         store_tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Serial", "Date", "Item", "Breakfast", "Lunch", "Dinner", "Average Price", "Memo"
@@ -458,35 +737,19 @@ public class StoreOutSum extends javax.swing.JFrame {
         store_tbl.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(store_tbl);
 
-        jPanel2.setBackground(new java.awt.Color(117, 175, 182));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 58, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
         );
 
         pack();
@@ -551,7 +814,6 @@ public class StoreOutSum extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton pdf_btn;
     private javax.swing.JTable store_tbl;
