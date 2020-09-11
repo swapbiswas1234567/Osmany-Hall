@@ -10,17 +10,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author Ajmir
  */
+
 public class DailyAvgBill {
     Connection conn = null;
     PreparedStatement psmt = null;
@@ -46,23 +44,22 @@ public class DailyAvgBill {
           for(Map.Entry mapelement : previous.entrySet()){
               String key = (String) mapelement.getKey();
               //System.out.println(key+" "+previous.get(key).amount);
-              previousavgprice(20200720,key);  // calculate the previous avg price
+              previousavgprice(fromdate,key);  // calculate the previous avg price
           }
           
          //System.out.println(" "+previous.get("Rice").avgprice+" "+previous.get("Rice").prevavailable);
-          storeditemdailycost(20200720,20200828);  //calculate stored bill
-//          System.out.println(billMap.get(20200807).bfbill+" lunch "+
-//                  billMap.get(20200807).lunchbill.get(0)
-//                  +" dinner "+billMap.get(20200807).dinnerbill.get(0));
-          nonstoreddailycost(20200720,20200828); //add nonstored bill
+          storeditemdailycost(fromdate,todate);  //calculate stored bill
+          //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill);
+          
+          nonstoreddailycost(fromdate,todate); //add nonstored bill
 //          for(int i=0; i<billMap.get(20200807).item.size(); i++){
 //              System.out.println(billMap.get(20200807).item.get(i).name+" "+billMap.get(20200807).item.get(i).avgprice+" "+
 //                      billMap.get(20200807).item.get(i).bfamount+" "+billMap.get(20200807).item.get(i).dinneramount);
 //          }
-        System.out.println(billMap.get(20200820).bfbill+" "+billMap.get(20200807).lunchbill);
-        perheadmeal(20200720,20200828); // divide total bill by total meal on
-        System.out.println(billMap.get(20200820).bfbill+" "+billMap.get(20200807).lunchbill);
-          return billMap;
+        //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill+" "+billMap.get(20200601).dinnerbill);
+        perheadmeal(fromdate,todate); // divide total bill by total meal on
+        //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill+" "+billMap.get(20200601).dinnerbill);
+        return billMap;
           
     }
     
@@ -75,9 +72,11 @@ public class DailyAvgBill {
             psmt.setInt(1, fromdate);
             psmt.setInt(2, todate);
             rs = psmt.executeQuery();
+            
             while(rs.next()){
                 previous.put(rs.getString(1), new PreviousValue(0.0,0.0));
             }
+            
             psmt.close();
             rs.close();
         }catch(SQLException e){
@@ -215,7 +214,6 @@ public class DailyAvgBill {
                     billMap.get(date).bfbill.add(0.0);
                 }
                 else if(state.equals("lunch")){
-                    
                     billMap.get(date).lunchbill.add(0.0);
                 }
                 else if(state.equals("dinner")){
@@ -242,6 +240,7 @@ public class DailyAvgBill {
             while(rs.next()){
                 try{
                     name = rs.getString(6);
+                    //System.out.println(name);
                     prevavailable = previous.get(name).prevavailable;
                     avgprice = previous.get(name).avgprice;
                 }
@@ -268,6 +267,12 @@ public class DailyAvgBill {
                 if(billMap.containsKey(date)){
                     bfbill = billMap.get(date).bfbill.get(bfgrp)+bfbill;
                     billMap.get(date).bfbill.set(bfgrp, bfbill);
+                    
+                    lunchbill = billMap.get(date).lunchbill.get(lunchgrp)+lunchbill;
+                    billMap.get(date).lunchbill.set(lunchgrp, lunchbill);
+                    
+                    dinnerbill = billMap.get(date).dinnerbill.get(dinnergrp)+dinnerbill;
+                    billMap.get(date).dinnerbill.set(dinnergrp, dinnerbill);
                 }
                 else{
                    billMap.put(date, new BillAmount());

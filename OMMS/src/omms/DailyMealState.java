@@ -13,10 +13,16 @@ public class DailyMealState {
     int bf;
     int lunch;
     int dinner;
+    int bfgrp;
+    int lunchgrp;
+    int dinnergrp;
     
-    DailyMealState(int bf, int lunch, int dinner){
+    DailyMealState(int bf, int lunch, int dinner, int bfgrp, int lunchgrp, int dinnergrp){
         this.bf = bf;
         this.lunch = lunch;
         this.dinner = dinner;
+        this.bfgrp = bfgrp;
+        this.lunchgrp = lunchgrp;
+        this.dinnergrp = dinnergrp;
     }    
 }

@@ -5,14 +5,28 @@
  */
 package omms;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -89,7 +103,7 @@ public class PresentDue extends javax.swing.JFrame {
     
     
     public void settable(int type){
-        String sql="", strfrom="";
+        String sql="", strfrom="",strdue="";
         int serial=1;
         Date fromdate=null;
         
@@ -128,7 +142,13 @@ public class PresentDue extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Failed to set date", "Date set error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                Object o [] = {serial,rs.getInt(1),rs.getString(2),rs.getString(3),strfrom,rs.getString(5),rs.getString(6),rs.getDouble(7),rs.getString(8)};
+                if(rs.getDouble(7)<0){
+                    strdue = Double.toString(rs.getDouble(7)*-1)+"(A)";
+                }
+                else{
+                    strdue = Double.toString(rs.getDouble(7));
+                }
+                Object o [] = {serial,rs.getInt(1),rs.getString(2),rs.getString(3),strfrom,rs.getString(5),rs.getString(6),strdue,rs.getString(8)};
                 tablemodel.addRow(o);
                 serial++;
             }
@@ -159,6 +179,146 @@ public class PresentDue extends javax.swing.JFrame {
     
     
     
+    public void genpdf()
+    {
+        String path="", date="",ser="",hallid="",name="",roll="",dept="",room="",due="",mobile="";
+        JFileChooser j=new JFileChooser();
+        //j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int x=j.showSaveDialog(this);
+        
+        if(x==JFileChooser.APPROVE_OPTION)
+        {
+            path=j.getSelectedFile().getPath();
+        }
+        
+        Document doc=new Document ();
+        
+        try{
+            
+         
+            PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
+             
+            doc.open();
+                
+                
+            Image image1 = Image.getInstance("C:\\Users\\Ajmir\\Desktop\\MIST_Logo.png");
+            image1.setAlignment(Element.ALIGN_CENTER);
+            image1.scaleAbsolute(100, 70);
+            //Add to document
+            doc.add(image1);
+            
+            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+            osmany.setAlignment(Element.ALIGN_CENTER);
+            doc.add(osmany);
+            
+            
+            Paragraph p=new Paragraph("DUE MESS BILL REPORT\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
+             
+            p.setAlignment(Element.ALIGN_CENTER);
+             
+            doc.add(p);
+            
+            Date todaysdate =new Date();
+            date = formatter.format(todaysdate);
+            
+            
+            Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+            q.setAlignment(Element.ALIGN_CENTER);
+            
+            doc.add(q);
+            
+            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+            total.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(total);
+            
+            Paragraph newline=new Paragraph("\n");
+            doc.add(newline);
+             
+            String[] header = new String[] { "Sl","Hall Id","Name","Roll","Dept","Room",
+            "Due","Mobile No"};
+            
+            PdfPTable table = new PdfPTable(header.length);
+            table.setHeaderRows(1);
+            table.setWidths(new int[] { 2, 2, 4, 3,2,2,3,4});
+            table.setWidthPercentage(98);
+            table.setSpacingBefore(15);
+            table.setSplitLate(false);
+            for (String columnHeader : header) {
+                PdfPCell headerCell = new PdfPCell();
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
+                headerCell.setPadding(8);
+                table.addCell(headerCell);
+            } 
+             
+             
+            for(int i=0; i<duetable.getRowCount(); i++){
+
+                ser= duetable.getValueAt(i, 0).toString();
+                hallid= duetable.getValueAt(i, 1).toString();
+                name= duetable.getValueAt(i, 2).toString();
+                roll= duetable.getValueAt(i,3).toString();
+                dept= duetable.getValueAt(i,5).toString();
+                room= duetable.getValueAt(i,6).toString();
+                due= duetable.getValueAt(i,7).toString();
+                mobile= duetable.getValueAt(i,8).toString();
+                 String[] content = new String[] { ser, hallid,name,roll,
+                dept, room, due,mobile};
+
+                for (String text : content) {
+                    PdfPCell cell = new PdfPCell();
+                    if(text.contains("(A)")){
+                        //System.out.println("called");
+                        cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
+                    }
+                    else{
+                        cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
+                    }
+                    cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+
+            }
+            doc.add(table);
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator = new LineSeparator();
+            separator.setPercentage(24);
+            separator.setAlignment(Element.ALIGN_RIGHT);
+            separator.setLineColor(BaseColor.BLACK);
+            Chunk linebreak = new Chunk(separator);
+            doc.add(linebreak);
+            
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name1.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name1);
+            
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator1 = new LineSeparator();
+            separator1.setPercentage(24);
+            separator1.setAlignment(Element.ALIGN_RIGHT);
+            separator1.setLineColor(BaseColor.BLACK);
+            Chunk linebreak1 = new Chunk(separator1);
+            doc.add(linebreak1);
+            
+            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name2.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name2);
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        doc.close();
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -175,7 +335,7 @@ public class PresentDue extends javax.swing.JFrame {
         typecombo = new javax.swing.JComboBox<>();
         idtxt = new javax.swing.JTextField();
         searchbtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        generatebtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         duetable = new javax.swing.JTable();
 
@@ -217,9 +377,14 @@ public class PresentDue extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/pdf.png"))); // NOI18N
-        jButton1.setText("Generate");
+        generatebtn.setFont(new java.awt.Font("Bell MT", 0, 16)); // NOI18N
+        generatebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/pdf.png"))); // NOI18N
+        generatebtn.setText("Generate");
+        generatebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generatebtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -235,7 +400,7 @@ public class PresentDue extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchbtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(65, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -253,7 +418,7 @@ public class PresentDue extends javax.swing.JFrame {
                     .addComponent(typecombo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(idtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
 
@@ -339,6 +504,11 @@ public class PresentDue extends javax.swing.JFrame {
         searchbtn.doClick();
     }//GEN-LAST:event_idtxtActionPerformed
 
+    private void generatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatebtnActionPerformed
+        // TODO add your handling code here:
+        genpdf();
+    }//GEN-LAST:event_generatebtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -376,8 +546,8 @@ public class PresentDue extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable duetable;
+    private javax.swing.JButton generatebtn;
     private javax.swing.JTextField idtxt;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

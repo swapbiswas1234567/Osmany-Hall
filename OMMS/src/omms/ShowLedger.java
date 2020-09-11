@@ -131,6 +131,7 @@ public class ShowLedger extends javax.swing.JFrame {
             psmt.setString(1, name);
             rs = psmt.executeQuery();
             while(rs.next()){
+                //System.out.print(rs.getString(1)+" "+name);
                 unit = rs.getString(1);
             }
             psmt.close();
@@ -200,8 +201,8 @@ public class ShowLedger extends javax.swing.JFrame {
             while(rs.next()){
                 
                 try{
-                date = formatter.parse(rs.getString(1));
-                strdate = formatter1.format(date);
+                    date = formatter.parse(rs.getString(1));
+                    strdate = formatter1.format(date);
                 }
                 catch(ParseException e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
@@ -237,7 +238,7 @@ public class ShowLedger extends javax.swing.JFrame {
                 namelbl.setText("");
                 previousavllbl.setText("");
                 currevtavllbl.setText("");
-               dayslbl.setText("");
+                dayslbl.setText("");
                unitlbl.setText("");
             }
            // setlbl(item,fromavailable.toString(),prevavailable[0].toString(),Integer.toString(tablemodel.getRowCount()));
