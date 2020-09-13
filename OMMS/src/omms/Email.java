@@ -49,9 +49,9 @@ public class Email
             
         } catch (Exception e) 
         {
-            SendMail.flag =1;
-            SendMail.phone.add(strhallid);
-            System.err.println("Error Sending: ");
+            SendMail.flag = 1;
+            SendMail.hallid.add(strhallid);
+            //System.err.println("Error Sending: ");
             //JOptionPane.showMessageDialog(null,"Failed!", "Email from " + senderEmail + " couldn't be sent to " + receiverEmail, JOptionPane.ERROR_MESSAGE);
 
         }

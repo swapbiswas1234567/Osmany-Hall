@@ -44,7 +44,7 @@ public class SendMail extends javax.swing.JFrame {
     DecimalFormat dec;
     int combo=0;
     public static int flag;
-    public static ArrayList<String> phone;
+    public static ArrayList<String> hallid;
     
     public SendMail() {
         initComponents();
@@ -63,7 +63,7 @@ public class SendMail extends javax.swing.JFrame {
         int month = Calendar.getInstance().get(Calendar.MONTH);
         //System.out.println(month+" "+year);
         monthcombo.setSelectedIndex(month);
-        phone = new ArrayList<>();
+        hallid = new ArrayList<>();
         
         formatter = new SimpleDateFormat("MMM dd,yyyy");
         formatter1 = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
@@ -73,7 +73,8 @@ public class SendMail extends javax.swing.JFrame {
     public void sendmail(boolean single,int hallid, int month, String monthname, int year){
         String body="", greetings="",billinfo="",tail="",msg="",strhallid="";
         Double bill=0.00,others=0.00,fine=0.00,waive=0.00,due=0.00,total=0.0;
-        String subject="Mess Bill of OSMANY HALL("+monthname+")";
+        String subject="Mess Bill of OSMANY HALL("+monthname+", "+year+")";
+        
         try{
             if(single && hallid > 0){
                 psmt = conn.prepareStatement("select st.name,st.email,bh.bill, bh.others, bh.fine, bh.waive, bh.due,st.hallid from stuinfo st join billhistory bh on st.hallid = bh.hallid and st.hallid =? and bh.month=? and bh.year=?");
@@ -107,7 +108,15 @@ public class SendMail extends javax.swing.JFrame {
             psmt.close();
             rs.close();
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Data Fetch for Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+        //System.out.println("called "+flag);
+        if(flag == 1 && !single){
+            genpdf();
+            JOptionPane.showMessageDialog(null, "Failed to send mail check the pdf", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+        else if(single && flag == 1){
+            JOptionPane.showMessageDialog(null, "Failed to send mail to hallid: "+strhallid, "Sending Mail error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -117,13 +126,13 @@ public class SendMail extends javax.swing.JFrame {
         Document doc=new Document ();
         try{
             
-         
-            PdfWriter.getInstance(doc,new FileOutputStream(".pdf"));
+            
+            PdfWriter.getInstance(doc,new FileOutputStream("C:\\Users\\Ajmir\\Desktop\\Mailerror.pdf"));
              
             doc.open();
                 
                 
-            Image image1 = Image.getInstance("C:\\Users\\Ajmir\\Desktop\\MIST_Logo.png");
+            Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
             image1.setAlignment(Element.ALIGN_CENTER);
             image1.scaleAbsolute(100, 70);
             //Add to document
@@ -146,12 +155,24 @@ public class SendMail extends javax.swing.JFrame {
             
             Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
             q.setAlignment(Element.ALIGN_CENTER);
-            
             doc.add(q);
-        }catch(Exception e){
             
+            Paragraph name=new Paragraph("Serial     Hallid");
+            name.setAlignment(Element.ALIGN_LEFT);
+            doc.add(name);
+            
+            int serial=1;
+            for (String phone1 : hallid) {
+                Paragraph numbers=new Paragraph(serial+".           "+phone1);
+                numbers.setAlignment(Element.ALIGN_LEFT);
+                doc.add(numbers);
+                serial++;
+            }
+              
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+        doc.close();
     }
     
     

@@ -48,6 +48,7 @@ public class PresentDue extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     int flag=0;
+    Double totaldue,advance;
 
     /**
      * Creates new form PresentDue
@@ -57,6 +58,7 @@ public class PresentDue extends javax.swing.JFrame {
         Tabledecoration();
         initialize();
         flag=1;
+        
         
     }
     
@@ -75,6 +77,8 @@ public class PresentDue extends javax.swing.JFrame {
         //duetable.setRowSorter(sorter);
         
         int type= typecombo.getSelectedIndex();
+        totaldue=0.0;
+        advance=0.0;
         settable(type);
         idtxt.requestFocus();
     }
@@ -105,26 +109,31 @@ public class PresentDue extends javax.swing.JFrame {
     public void settable(int type){
         String sql="", strfrom="",strdue="";
         int serial=1;
+        
         Date fromdate=null;
         
         
-        if(type == 0){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue ASC";
-        }
-        else if(type ==1){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue desc";
-        }
-        else if(type ==2){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by hallid";
-        }
-        else if(type == 3){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by roomno desc";
-        }
-        else if(type == 4){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by entrydate";
-        }
-        else if(type == 5){
-            sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by dept";
+        switch (type) {
+            case 0:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue ASC";
+                break;
+            case 1:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue desc";
+                break;
+            case 2:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by hallid";
+                break;
+            case 3:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by roomno desc";
+                break;
+            case 4:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by entrydate";
+                break;
+            case 5:
+                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by dept";
+                break;
+            default:
+                break;
         }
         
         if(tablemodel.getRowCount() >0){
@@ -143,10 +152,13 @@ public class PresentDue extends javax.swing.JFrame {
                     return;
                 }
                 if(rs.getDouble(7)<0){
-                    strdue = Double.toString(rs.getDouble(7)*-1)+"(A)";
+                    strdue = Double.toString(rs.getDouble(7)*-1)+" (A)";
+                    advance = advance-rs.getDouble(7);
+                    
                 }
                 else{
                     strdue = Double.toString(rs.getDouble(7));
+                    totaldue = totaldue+rs.getDouble(7);
                 }
                 Object o [] = {serial,rs.getInt(1),rs.getString(2),rs.getString(3),strfrom,rs.getString(5),rs.getString(6),strdue,rs.getString(8)};
                 tablemodel.addRow(o);
@@ -159,6 +171,7 @@ public class PresentDue extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
             
         }
+        
     }
     
     public void search(String id){
@@ -227,8 +240,9 @@ public class PresentDue extends javax.swing.JFrame {
             q.setAlignment(Element.ALIGN_CENTER);
             
             doc.add(q);
+            //System.err.println("called "+due);
             
-            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+            Paragraph total=new Paragraph("Total Due: "+totaldue,FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);
             
