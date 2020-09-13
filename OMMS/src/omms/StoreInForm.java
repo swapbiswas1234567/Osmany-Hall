@@ -363,7 +363,7 @@ public class StoreInForm extends javax.swing.JFrame {
         
         for(int i=0; i<row ; i++)
         {
-          if(tm.getValueAt(i,1).toString().trim().equals(Item) && tm.getValueAt(i,5).toString().trim().equals(Date) && i!= index ) 
+          if(tm.getValueAt(i,0).toString().trim().equals(Item) && tm.getValueAt(i,4).toString().trim().equals(Date) && i!= index ) 
         { 
              
        
@@ -451,7 +451,7 @@ public class StoreInForm extends javax.swing.JFrame {
              }
              
               //quantity check
-                 if(Quantity.equals("") != true)
+                 if(Quantity.equals("") == true)
                     {
                         JOptionPane.showMessageDialog(null, "Quantity Field is empty .","Quantity Update Error",JOptionPane.ERROR_MESSAGE);
                         return; 
@@ -472,7 +472,7 @@ public class StoreInForm extends javax.swing.JFrame {
                     }
                     
                     //Price checking
-                    if(price.equals(""))
+                    if(price.equals("") == true)
                     {
                         JOptionPane.showMessageDialog(null, "Price Field is empty .","Price Update Error",JOptionPane.ERROR_MESSAGE);
                         return; 
@@ -775,6 +775,11 @@ public class StoreInForm extends javax.swing.JFrame {
 
         dateIn_ch.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         dateIn_ch.setMinimumSize(new java.awt.Dimension(30, 26));
+        dateIn_ch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dateIn_chPropertyChange(evt);
+            }
+        });
 
         input_cmb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         input_cmb.setAutoscrolls(true);
@@ -1112,8 +1117,10 @@ public class StoreInForm extends javax.swing.JFrame {
             if (responce == JOptionPane.YES_OPTION){
                 try {
                     insertUpdate();
-                    //Save close to dashboard
+                    
                     JFrame frame = this;
+                    //Dashboard das = new Dashboard();
+                    //das.setVisible(true);
                     frame.setVisible(false);
                     conn.close();
                 } catch (SQLException ex) {
@@ -1216,6 +1223,10 @@ public class StoreInForm extends javax.swing.JFrame {
     private void delete_btnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_delete_btnKeyPressed
     
     }//GEN-LAST:event_delete_btnKeyPressed
+
+    private void dateIn_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateIn_chPropertyChange
+ 
+    }//GEN-LAST:event_dateIn_chPropertyChange
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

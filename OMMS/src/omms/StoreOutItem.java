@@ -5,12 +5,25 @@
  */
 package omms;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -853,6 +867,140 @@ public class StoreOutItem extends javax.swing.JFrame {
         
     }
     
+    public void genpdf()
+    {
+        String path="", outdate="",item="",amount="",date="",status="",unit="";
+        int serial=1;
+        JFileChooser j=new JFileChooser();
+        ShowLedger sl = new ShowLedger();
+        
+        //j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int x=j.showSaveDialog(this);
+        
+        if(x==JFileChooser.APPROVE_OPTION)
+        {
+            path=j.getSelectedFile().getPath();
+        }
+        
+        Document doc=new Document ();
+        
+        try{
+            
+         
+            PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
+             
+            doc.open();
+                
+                
+            Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
+            image1.setAlignment(Element.ALIGN_CENTER);
+            image1.scaleAbsolute(100, 70);
+            //Add to document
+            doc.add(image1);
+            
+            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+            osmany.setAlignment(Element.ALIGN_CENTER);
+            doc.add(osmany);
+            
+            
+            Paragraph p=new Paragraph("Daily Store Out Item\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
+             
+            p.setAlignment(Element.ALIGN_CENTER);
+             
+            doc.add(p);
+            
+            Date todaysdate =new Date();
+            date = formatter3.format(todaysdate);
+            
+            
+            Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+            q.setAlignment(Element.ALIGN_CENTER);
+            
+            doc.add(q);
+            
+//            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+//            total.setAlignment(Element.ALIGN_RIGHT);
+//            doc.add(total);
+            
+            Paragraph newline=new Paragraph("\n");
+            doc.add(newline);
+             
+            String[] header = new String[] { "Sl","Item","Amount","Date","Status"};
+            
+            PdfPTable table = new PdfPTable(header.length);
+            table.setHeaderRows(1);
+            table.setWidths(new int[] { 2, 4, 4, 3,3});
+            table.setWidthPercentage(98);
+            table.setSpacingBefore(15);
+            table.setSplitLate(false);
+            for (String columnHeader : header) {
+                PdfPCell headerCell = new PdfPCell();
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
+                headerCell.setPadding(8);
+                table.addCell(headerCell);
+            } 
+             
+             
+            for(int i=0; i<Storeouttable.getRowCount(); i++){
+
+                item= Storeouttable.getValueAt(i, 0).toString();
+                amount= Storeouttable.getValueAt(i, 1).toString();
+                outdate= Storeouttable.getValueAt(i, 3).toString();
+                status= Storeouttable.getValueAt(i, 4).toString();
+                unit =sl.getunit(item);
+                amount = amount+" "+unit;
+                String[] content = new String[] {Integer.toString(serial),item,amount,outdate,status};
+
+                for (String text : content) {
+                    PdfPCell cell = new PdfPCell();
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
+                    
+                    cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+                serial++;
+
+            }
+            doc.add(table);
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator = new LineSeparator();
+            separator.setPercentage(24);
+            separator.setAlignment(Element.ALIGN_RIGHT);
+            separator.setLineColor(BaseColor.BLACK);
+            Chunk linebreak = new Chunk(separator);
+            doc.add(linebreak);
+            
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name1.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name1);
+            
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator1 = new LineSeparator();
+            separator1.setPercentage(24);
+            separator1.setAlignment(Element.ALIGN_RIGHT);
+            separator1.setLineColor(BaseColor.BLACK);
+            Chunk linebreak1 = new Chunk(separator1);
+            doc.add(linebreak1);
+            
+            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name2.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name2);
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        doc.close();
+    }
+    
     
     //function for delete a selected table row
     public void DeleteTableRow(){
@@ -1421,6 +1569,7 @@ public class StoreOutItem extends javax.swing.JFrame {
             if (responce == JOptionPane.YES_OPTION){
                 try {
                     insert();
+                    genpdf();
                     
                     JFrame frame = this;
                     NewDashboard das = new NewDashboard();

@@ -296,18 +296,18 @@ public class StoreOutSum extends javax.swing.JFrame {
                     previous.get(name).prevavailable =previous.get(name).prevavailable+ rs.getDouble(3)-(bf+lunch+dinner);
 
                     if(rs.getString(5).equals("###") ){
-                        System.out.println(""+previous.get(name).avgprice);
+                        //System.out.println(""+previous.get(name).avgprice);
                         ser++;
-                        Object o[] = {ser,strdate,name,dec2.format(rs.getDouble(6)),dec2.format(bf),dec2.format(lunch),dec2.format(dinner),dec2.format(previous.get(name).avgprice),"c"};
+                        Object o[] = {ser,strdate,name,dec2.format(bf),dec2.format(lunch),dec2.format(dinner),dec2.format(previous.get(name).avgprice),""};
                         //Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(6))+" "+X,rs.getDouble(8)+" "+X,dec2.format(previous.get(rs.getString(2)).avgprice),""};
                         tm.addRow(o);
                 
                     }
                     else {
                            
-//                        ser++;
-//                        Object o [] = {ser,strdate,name,dec2.format(rs.getDouble(6)),dec2.format(rs.getDouble(7)),dec2.format(rs.getDouble(8)),dec2.format(previous.get(rs.getString(2)).avgprice),rs.getString(5)};
-//                        tm.addRow(o);
+                        ser++;
+                        Object o[] = {ser,strdate,name,dec2.format(bf),dec2.format(lunch),dec2.format(dinner),dec2.format(previous.get(name).avgprice),rs.getString(5)};
+                        tm.addRow(o);
                     
                     }  
                 
@@ -696,7 +696,7 @@ public class StoreOutSum extends javax.swing.JFrame {
                 .addGap(66, 66, 66)
                 .addComponent(pdf_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(43, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -704,9 +704,9 @@ public class StoreOutSum extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(26, 26, 26)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)

@@ -400,7 +400,12 @@ public class StoreInSum extends javax.swing.JFrame {
                     if(rs.getString(5).equals("###") && rs.getDouble(3)!=0.0){
                 
                         ser++;
-                        Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(3))+" "+X,dec2.format(rs.getDouble(4)),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+
+                        //System.err.println(""+rs.getDouble(4));
+                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+
+                        //Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(3))+" "+X,dec2.format(rs.getDouble(4)),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+
                         tm.addRow(o);
                 
                     }
