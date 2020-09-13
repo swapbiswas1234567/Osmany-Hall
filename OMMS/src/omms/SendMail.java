@@ -89,7 +89,7 @@ public class SendMail extends javax.swing.JFrame {
                 rs = psmt.executeQuery();
             }
             greetings ="Assalamualaikum";
-            body="Your mess bill of "+monthname+","+Integer.toString(year)+" has been generated. You are requested to pay the mess bill within the given time. Total bill description is given below\n";
+            body="Your mess bill of "+monthname+","+Integer.toString(year)+" has been published. You are requested to pay the mess bill in due time. Total bill description is given below\n";
             tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
             while(rs.next()){
                 greetings = greetings+" "+rs.getString(1)+",\n";
