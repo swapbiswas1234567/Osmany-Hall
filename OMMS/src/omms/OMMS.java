@@ -23,7 +23,6 @@ public class OMMS {
      */
 
     public static void main(String[] args) {
-        //StoreOutItem st = new StoreOutItem();
         
     }
 
