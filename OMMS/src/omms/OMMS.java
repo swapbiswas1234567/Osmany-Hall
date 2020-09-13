@@ -23,7 +23,8 @@ public class OMMS {
      */
 
     public static void main(String[] args) {
-        StoreInForm st=new StoreInForm();
+        //NewDashboard st= new NewDashboard();
+        StoreInForm st = new StoreInForm();
         st.setVisible(true);
         
     }

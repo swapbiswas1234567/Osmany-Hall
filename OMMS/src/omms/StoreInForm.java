@@ -274,11 +274,11 @@ public class StoreInForm extends javax.swing.JFrame {
         
         
         for( int i=0; i<totalrow; i++){
-           itemname = tm.getValueAt(i, 1).toString();
-           amount = Double.parseDouble(tm.getValueAt(i, 2).toString());
-           price = Double.parseDouble(tm.getValueAt(i, 3).toString());
-           tabledate = tm.getValueAt(i, 5).toString();
-           memo=tm.getValueAt(i, 4).toString();
+           itemname = tm.getValueAt(i, 0).toString();
+           amount = Double.parseDouble(tm.getValueAt(i, 1).toString());
+           price = Double.parseDouble(tm.getValueAt(i, 2).toString());
+           tabledate = tm.getValueAt(i, 4).toString();
+           memo=tm.getValueAt(i, 3).toString();
            databaseserial = 0;
            
            try{
@@ -289,7 +289,7 @@ public class StoreInForm extends javax.swing.JFrame {
                JOptionPane.showMessageDialog(null,"Failed to save"
                        + "t data while inserting","Data Error",JOptionPane.ERROR_MESSAGE);
            }
-           
+           actvalue=inputcheckDatabase(itemname ,serial);
         
       if( actvalue == 2)
       {
