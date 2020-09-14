@@ -6,6 +6,9 @@ cmd - git config core.autocrlf true
 
 git checkout --ours -- osmanyhall.db
 git add -f osmanyhall.db
+git commit -m "Database Git Error"
+
+
 
 git checkout --ours -- OMMS/dist/OMMS.jar
 git add -f OMMS/dist/OMMS.jar
@@ -27,4 +30,43 @@ git add -f -- OMMS/src/omms/deleteGroup.form
 
 git checkout --ours -- OMMS/src/omms/deleteGroup.java
 git add -f -- OMMS/src/omms/deleteGroup.java
+
+git checkout --ours -- OMMS/src/omms/CreateGroup.form
+git add -f -- OMMS/src/omms/CreateGroup.form
+
+
+
+
+
+git checkout --ours -- OMMS/src/omms/Dashboard.form
+git add -f -- OMMS/src/omms/Dashboard.form
+
+git checkout --ours -- OMMS/src/omms/StoreInForm.form
+git add -f -- OMMS/src/omms/StoreInForm.form
+
+git checkout --ours -- OMMS/src/omms/StoreOutForm.form
+git add -f -- OMMS/src/omms/StoreOutForm.form
+
+git checkout --ours -- OMMS/src/omms/deleteGroup.form
+git add -f -- OMMS/src/omms/deleteGroup.form
+
+git checkout --ours -- OMMS/src/omms/deleteGroup.form
+git add -f -- OMMS/src/omms/deleteGroup.form
+
+git checkout --ours -- OMMS/src/omms/deleteGroup.java
+git add -f -- OMMS/src/omms/deleteGroup.java
+
+git checkout --ours -- OMMS/src/omms/Login.form
+git add -f -- OMMS/src/omms/Login.form
+
+git checkout --ours -- OMMS/src/omms/Login.java
+git add -f -- OMMS/src/omms/Login.java
+
+git checkout --ours -- OMMS/src/omms/NewDashboard.form
+git add -f -- OMMS/src/omms/NewDashboard.form
+
+git checkout --ours -- OMMS/src/omms/NewDashboard.java
+git add -f -- OMMS/src/omms/NewDashboard.java
+
+
 

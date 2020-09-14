@@ -150,3 +150,7 @@ editTextName.requestFocusInWindow();
     //-> Stop drag moving action
     BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
     bi.setNorthPane(null);
+
+    //-> dispose parent frame from InternalJframe
+	SwingUtilities.getWindowAncestor(this).dispose();
+	

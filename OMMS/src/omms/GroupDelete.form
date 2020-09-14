@@ -61,21 +61,18 @@
               </Group>
               <Group type="102" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tempFoodViewJpanel" alignment="0" min="-2" pref="401" max="-2" attributes="0"/>
-                      <Component id="totalBillJlbl" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="totalBillJlbl" min="-2" pref="197" max="-2" attributes="0"/>
+                  <EmptySpace pref="638" max="32767" attributes="0"/>
               </Group>
               <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+              <Component id="tempFoodViewJpanel" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="tempFoodViewJpanel" min="-2" pref="49" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="tempFoodViewJpanel" min="-2" pref="106" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" max="-2" attributes="0">
                           <Component id="jLabel3" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>

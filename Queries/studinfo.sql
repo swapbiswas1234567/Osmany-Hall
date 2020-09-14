@@ -11,3 +11,8 @@ UPDATE stuinfo SET roll = , name = , fname = , mname = , dept = , batch = , cont
 
 
 UPDATE stuinfo SET roll = ?, name = ?, fname = ?, mname = ?, dept = ?, batch = ?, contno = ?, bgrp = ?, rel = ?, dob = ?, peradd = ?, presentadd = ?, roomno = ? WHERE hallid = ?
+
+SELECT hallid, name, roll, dept, roomno, totaldue, securitymoney, messad, idcard, contno FROM stuinfo
+
+INSERT INTO previousstudents (hallid, roll, name, fname, mname, dept, batch, entrydate, contno, email, bgrp, sex, rel, dob, peradd, presentadd, roomno, image, securitymoney, messad, idcard) SELECT hallid, roll, name, fname, mname, dept, batch, entrydate, contno, email, bgrp, sex, rel, dob, peradd, presentadd, roomno, image, securitymoney, messad, idcard FROM stuinfo WHERE hallid = 1488
+

@@ -46,6 +46,13 @@ SELECT item, bf, unit FROM storeinout sio JOIN storeditem si ON sio.item = si.na
 SELECT name, amount, unit FROM nonstoreditem nsi JOIN nonstoreditemlist nsil USING(name) WHERE nsi.serial = 20200819 and grp = 1
 
 
+DELETE FROM grp WHERE date = 20200820 AND state = 'breakfast'
+
+SELECT * FROM nonstoreditem WHERE serial = 20200823 AND state = 'breakfast'
 
 
+UPDATE nonstoreditem SET grp = 0 WHERE serial = 20200823 AND state = 'breakfast'
 
+
+UPDATE mealsheet SET bfgrp = 0 WHERE date = 20200820;
+SELECT * FROM mealsheet WHERE date = 20200820;
