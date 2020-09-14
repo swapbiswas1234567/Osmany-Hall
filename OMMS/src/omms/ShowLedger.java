@@ -40,6 +40,7 @@ public class ShowLedger extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
+    DecimalFormat dec2;
     int flag=0;
     
     
@@ -131,6 +132,7 @@ public class ShowLedger extends javax.swing.JFrame {
             psmt.setString(1, name);
             rs = psmt.executeQuery();
             while(rs.next()){
+                //System.out.print(rs.getString(1)+" "+name);
                 unit = rs.getString(1);
             }
             psmt.close();
@@ -162,6 +164,7 @@ public class ShowLedger extends javax.swing.JFrame {
         dtedit1.setEditable(false);
         
         dec = new DecimalFormat("#0.000");
+        dec2 = new DecimalFormat("#0.00");
         model = ledgertable.getModel();
         
     }
@@ -200,8 +203,8 @@ public class ShowLedger extends javax.swing.JFrame {
             while(rs.next()){
                 
                 try{
-                date = formatter.parse(rs.getString(1));
-                strdate = formatter1.format(date);
+                    date = formatter.parse(rs.getString(1));
+                    strdate = formatter1.format(date);
                 }
                 catch(ParseException e){
                     JOptionPane.showMessageDialog(null, "Date Parse "
@@ -215,7 +218,7 @@ public class ShowLedger extends javax.swing.JFrame {
                 lastavl = prevavailable[0] +rs.getDouble(2)-(rs.getDouble(3)+rs.getDouble(4)+rs.getDouble(5));
                 //System.out.println("serial "+rs.getInt(1)+"prev available: "+prevavailable[0]+"last available: "+lastavl+"avg price: "+prevavailable[1]);
                 
-                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),lastavl,dec.format(prevavailable[1]),rs.getString(7)};
+                Object o [] = {strdate,item,dec.format(prevavailable[0]),rs.getDouble(2),rs.getDouble(3),rs.getDouble(4),rs.getDouble(5),dec.format(lastavl),dec2.format(prevavailable[1]),rs.getString(7)};
                 tablemodel.addRow(o);
                 prevavailable[0] = lastavl;
                 
@@ -237,7 +240,7 @@ public class ShowLedger extends javax.swing.JFrame {
                 namelbl.setText("");
                 previousavllbl.setText("");
                 currevtavllbl.setText("");
-               dayslbl.setText("");
+                dayslbl.setText("");
                unitlbl.setText("");
             }
            // setlbl(item,fromavailable.toString(),prevavailable[0].toString(),Integer.toString(tablemodel.getRowCount()));

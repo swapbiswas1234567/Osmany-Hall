@@ -13,11 +13,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -47,6 +50,7 @@ public class GenerateBill extends javax.swing.JFrame {
         initComponents();
         billtabledecoration();
         inittialization();
+        flag=1;
     }
     
     
@@ -55,19 +59,8 @@ public class GenerateBill extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb(); // set connection with database
         formatter = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
         formatter1 = new SimpleDateFormat("MMM dd,yyyy");
-        Date todaysdate =new Date();
-        fromdatechooser.setDate(todaysdate);  // setting both datechooser todays date
-        todatechooser.setDate(todaysdate);  // setting both datechooser todays date
         
-        JTextFieldDateEditor dtedit;
-        dtedit = (JTextFieldDateEditor) fromdatechooser.getDateEditor();
-        dtedit.setEditable(false);
-        
-        dtedit = (JTextFieldDateEditor) todatechooser.getDateEditor();
-        dtedit.setEditable(false);
-        
-        
-        dec = new DecimalFormat("#0.00");
+        dec = new DecimalFormat("#0");
         model = billtbl.getModel();
         
         int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -76,6 +69,96 @@ public class GenerateBill extends javax.swing.JFrame {
         int month = Calendar.getInstance().get(Calendar.MONTH);
         //System.out.println(month+" "+year);
         monthcombo.setSelectedIndex(month);
+        setgeneratedate();
+        
+        savebtnvisibility(month+1, year);
+        
+    }
+    
+    public void savebtnvisibility(int month,int year){
+        int permission=-1, generated=-1;
+        try{
+            //.out.println(month+" called "+year);
+            psmt = conn.prepareStatement("select permission,generated from billpermission where month=? and year=?");
+            psmt.setInt(1, month);
+            psmt.setInt(2, year);
+            rs = psmt.executeQuery();
+            
+            while(rs.next()){
+                permission=rs.getInt(1);
+                generated = rs.getInt(2);
+            }
+            
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to check permission", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        //System.out.println(permission+" "+generated+" "+month+" "+year);
+        if(permission ==1 && generated == 0){
+            savebtn.setVisible(true);
+        }
+        else{
+            savebtn.setVisible(false);
+        }
+    }
+    
+    public void setgeneratedate(){
+        String strfrom="", strto="", stryear="",strmonth="";
+        int month=0, fromserial=0, toserial=0;
+        Date fromdate=null, todate=null;
+        
+        try{
+            //System.out.println(fromdate+" called "+todate);
+            psmt = conn.prepareStatement("select fromdate,todate from mealrange where sl =1");
+            rs = psmt.executeQuery();
+            
+            while(rs.next()){
+                strfrom= rs.getString(1);
+                strto = rs.getString(2);
+            }
+            
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to fetchname of stored item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        stryear = yeartxt.getText();
+        //strmonth = Integer.toString(monthcombo.getSelectedIndex());
+        month = monthcombo.getSelectedIndex();
+        if(month <=9){
+            strmonth = Integer.toString(month);
+            strmonth = "0"+strmonth;
+        }
+        else{
+            strmonth = Integer.toString(month);
+        }
+        strfrom=stryear+strmonth+strfrom;
+        //System.out.println("from date "+ strfrom);
+        month=month+1;
+        if(month <=9){
+            strmonth = Integer.toString(month);
+            strmonth = "0"+strmonth;
+        }
+        else{
+            strmonth = Integer.toString(month);
+        }
+        strto=stryear+strmonth+strto;
+        //System.out.println("to date "+ strto);
+        
+        try{
+            fromdate = formatter.parse(strfrom);
+            todate = formatter.parse(strto);
+            strfrom = formatter1.format(fromdate);
+            strto =formatter1.format(todate);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Failed to set date", "Date set error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+          fromdatelbl.setText(strfrom);
+          todatelbl.setText(strto);
     }
     
     
@@ -107,66 +190,69 @@ public class GenerateBill extends javax.swing.JFrame {
     
     
     public void calculatebill(int fromdate, int todate){
-//        SingleStdntBill st= new SingleStdntBill();
-//        DailyAvgBill db= new DailyAvgBill();
-//        Map<Integer, BillAmount> billmap = new HashMap<>();
-//        tablemodel = (DefaultTableModel) billtbl.getModel();
-//        Double bill=0.00, tmpbill=0.0, prevbill=0.0,totalbill=0.0;
-//        int hallid=0,serial=1;
-//        String roll="",name="",room="",strtotal="";
-//        
-//        billmap = db.setbill(fromdate, todate);
+        SingleStdntBill st= new SingleStdntBill();
+        DailyAvgBill db= new DailyAvgBill();
+        Map<Integer, BillAmount> billmap = new HashMap<>();
+        tablemodel = (DefaultTableModel) billtbl.getModel();
+        
+        Double bill=0.00, tmpbill=0.0, prevbill=0.0,totalbill=0.0;
+        int hallid=0,serial=1;
+        String roll="",name="",room="",strtotal="";
+        
+        billmap = db.setbill(fromdate, todate);
         
 //        //System.out.println(bill);
-//        try{
-//            psmt = conn.prepareStatement("select hallid,roll,name,roomno from stuinfo ORDER by hallid");
-//            rs = psmt.executeQuery();
-//            while(rs.next()){
-//                hallid = rs.getInt(1);
-//                roll = rs.getString(2);
-//                name = rs.getString(3);
-//                room = rs.getString(4);
-//                
-//                bill =st.monthlybill(billmap, fromdate, todate, hallid);
-//                tmpbill = st.monthlytmpfoodbill(fromdate, todate,hallid);
-//                bill = bill+tmpbill;
-//                prevbill = st.previousbill(hallid);
-//                
-//                if(prevbill > 0){
-//                    
-//                    totalbill = bill+prevbill;
-//                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
-//                    0,0,0,prevbill,0,dec.format(totalbill)};
-//                    tablemodel.addRow(o);
-//                }
-//                else if(prevbill < 0){
-//                    prevbill =prevbill* -1;
-//                    totalbill = bill-prevbill;
-//                    if(totalbill <0){
-//                        totalbill*=-1;
-//                        strtotal = dec.format(totalbill)+"(Extra)";
-//                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
-//                        0,0,0,0.0,prevbill,strtotal};
-//                        tablemodel.addRow(o);
-//                    }
-//                    else{
-//                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
-//                        0,0,0,0.0,prevbill,dec.format(totalbill)};
-//                        tablemodel.addRow(o);
-//                    }
-//                }
-//                else{
-//                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
-//                    0,0,0,0.0,0.0,dec.format(bill)};
-//                    tablemodel.addRow(o);
-//                }
-//                serial++;
-//            }
-//            psmt.close();
-//            rs.close();
-//        }catch(SQLException e){
-//            JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-//        }
+        try{
+            psmt = conn.prepareStatement("select hallid,roll,name,roomno,totaldue from stuinfo ORDER by hallid");
+            rs = psmt.executeQuery();
+            while(rs.next()){
+                hallid = rs.getInt(1);
+                roll = rs.getString(2);
+                name = rs.getString(3);
+                room = rs.getString(4);
+                prevbill = rs.getDouble(5);
+                
+                bill =st.monthlybill(billmap, fromdate, todate, hallid);
+                tmpbill = st.monthlytmpfoodbill(fromdate, todate,hallid);
+                bill = bill+tmpbill;
+                bill = Math.ceil(bill);
+                //prevbill = st.previousbill(hallid);
+                
+                if(prevbill > 0){
+                    
+                    totalbill = bill+prevbill;
+                    Object o []={serial,hallid,roll,name, room,dec.format(bill),
+                    0,0,0,prevbill,0,dec.format(totalbill)};
+                    tablemodel.addRow(o);
+                }
+                else if(prevbill < 0){
+                    prevbill =prevbill* -1;
+                    totalbill = bill-prevbill;
+                    if(totalbill <0){
+                        totalbill*=-1;
+                        strtotal = dec.format(totalbill)+"(Extra)";
+                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
+                        0,0,0,0.0,prevbill,strtotal};
+                        tablemodel.addRow(o);
+                    }
+                    else{
+                        Object o []={serial,hallid,roll,name, room, dec.format(bill),
+                        0,0,0,0.0,prevbill,dec.format(totalbill)};
+                        tablemodel.addRow(o);
+                    }
+                }
+                else{
+                    Object o []={serial,hallid,roll,name, room, dec.format(bill),
+                    0,0,0,0.0,0.0,dec.format(bill)};
+                    tablemodel.addRow(o);
+                }
+                serial++;
+            }
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "bill calcualtion for each student failed", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
         
     }
     
@@ -398,6 +484,23 @@ public class GenerateBill extends javax.swing.JFrame {
         Double bill=0.0, others=0.0, fine=0.0, waive=0.0,advance=0.0, due=0.0, totaldue=0.0;
         int hallid=0;
         
+        
+        try{
+            psmt = conn.prepareStatement("update billpermission set generated=? where month=? and year=?");
+            psmt.setInt(1, 1);
+            psmt.setInt(2, month);
+            psmt.setInt(3, year);
+            psmt.execute();
+            psmt.close();
+
+        }  
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Data insertion error in permission table", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        
         for(int i=0; i<totalrow; i++){
             hallid =Integer.parseInt(model.getValueAt(i, 1).toString());
             bill = Double.parseDouble(model.getValueAt(i, 5).toString());
@@ -406,6 +509,7 @@ public class GenerateBill extends javax.swing.JFrame {
             waive = Double.parseDouble(model.getValueAt(i, 8).toString());
             advance = Double.parseDouble(model.getValueAt(i, 10).toString());
             due = Double.parseDouble(model.getValueAt(i, 9).toString());
+            
             if(advance > 0){
                 totaldue = -1*advance;
             }
@@ -415,6 +519,10 @@ public class GenerateBill extends javax.swing.JFrame {
             else{
                 totaldue=0.0;
             }
+            
+            
+            
+            
             
             try{
                     psmt = conn.prepareStatement("insert into billhistory (hallid, year, month,bill,others,fine,waive,due) VALUES(?,?,?,?,?,?,?,?)");
@@ -438,7 +546,7 @@ public class GenerateBill extends javax.swing.JFrame {
             totaldue = bill+others+fine-waive+due-advance;
             
             try{
-                psmt = conn.prepareStatement("update totalbill SET totaldue=? where hallid=? ");
+                psmt = conn.prepareStatement("update stuinfo SET totaldue=? where hallid=? ");
                 psmt.setDouble(1, totaldue);
                 psmt.setInt(2, hallid);
                 psmt.execute();
@@ -467,9 +575,7 @@ public class GenerateBill extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        fromdatechooser = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
-        todatechooser = new com.toedter.calendar.JDateChooser();
         generatebtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -509,6 +615,8 @@ public class GenerateBill extends javax.swing.JFrame {
         waivetxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         grandtotallbl = new javax.swing.JLabel();
+        fromdatelbl = new javax.swing.JLabel();
+        todatelbl = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         billtbl = new javax.swing.JTable();
 
@@ -526,14 +634,10 @@ public class GenerateBill extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/start.png"))); // NOI18N
         jLabel2.setText("From Date");
 
-        fromdatechooser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
         jLabel3.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/end.png"))); // NOI18N
         jLabel3.setText("To Date");
-
-        todatechooser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         generatebtn.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         generatebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/pos-terminal (1).png"))); // NOI18N
@@ -563,6 +667,11 @@ public class GenerateBill extends javax.swing.JFrame {
         });
 
         yeartxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        yeartxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yeartxtActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -725,6 +834,12 @@ public class GenerateBill extends javax.swing.JFrame {
         grandtotallbl.setForeground(new java.awt.Color(255, 51, 0));
         grandtotallbl.setText("0");
 
+        fromdatelbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        fromdatelbl.setForeground(new java.awt.Color(255, 51, 0));
+
+        todatelbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        todatelbl.setForeground(new java.awt.Color(255, 51, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -743,13 +858,12 @@ public class GenerateBill extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(generatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(todatechooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(yeartxt)
-                            .addComponent(monthcombo, 0, 150, Short.MAX_VALUE)
-                            .addComponent(fromdatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(datelbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(todatelbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fromdatelbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(yeartxt, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(monthcombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 150, Short.MAX_VALUE)
+                        .addComponent(datelbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
@@ -843,14 +957,15 @@ public class GenerateBill extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(finelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(duelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(finetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(fromdatechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(fromdatelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, 0)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -859,14 +974,14 @@ public class GenerateBill extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(roomlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(todatechooser, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(todatelbl, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(waivetxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                                         .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)))))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, 0)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(idtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
@@ -941,21 +1056,34 @@ public class GenerateBill extends javax.swing.JFrame {
     private void generatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatebtnActionPerformed
         // TODO add your handling code here:
         Date from=null, to=null;
+        String strfrom="", strto="";
         int fromserial =0, toserial=0;
-        from = fromdatechooser.getDate();
-        to = todatechooser.getDate();
+        strfrom = fromdatelbl.getText();
+        strto = todatelbl.getText();
+        
+        try {
+            from = formatter1.parse(strfrom);
+            to =  formatter1.parse(strto);
+        } catch (ParseException ex) {
+            Logger.getLogger(GenerateBill.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        
+        
         
         try{
+            
             fromserial = Integer.parseInt(formatter.format(from));
             toserial = Integer.parseInt(formatter.format(to));
-        }catch(NumberFormatException e){
+        }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Failed to convert date", "Data convertion error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         tablemodel = (DefaultTableModel) billtbl.getModel();
         if(tablemodel.getColumnCount() > 0){
             tablemodel.setRowCount(0);
         }
-        
+        //System.out.println(fromserial+" "+toserial);
         if(fromserial <= toserial){
             calculatebill(fromserial,toserial);
             calculatetotal();
@@ -970,11 +1098,31 @@ public class GenerateBill extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         String name="",year="";
+        int month=0, yearval=0;
+        
         name= monthcombo.getSelectedItem().toString();
         year = yeartxt.getText();
         //System.out.println(name);
         name=name+", "+year;
         datelbl.setText(name);
+        setgeneratedate();
+        
+        try {
+            yearval = Integer.parseInt(year);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Year format error", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(flag ==1 && yearval >0){
+            month = monthcombo.getSelectedIndex()+1;
+            savebtnvisibility(month, yearval);
+        }
+        else if(flag==1){
+            JOptionPane.showMessageDialog(null, "Invalid year", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
     }//GEN-LAST:event_monthcomboActionPerformed
 
     private void searchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtnActionPerformed
@@ -1038,7 +1186,7 @@ public class GenerateBill extends javax.swing.JFrame {
         int totalrow=-1,year=0,month=0;
         totalrow = billtbl.getRowCount();
         stryear = yeartxt.getText().trim();
-        month= monthcombo.getSelectedIndex();
+        month= monthcombo.getSelectedIndex()+1;
         try{
             year = Integer.parseInt(stryear);
         }catch(NumberFormatException e){
@@ -1047,8 +1195,9 @@ public class GenerateBill extends javax.swing.JFrame {
         }
         
         if(year >0){
-            month += 1;
+            System.out.println(month);
             savedatabase(totalrow,year,month);
+            savebtnvisibility(month, year);
         }
         else{
             JOptionPane.showMessageDialog(null,"year not valid", "Search Error", JOptionPane.ERROR_MESSAGE);
@@ -1056,9 +1205,42 @@ public class GenerateBill extends javax.swing.JFrame {
         
     }//GEN-LAST:event_savebtnActionPerformed
 
+    private void yeartxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yeartxtActionPerformed
+        // TODO add your handling code here:
+        String name="",year="",stryear="";
+        int month=0,yearval=0;
+        
+        name= monthcombo.getSelectedItem().toString();
+        year = yeartxt.getText();
+        //System.out.println(name);
+        name=name+", "+year;
+        datelbl.setText(name);
+        
+        
+        stryear = yeartxt.getText().trim();
+        month= monthcombo.getSelectedIndex()+1;
+        
+        try{
+            yearval = Integer.parseInt(stryear);
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null,"year format error", "Search Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(yearval >0){
+            //System.out.println(month);
+            setgeneratedate();
+            savebtnvisibility(month, yearval);
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"year not valid", "Search Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_yeartxtActionPerformed
+
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1099,7 +1281,7 @@ public class GenerateBill extends javax.swing.JFrame {
     private javax.swing.JLabel duelbl;
     private javax.swing.JLabel finelbl;
     private javax.swing.JTextField finetxt;
-    private com.toedter.calendar.JDateChooser fromdatechooser;
+    private javax.swing.JLabel fromdatelbl;
     private javax.swing.JButton generatebtn;
     private javax.swing.JLabel grandtotallbl;
     private javax.swing.JTextField idtxt;
@@ -1133,7 +1315,7 @@ public class GenerateBill extends javax.swing.JFrame {
     private javax.swing.JLabel roomlbl;
     private javax.swing.JButton savebtn;
     private javax.swing.JButton searchbtn;
-    private com.toedter.calendar.JDateChooser todatechooser;
+    private javax.swing.JLabel todatelbl;
     private javax.swing.JLabel totallbl;
     private javax.swing.JButton updatebtn;
     private javax.swing.JLabel waivelbl;
