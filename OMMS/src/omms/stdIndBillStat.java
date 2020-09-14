@@ -491,7 +491,7 @@ public class stdIndBillStat extends javax.swing.JFrame {
         from = fromdatechooser.getDate();
         to = todatechooser.getDate();
         
-        
+        //System.out.println(strid);
         try{
             fromdate = Integer.parseInt(formatter1.format(from));
             todate = Integer.parseInt(formatter1.format(to));

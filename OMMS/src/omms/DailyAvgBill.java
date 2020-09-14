@@ -56,7 +56,7 @@ public class DailyAvgBill {
 //              System.out.println(billMap.get(20200807).item.get(i).name+" "+billMap.get(20200807).item.get(i).avgprice+" "+
 //                      billMap.get(20200807).item.get(i).bfamount+" "+billMap.get(20200807).item.get(i).dinneramount);
 //          }
-        //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill+" "+billMap.get(20200601).dinnerbill);
+       // System.out.println(billMap.get(20200501).bfbill+" "+billMap.get(20200501).lunchbill+" "+billMap.get(20200501).dinnerbill);
         perheadmeal(fromdate,todate); // divide total bill by total meal on
         //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill+" "+billMap.get(20200601).dinnerbill);
         return billMap;

@@ -289,7 +289,7 @@ public class StoreInForm extends javax.swing.JFrame {
                JOptionPane.showMessageDialog(null,"Failed to save"
                        + "t data while inserting","Data Error",JOptionPane.ERROR_MESSAGE);
            }
-           
+           actvalue=inputcheckDatabase(itemname ,serial);
         
       if( actvalue == 2)
       {
