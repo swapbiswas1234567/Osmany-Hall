@@ -40,7 +40,6 @@ public class AboutUs extends javax.swing.JFrame {
 	icon = new ImageIcon(scaleImage);
 	mahinlbl.setIcon(icon);
 
-
     }
     
     

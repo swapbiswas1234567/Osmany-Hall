@@ -6,6 +6,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -475,9 +476,19 @@ public class StoreOutSum extends javax.swing.JFrame {
          
             PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
              
-                doc.open();
+            doc.open();
             
-            Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
+            Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
+            image1.setAlignment(Element.ALIGN_CENTER);
+            image1.scaleAbsolute(100, 70);
+            //Add to document
+            doc.add(image1);
+            
+            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+            osmany.setAlignment(Element.ALIGN_CENTER);
+            doc.add(osmany);
+            
+            Paragraph p=new Paragraph("STORE OUT REPORT\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
              
             p.setAlignment(Element.ALIGN_CENTER);
              
@@ -486,12 +497,15 @@ public class StoreOutSum extends javax.swing.JFrame {
             Date dt=todt_ch.getDate();
             
             
-            Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\t \t"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.UNDERLINE));           
-            q.setAlignment(Element.ALIGN_CENTER);
-            
+            Paragraph q=new Paragraph("From :"+formatter2.format(ddt) ,FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+            q.setAlignment(Element.ALIGN_CENTER);   
             doc.add(q);
             
-            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+            Paragraph q1=new Paragraph("To :"+formatter2.format(dt),FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+            q1.setAlignment(Element.ALIGN_CENTER);   
+            doc.add(q1);
+            
+            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);
             
@@ -499,17 +513,17 @@ public class StoreOutSum extends javax.swing.JFrame {
             doc.add(newline);
              
             String[] header = new String[] { "Serial", "Date", "Name",
-            "Quantity", "Price","Avg Price","Memo" };
+            "Breakfast", "Lunch","Dinner","Avg Price","Memo" };
             
             PdfPTable table = new PdfPTable(header.length);
             table.setHeaderRows(1);
-            table.setWidths(new int[] { 2, 3, 4, 3, 2,3,2 });
+            table.setWidths(new int[] { 2,3, 3, 4, 3, 2,3,2 });
             table.setWidthPercentage(98);
             table.setSpacingBefore(15);
             table.setSplitLate(false);
             for (String columnHeader : header) {
                 PdfPCell headerCell = new PdfPCell();
-                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
                 headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
@@ -523,16 +537,17 @@ public class StoreOutSum extends javax.swing.JFrame {
                  String ser= store_tbl.getValueAt(i, 0).toString();
                  String Date= store_tbl.getValueAt(i, 1).toString();
                  String Item= store_tbl.getValueAt(i, 2).toString();
-                 String Quan= store_tbl.getValueAt(i,3).toString();
-                 String pr= store_tbl.getValueAt(i,4).toString();
-                 String avg= store_tbl.getValueAt(i,5).toString();
-                 String mem= store_tbl.getValueAt(i,6).toString();
+                 String bf= store_tbl.getValueAt(i,3).toString();
+                 String lunch= store_tbl.getValueAt(i,4).toString();
+                 String dinner= store_tbl.getValueAt(i,5).toString();
+                 String avg= store_tbl.getValueAt(i,6).toString();
+                 String mem= store_tbl.getValueAt(i,7).toString();
                  String[] content = new String[] { ser, Date,
-                Item, Quan, pr,avg,mem };
+                Item, bf, lunch, dinner,avg,mem };
                 
                 for (String text : content) {
                     PdfPCell cell = new PdfPCell();
-                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL)));
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
                     cell.setBorderColor(BaseColor.LIGHT_GRAY);
                     cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell.setPadding(5);
@@ -541,12 +556,31 @@ public class StoreOutSum extends javax.swing.JFrame {
 
              }
              doc.add(table);
-            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n\n\n"));
+            
             LineSeparator separator = new LineSeparator();
-            separator.setPercentage(98);
-            separator.setLineColor(BaseColor.LIGHT_GRAY);
+            separator.setPercentage(24);
+            separator.setAlignment(Element.ALIGN_RIGHT);
+            separator.setLineColor(BaseColor.BLACK);
             Chunk linebreak = new Chunk(separator);
             doc.add(linebreak);
+            
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name1.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name1);
+            
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator1 = new LineSeparator();
+            separator1.setPercentage(24);
+            separator1.setAlignment(Element.ALIGN_RIGHT);
+            separator1.setLineColor(BaseColor.BLACK);
+            Chunk linebreak1 = new Chunk(separator1);
+            doc.add(linebreak1);
+            
+            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name2.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name2);
              
         }
         catch(Exception e)

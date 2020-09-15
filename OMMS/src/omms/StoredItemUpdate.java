@@ -67,6 +67,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     conn.close();
+                    //System.out.println(UserLog.name);
                     if(UserLog.name.equals("accountant")){
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
@@ -98,7 +99,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
     
     //get name of all item from database 
     public void getAllstoreditem(){
-       
+        
         try{
             psmt = conn.prepareStatement("select name from storeditem");
             rs = psmt.executeQuery();
@@ -111,7 +112,6 @@ public class StoredItemUpdate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
         
-   
     }
     
     
@@ -214,11 +214,11 @@ public class StoredItemUpdate extends javax.swing.JFrame {
      
      public void updatedatabase(Date date, String item){
          
-         int serial =0;
-         int delserial=0;
-         String delname="", memo="";
-         Double inamount=0.00,price=0.00,bf=0.00,lunch=0.00,dinner=0.00;
-         try{
+        int serial =0;
+        int delserial=0;
+        String delname="", memo="";
+        Double inamount=0.00,price=0.00,bf=0.00,lunch=0.00,dinner=0.00;
+        try{
             serial = Integer.parseInt(formatter.format(date));
         }
         catch(NumberFormatException e){
@@ -490,7 +490,6 @@ public class StoredItemUpdate extends javax.swing.JFrame {
         // TODO add your handling code here:
         Date date = null;
         String name="";
-        UserLog.name="accountant";
         
         date = fromdatechooser.getDate();
         name = itemcombobox.getSelectedItem().toString();
@@ -503,7 +502,6 @@ public class StoredItemUpdate extends javax.swing.JFrame {
             if(tablemodel.getColumnCount() > 0){
                 tablemodel.setRowCount(0);
             }
-            
             
         }
         

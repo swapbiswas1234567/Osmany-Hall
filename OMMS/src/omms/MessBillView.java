@@ -98,7 +98,8 @@ public class MessBillView extends javax.swing.JFrame {
         monthCombo.setSelectedIndex(Integer.parseInt(month.format(date)) - 1);
         yearTxt.setText(year.format(date));
     }
-
+    
+    
     public void Tabledecoration() {
         showBillTable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 16));
         showBillTable.getTableHeader().setOpaque(false);
