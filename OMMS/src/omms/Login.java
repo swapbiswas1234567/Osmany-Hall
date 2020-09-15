@@ -11,6 +11,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,6 +23,10 @@ import javax.swing.JOptionPane;
  * @author Asus
  */
 public class Login extends javax.swing.JFrame {
+
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
     /**
      * Creates new form Login
@@ -31,37 +38,67 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void initialize() {
+        conn = Jconnection.ConnecrDb(); // set connection with database        
+        usernameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
     }
 
-    public void closeBtn() {
-        JFrame frame = this;
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent evt) {
-                try {
-                    NewDashboard das = new NewDashboard();
-                    das.setVisible(true);
-                    frame.setVisible(false);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+    public void checkLoginValidity() {
+        try {
+            ps = conn.prepareStatement("SELECT * FROM login");
+            rs = ps.executeQuery();
+            int chk = 0;
+            while (rs.next()) {
+                if (usernameTxt.getText().toString().trim().equals(rs.getString(1)) && passwordTxt.getText().toString().trim().equals(rs.getString(2))) {
+                    try {
+                        switch (rs.getString(1)) {
+                            case "accountant":
+                                {
+                                    UserLog.name = "accountant";
+                                    DashboardAccountant das = new DashboardAccountant();
+                                    das.setVisible(true);
+                                    this.setVisible(false);
+                                    break;
+                                }
+                            case "mess":
+                                {
+                                    UserLog.name = "mess";
+                                    DashboardMess das = new DashboardMess();
+                                    das.setVisible(true);
+                                    this.setVisible(false);
+                                    break;
+                                }
+                            case "provost":
+                                {
+                                    UserLog.name = "provost";
+                                    DashboardHallAutho das = new DashboardHallAutho();
+                                    das.setVisible(true);
+                                    this.setVisible(false);
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                        ps.close();
+                        rs.close();
+                        return;
+                    }
+                    chk++;
                 }
             }
-        });
-    }
-    
-    public void checkLoginValidity(){
-        if (usernameTxt.getText().toString().trim().equals("abir") && passwordTxt.getText().toString().trim().equals("1234")) {
-            try {
-                    NewDashboard das = new NewDashboard();
-                    das.setVisible(true);
-                    this.setVisible(false);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
-                }
-        } else {
-            usernameTxt.requestFocusInWindow();
-            JOptionPane.showMessageDialog(null, "Username or Password is wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);
+            if (chk == 0) {
+                usernameTxt.requestFocusInWindow();
+                JOptionPane.showMessageDialog(null, "Username or Password is wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                ps.close();
+                rs.close();
+                return;
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
         }
+
     }
 
     /**
@@ -190,18 +227,18 @@ public class Login extends javax.swing.JFrame {
         if (usernameTxt.getText().equals("Enter Username")) {
             usernameTxt.setText("");
         }
-        usernameTxt.setForeground(new Color(204,204,204));
+        usernameTxt.setForeground(new Color(204, 204, 204));
     }//GEN-LAST:event_usernameTxtFocusGained
 
     private void passwordTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordTxtFocusGained
         // TODO add your handling code here:
         passwordTxt.setText("");
-        usernameTxt.setForeground(new Color(204,204,204));
+        usernameTxt.setForeground(new Color(204, 204, 204));
     }//GEN-LAST:event_passwordTxtFocusGained
 
     private void loginLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginLblMouseClicked
         // TODO add your handling code here:
-        checkLoginValidity();        
+        checkLoginValidity();
     }//GEN-LAST:event_loginLblMouseClicked
 
     private void usernameTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTxtActionPerformed

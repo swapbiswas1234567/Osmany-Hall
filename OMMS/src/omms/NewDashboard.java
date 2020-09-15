@@ -6,11 +6,11 @@
 package omms;
 
 import java.awt.Color;
-import omms.dashboardInternalJframe.GroupingDash;
-import omms.dashboardInternalJframe.HallAdmissionDash;
-import omms.dashboardInternalJframe.NonStoredItemDash;
-import omms.dashboardInternalJframe.StoredItemDash;
-import omms.dashboardInternalJframe.TempFoodDash;
+import omms.messDashboardInternalJframe.MessGroupingDash;
+import omms.messDashboardInternalJframe.MessHallAdmissionDash;
+import omms.messDashboardInternalJframe.MessNonStoredItemDash;
+import omms.messDashboardInternalJframe.MessStoredItemDash;
+import omms.messDashboardInternalJframe.MessTempFoodDash;
 
 /**
  *
@@ -57,12 +57,6 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl = new javax.swing.JLabel();
         logoPanel = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
-        hallAddPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        hallAddLbl1 = new javax.swing.JLabel();
-        hallAddPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        hallAddLbl2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
@@ -316,7 +310,7 @@ public class NewDashboard extends javax.swing.JFrame {
             .addComponent(hallAddLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        sidePanel.add(hallAddPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 570, 310, 60));
+        sidePanel.add(hallAddPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 310, 60));
 
         logoPanel.setBackground(new java.awt.Color(253, 253, 253));
 
@@ -338,86 +332,6 @@ public class NewDashboard extends javax.swing.JFrame {
         );
 
         sidePanel.add(logoPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 160));
-
-        hallAddPanel1.setBackground(new java.awt.Color(33, 102, 142));
-        hallAddPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                hallAddPanel1MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                hallAddPanel1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                hallAddPanel1MouseExited(evt);
-            }
-        });
-
-        jLabel2.setBackground(new java.awt.Color(33, 102, 142));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/admission.png"))); // NOI18N
-
-        hallAddLbl1.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
-        hallAddLbl1.setForeground(new java.awt.Color(255, 255, 255));
-        hallAddLbl1.setText("Hall Admission");
-
-        javax.swing.GroupLayout hallAddPanel1Layout = new javax.swing.GroupLayout(hallAddPanel1);
-        hallAddPanel1.setLayout(hallAddPanel1Layout);
-        hallAddPanel1Layout.setHorizontalGroup(
-            hallAddPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hallAddPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(hallAddLbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        hallAddPanel1Layout.setVerticalGroup(
-            hallAddPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-            .addComponent(hallAddLbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        sidePanel.add(hallAddPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 310, 60));
-
-        hallAddPanel2.setBackground(new java.awt.Color(33, 102, 142));
-        hallAddPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                hallAddPanel2MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                hallAddPanel2MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                hallAddPanel2MouseExited(evt);
-            }
-        });
-
-        jLabel4.setBackground(new java.awt.Color(33, 102, 142));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/admission.png"))); // NOI18N
-
-        hallAddLbl2.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
-        hallAddLbl2.setForeground(new java.awt.Color(255, 255, 255));
-        hallAddLbl2.setText("Hall Admission");
-
-        javax.swing.GroupLayout hallAddPanel2Layout = new javax.swing.GroupLayout(hallAddPanel2);
-        hallAddPanel2.setLayout(hallAddPanel2Layout);
-        hallAddPanel2Layout.setHorizontalGroup(
-            hallAddPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hallAddPanel2Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(hallAddLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        hallAddPanel2Layout.setVerticalGroup(
-            hallAddPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-            .addComponent(hallAddLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        sidePanel.add(hallAddPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 310, 60));
 
         getContentPane().add(sidePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 710));
 
@@ -521,7 +435,7 @@ public class NewDashboard extends javax.swing.JFrame {
         
         
         dashhboardPanel.removeAll();
-        StoredItemDash sid = new StoredItemDash();
+        MessStoredItemDash sid = new MessStoredItemDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(sid).setVisible(true);
     }//GEN-LAST:event_storeItemPanelMousePressed
@@ -559,7 +473,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
-        NonStoredItemDash nsid = new NonStoredItemDash();
+        MessNonStoredItemDash nsid = new MessNonStoredItemDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(nsid).setVisible(true);
     }//GEN-LAST:event_nonStorePanelMouseClicked
@@ -597,7 +511,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();        
-        TempFoodDash tmd = new TempFoodDash();
+        MessTempFoodDash tmd = new MessTempFoodDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(tmd).setVisible(true);
     }//GEN-LAST:event_tempFoodPanelMouseClicked
@@ -673,7 +587,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
-        GroupingDash gd = new GroupingDash();
+        MessGroupingDash gd = new MessGroupingDash();
         dashhboardPanel.add(gd).setVisible(true);
     }//GEN-LAST:event_groupingPanelMouseClicked
 
@@ -710,7 +624,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.BLACK);
         
         dashhboardPanel.removeAll();
-        HallAdmissionDash had = new HallAdmissionDash();
+        MessHallAdmissionDash had = new MessHallAdmissionDash();
         dashhboardPanel.add(had).setVisible(true);
     }//GEN-LAST:event_hallAddPanelMouseClicked
 
@@ -728,29 +642,6 @@ public class NewDashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_hallAddPanelMouseExited
 
-    private void hallAddPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel1MouseClicked
-
-    private void hallAddPanel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel1MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel1MouseEntered
-
-    private void hallAddPanel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel1MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel1MouseExited
-
-    private void hallAddPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel2MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel2MouseClicked
-
-    private void hallAddPanel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel2MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel2MouseEntered
-
-    private void hallAddPanel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hallAddPanel2MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_hallAddPanel2MouseExited
 
     /**
      * @param args the command line arguments
@@ -793,19 +684,13 @@ public class NewDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel groupingPanel;
     private javax.swing.JLabel grpLbl;
     private javax.swing.JLabel hallAddLbl;
-    private javax.swing.JLabel hallAddLbl1;
-    private javax.swing.JLabel hallAddLbl2;
     private javax.swing.JPanel hallAddPanel;
-    private javax.swing.JPanel hallAddPanel1;
-    private javax.swing.JPanel hallAddPanel2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;

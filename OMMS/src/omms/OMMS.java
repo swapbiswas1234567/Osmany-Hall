@@ -21,7 +21,7 @@ public class OMMS {
      */
     public static void main(String[] args) throws SQLException {
         //deleteGroup st = new deleteGroup();
-        //Login st = new Login();
+        Login st = new Login();
         //Dashboard st = new Dashboard();
         //StdHallAdmission st = new StdHallAdmission();
         //stdInfoUpdate st = new 
@@ -31,7 +31,9 @@ public class OMMS {
         //AccountPaymentDelete st = new AccountPaymentDelete();
         //AccountPaymentHistoryView st = new AccountPaymentHistoryView();
         //StdInfoDelete st = new StdInfoDelete();
-        MessDashboard st = new MessDashboard();
+        //DashboardMess st = new DashboardMess();
+        //AccountantDashboard st = new AccountantDashboard();
+        //DashboardHallAutho st = new DashboardHallAutho();
         st.setVisible(true);       
     }
 
