@@ -103,9 +103,24 @@ public class StoreOutItem extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     if(UserLog.name.equals("accountant")){
-//                        NewDashboard das = new NewDashboard();
-//                        das.setVisible(true);
-//                        frame.setVisible(false);
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
                     }
                     conn.close();
                 } catch (Exception e) {
@@ -1574,9 +1589,26 @@ public class StoreOutItem extends javax.swing.JFrame {
                     genpdf();
                     
                     JFrame frame = this;
-                    NewDashboard das = new NewDashboard();
-                    das.setVisible(true);
-                    frame.setVisible(false);
+                    if(UserLog.name.equals("accountant")){
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
                     conn.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
