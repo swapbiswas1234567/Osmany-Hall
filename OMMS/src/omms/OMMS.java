@@ -23,7 +23,15 @@ public class OMMS {
      */
 
     public static void main(String[] args) {
-        
+        //StoreInHistory st = new StoreInHistory();
+        //PaymentHistory st= new PaymentHistory();
+        //NSItemView st= new NSItemView();
+        //GenerateBill st= new GenerateBill();
+        //stdIndBillStat st= new stdIndBillStat();
+        //TmpFoodUpdate st= new TmpFoodUpdate();
+        //TemporaryFoodIn st= new TemporaryFoodIn();
+        AboutUs st= new AboutUs();
+        st.setVisible(true);
         
     }
 
