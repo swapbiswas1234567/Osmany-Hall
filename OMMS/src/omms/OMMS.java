@@ -25,6 +25,7 @@ public class OMMS {
            Login lg = new Login();
            //StdIndBillStat lg = new StdIndBillStat();
            //StdInfoViewPrev lg = new StdInfoViewPrev();
+           //PresentDue lg = new PresentDue();
            lg.setVisible(true);
     }
 }
