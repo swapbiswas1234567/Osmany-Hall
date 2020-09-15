@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import omms.StdHallAdmission;
 import omms.StdInfoDelete;
 import omms.StdInfoUpdate;
-import omms.StdInfoView;
+import omms.StdInfoViewCur;
 
 /**
  *
@@ -147,7 +147,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
 
     private void stdViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stdViewActionPerformed
         // TODO add your handling code here:
-        StdInfoView st = new StdInfoView();
+        StdInfoViewCur st = new StdInfoViewCur();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_stdViewActionPerformed

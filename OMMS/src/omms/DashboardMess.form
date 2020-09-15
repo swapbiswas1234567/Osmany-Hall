@@ -446,7 +446,7 @@
                   <Color blue="fd" green="fd" red="fd" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="D:\CSE-MIST\MIST Project\CSE Alumni Website\assets\img\mist_pattern_logo.png"/>
+                  <Image iconType="3" name="/imagepackage/mist_pattern_logo.png"/>
                 </Property>
               </Properties>
             </Component>

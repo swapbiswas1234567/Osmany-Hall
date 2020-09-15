@@ -64,22 +64,19 @@ public class MessBillView extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     conn.close();
-                    if(UserLog.name.equals("accountant")){
+                    if (UserLog.name.equals("accountant")) {
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("provost")){
+                    } else if (UserLog.name.equals("provost")) {
                         DashboardHallAutho das = new DashboardHallAutho();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("mess")){
+                    } else if (UserLog.name.equals("mess")) {
                         DashboardMess das = new DashboardMess();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("captain")){
+                    } else if (UserLog.name.equals("captain")) {
                         DashboardMessCap das = new DashboardMessCap();
                         das.setVisible(true);
                         frame.setVisible(false);
@@ -121,6 +118,56 @@ public class MessBillView extends javax.swing.JFrame {
         showBillTable.getColumnModel().getColumn(9).setCellRenderer(centerRender);
         showBillTable.getColumnModel().getColumn(10).setCellRenderer(centerRender);
         showBillTable.getColumnModel().getColumn(11).setCellRenderer(centerRender);
+    }
+    
+    public String findHallId() {
+        String id = idTxt.getText();
+        if (!id.equals("")) {
+
+            try {
+                ps = conn.prepareStatement("SELECT hallid FROM stuinfo WHERE hallid = ?");
+                ps.setString(1, id);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    String hallid = String.valueOf(rs.getInt(1));
+                    System.out.println("Id - " + hallid + " Roll - " + id);
+                    ps.close();
+                    rs.close();
+                    return hallid;
+                }
+
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Data cannot be fethced", "Database Error", JOptionPane.ERROR_MESSAGE);
+                return "";
+            }
+
+            try {
+                ps = conn.prepareStatement("SELECT hallid FROM stuinfo WHERE roll = ?");
+                ps.setString(1, id);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    String hallid = String.valueOf(rs.getInt(1));
+                    System.out.println("Id - " + hallid + " Roll - " + id);
+                    ps.close();
+                    rs.close();
+                    return hallid;
+                }
+
+                ps.close();
+                rs.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Data cannot be fethced", "Database Error", JOptionPane.ERROR_MESSAGE);
+                return "";
+            }
+
+            JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll can't be found", "Data No Found", JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
+        return "";
     }
 
     public void showBill() {
@@ -186,16 +233,20 @@ public class MessBillView extends javax.swing.JFrame {
     public void highlightStd(String id) {
         tablemodel = (DefaultTableModel) showBillTable.getModel();
         if (tablemodel.getRowCount() > 0) {
-            for (int j = 1; j <=3; j+=2) {//For each column
+            int chk = 0;
+            for (int j = 1; j <= 3; j += 2) {//For each column
                 for (int i = 0; i < tablemodel.getRowCount(); i++) {//For each row in that column
                     if (tablemodel.getValueAt(i, j).toString().equals(id)) {//Search the model
                         showBillTable.requestFocus();
-                        showBillTable.changeSelection(i,j,false, false);
+                        showBillTable.changeSelection(i, j, false, false);
+                        chk++;
                         break;
                     }
                 }//For loop inner
             }//For loop outer
-            JOptionPane.showMessageDialog(null, id + " Not Found On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+            if (chk == 0) {
+                JOptionPane.showMessageDialog(null, id + " Not Found On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "No Values On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
         }
@@ -345,8 +396,8 @@ public class MessBillView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -369,7 +420,8 @@ public class MessBillView extends javax.swing.JFrame {
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
         if (!idTxt.getText().equals("")) {
-            highlightStd(idTxt.getText().trim());
+            String id = findHallId();
+            highlightStd(id);
         }
     }//GEN-LAST:event_idTxtActionPerformed
 
