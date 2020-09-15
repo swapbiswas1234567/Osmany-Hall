@@ -6,11 +6,11 @@
 package omms;
 
 import java.awt.Color;
-import omms.dashboardInternalJframe.GroupingDash;
-import omms.dashboardInternalJframe.HallAdmissionDash;
-import omms.dashboardInternalJframe.NonStoredItemDash;
-import omms.dashboardInternalJframe.StoredItemDash;
-import omms.dashboardInternalJframe.TempFoodDash;
+import omms.messDashboardInternalJframe.MessGroupingDash;
+import omms.messDashboardInternalJframe.MessHallAdmissionDash;
+import omms.messDashboardInternalJframe.MessNonStoredItemDash;
+import omms.messDashboardInternalJframe.MessStoredItemDash;
+import omms.messDashboardInternalJframe.MessTempFoodDash;
 
 /**
  *
@@ -435,7 +435,7 @@ public class NewDashboard extends javax.swing.JFrame {
         
         
         dashhboardPanel.removeAll();
-        StoredItemDash sid = new StoredItemDash();
+        MessStoredItemDash sid = new MessStoredItemDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(sid).setVisible(true);
     }//GEN-LAST:event_storeItemPanelMousePressed
@@ -473,7 +473,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
-        NonStoredItemDash nsid = new NonStoredItemDash();
+        MessNonStoredItemDash nsid = new MessNonStoredItemDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(nsid).setVisible(true);
     }//GEN-LAST:event_nonStorePanelMouseClicked
@@ -511,7 +511,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();        
-        TempFoodDash tmd = new TempFoodDash();
+        MessTempFoodDash tmd = new MessTempFoodDash();
         //TempFoodView tm = new TempFoodView();
         dashhboardPanel.add(tmd).setVisible(true);
     }//GEN-LAST:event_tempFoodPanelMouseClicked
@@ -587,7 +587,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
-        GroupingDash gd = new GroupingDash();
+        MessGroupingDash gd = new MessGroupingDash();
         dashhboardPanel.add(gd).setVisible(true);
     }//GEN-LAST:event_groupingPanelMouseClicked
 
@@ -624,7 +624,7 @@ public class NewDashboard extends javax.swing.JFrame {
         hallAddLbl.setForeground(Color.BLACK);
         
         dashhboardPanel.removeAll();
-        HallAdmissionDash had = new HallAdmissionDash();
+        MessHallAdmissionDash had = new MessHallAdmissionDash();
         dashhboardPanel.add(had).setVisible(true);
     }//GEN-LAST:event_hallAddPanelMouseClicked
 
@@ -641,6 +641,7 @@ public class NewDashboard extends javax.swing.JFrame {
             hallAddPanel.setBackground(new Color(33, 102, 142));
         }
     }//GEN-LAST:event_hallAddPanelMouseExited
+
 
     /**
      * @param args the command line arguments

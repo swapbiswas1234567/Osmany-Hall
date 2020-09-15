@@ -136,15 +136,44 @@ public class AccountPayment extends javax.swing.JFrame {
         stdPayTable.getColumnModel().getColumn(8).setCellRenderer(centerRender);
     }
 
-    public void setPayTable(Info inf, String pd, int pa, String md, String rf) {
+    public void setPayTable(Info inf, String pd, Double pa, String md, String rf) {
         String payDate = pd;
         int id = inf.hallid;
         String name = inf.name;
         String roll = inf.roll;
         String room = inf.room;
-        int paidAmnt = pa;
+        Double paidAmnt = pa;
         String media = md;
         String ref = rf;
+
+        int dup = 0;
+        String msg = "Already Payment Inserted for " + inf.name + "(" + inf.roll + ")\n";
+
+        for (int i = 0; i < tablemodel.getRowCount(); i++) {
+            int dt1 = 0;
+            try {
+                dt1 = Integer.parseInt(formatDate.format(tableDateFormatter.parse(pd)));
+            } catch (ParseException ex) {
+                Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int dt2 = 0;
+            try {
+                dt2 = Integer.parseInt(formatDate.format(tableDateFormatter.parse(tablemodel.getValueAt(i, 1).toString())));
+            } catch (ParseException ex) {
+                Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println(dt1 + "  " + dt2);
+            if (inf.hallid == Integer.parseInt(tablemodel.getValueAt(i, 2).toString()) && dt1 == dt2) {
+                msg += tablemodel.getValueAt(i, 0).toString() + ". " + tablemodel.getValueAt(i, 6).toString() + " Tk. \n";
+                dup++;
+            }
+        }
+        if (dup > 0) {
+            int responce = JOptionPane.showConfirmDialog(this, msg, "Duplicate Insertion On " + payDate + ". Confirm!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (responce == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
 
         serial++;
         Object obj[] = {serial, payDate, id, name, roll, room, paidAmnt, media, ref};
@@ -152,7 +181,7 @@ public class AccountPayment extends javax.swing.JFrame {
         clearAllStdPay();
     }
 
-    public void setUpdatedPayTable(Info inf, String pd, int pa, String md, String rf) {
+    public void setUpdatedPayTable(Info inf, String pd, Double pa, String md, String rf) {
         tablemodel.setValueAt(inf.hallid, row, 2);
         tablemodel.setValueAt(pd, row, 1);
         tablemodel.setValueAt(inf.name, row, 3);
@@ -170,10 +199,10 @@ public class AccountPayment extends javax.swing.JFrame {
             return;
         }
         String payDate = tableDateFormatter.format(stPayDate.getDate());
-        int paidAmnt;
+        Double paidAmnt;
         try {
-            paidAmnt = Integer.parseInt(stPaidAmntTxt.getText());
-        } catch (Exception e) {
+            paidAmnt = Double.parseDouble(stPaidAmntTxt.getText());
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Inserted Paid Amount is Worng", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -188,11 +217,11 @@ public class AccountPayment extends javax.swing.JFrame {
             return;
         }
         String payDate = tableDateFormatter.format(upPayDate.getDate());
-        int paidAmnt;
+        Double paidAmnt;
         try {
-            paidAmnt = Integer.parseInt(upPaidAmntTxt.getText());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Up Inserted Paid Amount is Worng", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+            paidAmnt = Double.parseDouble(stPaidAmntTxt.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Inserted Paid Amount is Worng", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
             return;
         }
         String media = upMediaCombo.getSelectedItem().toString();
@@ -205,7 +234,7 @@ public class AccountPayment extends javax.swing.JFrame {
         int id = 0;
         try {
             id = Integer.parseInt(strId);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll is Worng", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
             return null;
         }
@@ -224,7 +253,7 @@ public class AccountPayment extends javax.swing.JFrame {
 
             ps.close();
             rs.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Data cannot be fethced", "Database Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
@@ -243,7 +272,7 @@ public class AccountPayment extends javax.swing.JFrame {
 
             ps.close();
             rs.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Data cannot be fethced", "Database Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
@@ -285,7 +314,7 @@ public class AccountPayment extends javax.swing.JFrame {
         if (tablemodel.getRowCount() > 0) {
             for (int i = 0; i < tablemodel.getRowCount(); i++) {
                 int id = (int) tablemodel.getValueAt(i, 2);
-                int paidAmnt = (int) tablemodel.getValueAt(i, 6);
+                Double paidAmnt = Double.parseDouble(tablemodel.getValueAt(i, 6).toString());
                 Date date;
                 int payDate;
                 int insertDate;
@@ -305,9 +334,8 @@ public class AccountPayment extends javax.swing.JFrame {
                 try {
                     //INSERT INTO paymenthistory VALUES (1315, 1000, 20200908, 20200909, "Bank", "")
                     ps = conn.prepareStatement("INSERT INTO paymenthistory (hallid, paidamount, paymentdate, insertdate, media, reference) VALUES (?, ?, ?, ?, ?, ?)");
-                    System.out.println("Id " + id + " I = " + i);
                     ps.setInt(1, id);
-                    ps.setInt(2, paidAmnt);
+                    ps.setDouble(2, paidAmnt);
                     ps.setInt(3, payDate);
                     ps.setInt(4, insertDate);
                     ps.setString(5, media);
@@ -319,6 +347,19 @@ public class AccountPayment extends javax.swing.JFrame {
                     Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
+
+                try {
+                    ps = conn.prepareStatement("UPDATE stuinfo SET totaldue = totaldue - ? WHERE hallid = ?");
+                    ps.setDouble(1, paidAmnt);
+                    ps.setInt(2, id);
+                    ps.execute();
+
+                    ps.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
+                }
+
             }
         } else {
             JOptionPane.showMessageDialog(null, "No data found on table", "Data Save Error", JOptionPane.ERROR_MESSAGE);
@@ -371,44 +412,46 @@ public class AccountPayment extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 209, 160));
 
-        jLabel2.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Bell MT", 1, 30)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/nonstoredupdate.png"))); // NOI18N
         jLabel2.setText("Update");
         jLabel2.setToolTipText("");
 
-        jLabel9.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel9.setText("Hall Id / Roll");
 
-        upIdTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        upIdTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         upIdTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 upIdTxtActionPerformed(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel4.setText("Payment Date");
 
+        upPayDate.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         upPayDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 upPayDatePropertyChange(evt);
             }
         });
 
-        jLabel10.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel10.setText("Paid Amount");
 
-        upPaidAmntTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        upPaidAmntTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         upPaidAmntTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 upPaidAmntTxtActionPerformed(evt);
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel11.setText("Media");
 
-        upMediaCombo.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        upMediaCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         upMediaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bank", "bKash", "Card", "Others" }));
         upMediaCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,10 +459,10 @@ public class AccountPayment extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel12.setText("Referrence");
 
-        upRefTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        upRefTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         upRefTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 upRefTxtActionPerformed(evt);
@@ -443,115 +486,116 @@ public class AccountPayment extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
+                .addContainerGap(118, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(upRefTxt))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(upPayDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(upIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(upPaidAmntTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(upMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(upUpdatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(upUpdatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(35, 35, 35)))
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(upIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(upIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(upPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(upPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(upPaidAmntTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(upPaidAmntTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(upMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(upMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(upRefTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
-                .addComponent(upUpdatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(upUpdatebtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 213, 219));
 
-        jLabel1.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Bell MT", 1, 30)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/card_payment_32px.png"))); // NOI18N
         jLabel1.setText("Student Payment");
         jLabel1.setToolTipText("");
 
-        jLabel3.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel3.setText("Payment Date");
 
+        stPayDate.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         stPayDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 stPayDatePropertyChange(evt);
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel5.setText("Hall Id / Roll");
 
-        stIdTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        stIdTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         stIdTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stIdTxtActionPerformed(evt);
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel6.setText("Paid Amount");
 
-        stPaidAmntTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        stPaidAmntTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         stPaidAmntTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stPaidAmntTxtActionPerformed(evt);
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel7.setText("Referrence");
 
-        stRefTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        stRefTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         stRefTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stRefTxtActionPerformed(evt);
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         jLabel8.setText("Media");
 
-        stMediaCombo.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        stMediaCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         stMediaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bank", "bKash", "Card", "Others" }));
         stMediaCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -560,7 +604,8 @@ public class AccountPayment extends javax.swing.JFrame {
         });
 
         stInsertBtn.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
-        stInsertBtn.setText("Insert");
+        stInsertBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Enter.png"))); // NOI18N
+        stInsertBtn.setText(" Insert");
         stInsertBtn.setBorder(null);
         stInsertBtn.setFocusPainted(false);
         stInsertBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -575,62 +620,62 @@ public class AccountPayment extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(127, Short.MAX_VALUE)
+                .addContainerGap(112, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(stRefTxt))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(stPayDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(stIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(stPaidAmntTxt)
                             .addComponent(stMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(stInsertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stInsertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)))
-                .addGap(0, 122, Short.MAX_VALUE))
+                .addGap(0, 72, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stPaidAmntTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stPaidAmntTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(stMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stMediaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stRefTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
-                .addComponent(stInsertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addComponent(stInsertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -644,8 +689,8 @@ public class AccountPayment extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         stdPayTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -677,8 +722,9 @@ public class AccountPayment extends javax.swing.JFrame {
             stdPayTable.getColumnModel().getColumn(0).setMaxWidth(85);
         }
 
-        saveBtn.setBackground(new java.awt.Color(0, 204, 204));
+        saveBtn.setBackground(new java.awt.Color(204, 204, 204));
         saveBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/save_as_42px.png"))); // NOI18N
         saveBtn.setText("Save & Exit");
         saveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -692,14 +738,14 @@ public class AccountPayment extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1)
-            .addComponent(saveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(saveBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

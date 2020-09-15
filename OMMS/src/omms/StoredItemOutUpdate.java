@@ -686,10 +686,7 @@ public class StoredItemOutUpdate extends javax.swing.JFrame {
         store_tbl.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         store_tbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Date", "Item", "Quantity", "Status"
