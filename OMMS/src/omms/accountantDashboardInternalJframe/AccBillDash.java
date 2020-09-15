@@ -5,7 +5,10 @@
  */
 package omms.accountantDashboardInternalJframe;
 
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.GenerateBill;
+import omms.MessBillView;
 
 /**
  *
@@ -41,7 +44,7 @@ public class AccBillDash extends javax.swing.JInternalFrame {
         genBillBtn.setBackground(new java.awt.Color(255, 255, 255));
         genBillBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
         genBillBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/receipt_64px.png"))); // NOI18N
-        genBillBtn.setText(" Generate & View Bill ");
+        genBillBtn.setText(" Generate & View Bill     ");
         genBillBtn.setBorder(null);
         genBillBtn.setFocusPainted(false);
         genBillBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -53,7 +56,7 @@ public class AccBillDash extends javax.swing.JInternalFrame {
         viewBill.setBackground(new java.awt.Color(255, 255, 255));
         viewBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
         viewBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        viewBill.setText("  View Student's Bill ");
+        viewBill.setText("  Student's Monthly Bill ");
         viewBill.setBorder(null);
         viewBill.setFocusPainted(false);
         viewBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
@@ -70,9 +73,9 @@ public class AccBillDash extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(257, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(genBillBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(viewBill, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(255, 255, 255))
+                    .addComponent(viewBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(genBillBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
+                .addGap(227, 227, 227))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,13 +94,16 @@ public class AccBillDash extends javax.swing.JInternalFrame {
 
     private void genBillBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genBillBtnActionPerformed
         // TODO add your handling code here:
-//        ShowLedger st = new ShowLedger();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
+        GenerateBill st = new GenerateBill();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_genBillBtnActionPerformed
 
     private void viewBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBillActionPerformed
         // TODO add your handling code here:
+        MessBillView st = new MessBillView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_viewBillActionPerformed
 
 

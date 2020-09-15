@@ -34,9 +34,9 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="279" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="genBillBtn" max="32767" attributes="0"/>
-                      <Component id="genBillBtn2" alignment="0" max="32767" attributes="0"/>
-                      <Component id="genBillBtn1" alignment="0" min="-2" pref="321" max="-2" attributes="0"/>
+                      <Component id="stdPayBtn" max="32767" attributes="0"/>
+                      <Component id="payViewBtn" alignment="0" max="32767" attributes="0"/>
+                      <Component id="payDelBtn" alignment="0" min="-2" pref="321" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="260" max="-2" attributes="0"/>
               </Group>
@@ -46,18 +46,18 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
-                  <Component id="genBillBtn" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="stdPayBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-                  <Component id="genBillBtn2" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="payViewBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                  <Component id="genBillBtn1" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="payDelBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace pref="105" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="genBillBtn">
+        <Component class="javax.swing.JButton" name="stdPayBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -75,10 +75,10 @@
             <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genBillBtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stdPayBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="genBillBtn1">
+        <Component class="javax.swing.JButton" name="payDelBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -96,10 +96,10 @@
             <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genBillBtn1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="payDelBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="genBillBtn2">
+        <Component class="javax.swing.JButton" name="payViewBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -118,7 +118,7 @@
             <Property name="horizontalAlignment" type="int" value="10"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genBillBtn2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="payViewBtnActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

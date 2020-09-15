@@ -5,7 +5,15 @@
  */
 package omms.hallAuthoDashboardInternalJframe;
 
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.NonStoredItemUpdate;
+import omms.ShowLedger;
+import omms.StoreInSum;
+import omms.StoreOutSum;
+import omms.StoredItemUpdate;
+import omms.TempFoodView;
+import omms.TmpFoodUpdate;
 
 /**
  *
@@ -33,69 +41,17 @@ public class HallAuthoFoodDash extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        storeUpdateBtn1 = new javax.swing.JButton();
-        storeUpdateBtn2 = new javax.swing.JButton();
-        storeUpdateBtn3 = new javax.swing.JButton();
-        storeUpdateBtn = new javax.swing.JButton();
         showLedgerBtn = new javax.swing.JButton();
-        nonStrUpdtBtn = new javax.swing.JButton();
-        nonStrUpdtBtn1 = new javax.swing.JButton();
         tempFoodViewBtn = new javax.swing.JButton();
         tempFoodUpdateBtn = new javax.swing.JButton();
+        storeInUpdateBtn = new javax.swing.JButton();
+        storeInSumBtn = new javax.swing.JButton();
+        storeOutUpdateBtn = new javax.swing.JButton();
+        storeOutSumBtn = new javax.swing.JButton();
+        nonStrUpdtBtn = new javax.swing.JButton();
+        nonStrViewBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        storeUpdateBtn1.setBackground(new java.awt.Color(255, 255, 255));
-        storeUpdateBtn1.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        storeUpdateBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_72px.png"))); // NOI18N
-        storeUpdateBtn1.setText(" Store In Item Update");
-        storeUpdateBtn1.setBorder(null);
-        storeUpdateBtn1.setFocusPainted(false);
-        storeUpdateBtn1.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        storeUpdateBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                storeUpdateBtn1ActionPerformed(evt);
-            }
-        });
-
-        storeUpdateBtn2.setBackground(new java.awt.Color(255, 255, 255));
-        storeUpdateBtn2.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        storeUpdateBtn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/business.png"))); // NOI18N
-        storeUpdateBtn2.setText("  Store In Summary");
-        storeUpdateBtn2.setBorder(null);
-        storeUpdateBtn2.setFocusPainted(false);
-        storeUpdateBtn2.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        storeUpdateBtn2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                storeUpdateBtn2ActionPerformed(evt);
-            }
-        });
-
-        storeUpdateBtn3.setBackground(new java.awt.Color(255, 255, 255));
-        storeUpdateBtn3.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        storeUpdateBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/business.png"))); // NOI18N
-        storeUpdateBtn3.setText(" Store Out Summary");
-        storeUpdateBtn3.setBorder(null);
-        storeUpdateBtn3.setFocusPainted(false);
-        storeUpdateBtn3.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        storeUpdateBtn3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                storeUpdateBtn3ActionPerformed(evt);
-            }
-        });
-
-        storeUpdateBtn.setBackground(new java.awt.Color(255, 255, 255));
-        storeUpdateBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        storeUpdateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_72px.png"))); // NOI18N
-        storeUpdateBtn.setText(" Store Out Item Update");
-        storeUpdateBtn.setBorder(null);
-        storeUpdateBtn.setFocusPainted(false);
-        storeUpdateBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        storeUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                storeUpdateBtnActionPerformed(evt);
-            }
-        });
 
         showLedgerBtn.setBackground(new java.awt.Color(255, 255, 255));
         showLedgerBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
@@ -107,32 +63,6 @@ public class HallAuthoFoodDash extends javax.swing.JInternalFrame {
         showLedgerBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showLedgerBtnActionPerformed(evt);
-            }
-        });
-
-        nonStrUpdtBtn.setBackground(new java.awt.Color(255, 255, 255));
-        nonStrUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        nonStrUpdtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        nonStrUpdtBtn.setText("  Non Store Item View");
-        nonStrUpdtBtn.setBorder(null);
-        nonStrUpdtBtn.setFocusPainted(false);
-        nonStrUpdtBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        nonStrUpdtBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nonStrUpdtBtnActionPerformed(evt);
-            }
-        });
-
-        nonStrUpdtBtn1.setBackground(new java.awt.Color(255, 255, 255));
-        nonStrUpdtBtn1.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
-        nonStrUpdtBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_64px.png"))); // NOI18N
-        nonStrUpdtBtn1.setText("  Non Store Item Update");
-        nonStrUpdtBtn1.setBorder(null);
-        nonStrUpdtBtn1.setFocusPainted(false);
-        nonStrUpdtBtn1.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        nonStrUpdtBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nonStrUpdtBtn1ActionPerformed(evt);
             }
         });
 
@@ -162,53 +92,124 @@ public class HallAuthoFoodDash extends javax.swing.JInternalFrame {
             }
         });
 
+        storeInUpdateBtn.setBackground(new java.awt.Color(255, 255, 255));
+        storeInUpdateBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        storeInUpdateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_72px.png"))); // NOI18N
+        storeInUpdateBtn.setText(" Store In Item Update");
+        storeInUpdateBtn.setBorder(null);
+        storeInUpdateBtn.setFocusPainted(false);
+        storeInUpdateBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        storeInUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeInUpdateBtnActionPerformed(evt);
+            }
+        });
+
+        storeInSumBtn.setBackground(new java.awt.Color(255, 255, 255));
+        storeInSumBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        storeInSumBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/business.png"))); // NOI18N
+        storeInSumBtn.setText("  Store In Summary");
+        storeInSumBtn.setBorder(null);
+        storeInSumBtn.setFocusPainted(false);
+        storeInSumBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        storeInSumBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeInSumBtnActionPerformed(evt);
+            }
+        });
+
+        storeOutUpdateBtn.setBackground(new java.awt.Color(255, 255, 255));
+        storeOutUpdateBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        storeOutUpdateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_72px.png"))); // NOI18N
+        storeOutUpdateBtn.setText(" Store Out Item Update");
+        storeOutUpdateBtn.setBorder(null);
+        storeOutUpdateBtn.setFocusPainted(false);
+        storeOutUpdateBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        storeOutUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeOutUpdateBtnActionPerformed(evt);
+            }
+        });
+
+        storeOutSumBtn.setBackground(new java.awt.Color(255, 255, 255));
+        storeOutSumBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        storeOutSumBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/business.png"))); // NOI18N
+        storeOutSumBtn.setText(" Store Out Summary");
+        storeOutSumBtn.setBorder(null);
+        storeOutSumBtn.setFocusPainted(false);
+        storeOutSumBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        storeOutSumBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeOutSumBtnActionPerformed(evt);
+            }
+        });
+
+        nonStrUpdtBtn.setBackground(new java.awt.Color(255, 255, 255));
+        nonStrUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        nonStrUpdtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update_64px.png"))); // NOI18N
+        nonStrUpdtBtn.setText("  Non Store Item Update");
+        nonStrUpdtBtn.setBorder(null);
+        nonStrUpdtBtn.setFocusPainted(false);
+        nonStrUpdtBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        nonStrUpdtBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nonStrUpdtBtnActionPerformed(evt);
+            }
+        });
+
+        nonStrViewBtn.setBackground(new java.awt.Color(255, 255, 255));
+        nonStrViewBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        nonStrViewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
+        nonStrViewBtn.setText("  Non Store Item View");
+        nonStrViewBtn.setBorder(null);
+        nonStrViewBtn.setFocusPainted(false);
+        nonStrViewBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(nonStrUpdtBtn1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                        .addComponent(storeUpdateBtn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(storeUpdateBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(tempFoodUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(storeInUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(storeInSumBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nonStrViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(storeUpdateBtn3, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                        .addComponent(storeUpdateBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(tempFoodViewBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29))
+                    .addComponent(storeOutSumBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(storeOutUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tempFoodUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tempFoodViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(showLedgerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(254, 254, 254))
+                .addGap(245, 245, 245))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(storeUpdateBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(storeUpdateBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(storeInUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(storeOutUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(storeUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(storeUpdateBtn3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nonStrUpdtBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(storeOutSumBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(storeInSumBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tempFoodUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nonStrViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tempFoodViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
                 .addComponent(showLedgerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(25, 25, 25))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 530));
@@ -216,67 +217,72 @@ public class HallAuthoFoodDash extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void storeUpdateBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeUpdateBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_storeUpdateBtn1ActionPerformed
-
-    private void storeUpdateBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeUpdateBtn2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_storeUpdateBtn2ActionPerformed
-
-    private void storeUpdateBtn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeUpdateBtn3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_storeUpdateBtn3ActionPerformed
-
-    private void storeUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeUpdateBtnActionPerformed
-        // TODO add your handling code here:
-//        StoredItemUpdate st = new StoredItemUpdate();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_storeUpdateBtnActionPerformed
-
     private void showLedgerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLedgerBtnActionPerformed
         // TODO add your handling code here:
-//        ShowLedger st = new ShowLedger();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
+        ShowLedger st = new ShowLedger();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_showLedgerBtnActionPerformed
-
-    private void nonStrUpdtBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonStrUpdtBtnActionPerformed
-        // TODO add your handling code here:
-//        NonStoredItemUpdate st = new NonStoredItemUpdate();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_nonStrUpdtBtnActionPerformed
-
-    private void nonStrUpdtBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonStrUpdtBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nonStrUpdtBtn1ActionPerformed
 
     private void tempFoodViewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempFoodViewBtnActionPerformed
         // TODO add your handling code here:
-//        TempFoodView st = new TempFoodView();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
+        TempFoodView st = new TempFoodView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_tempFoodViewBtnActionPerformed
 
     private void tempFoodUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempFoodUpdateBtnActionPerformed
         // TODO add your handling code here:
-//        TmpFoodUpdate st = new TmpFoodUpdate();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
+        TmpFoodUpdate st = new TmpFoodUpdate();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_tempFoodUpdateBtnActionPerformed
+
+    private void storeInUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeInUpdateBtnActionPerformed
+        // TODO add your handling code here:
+        StoredItemUpdate st = new StoredItemUpdate();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_storeInUpdateBtnActionPerformed
+
+    private void storeInSumBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeInSumBtnActionPerformed
+        // TODO add your handling code here:
+        StoreInSum st = new StoreInSum();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_storeInSumBtnActionPerformed
+
+    private void storeOutUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeOutUpdateBtnActionPerformed
+        // TODO add your handling code here:
+        StoredItemUpdate st = new StoredItemUpdate();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_storeOutUpdateBtnActionPerformed
+
+    private void storeOutSumBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeOutSumBtnActionPerformed
+        // TODO add your handling code here:
+        StoreOutSum st = new StoreOutSum();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_storeOutSumBtnActionPerformed
+
+    private void nonStrUpdtBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonStrUpdtBtnActionPerformed
+        // TODO add your handling code here:
+        NonStoredItemUpdate st = new NonStoredItemUpdate();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_nonStrUpdtBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton nonStrUpdtBtn;
-    private javax.swing.JButton nonStrUpdtBtn1;
+    private javax.swing.JButton nonStrViewBtn;
     private javax.swing.JButton showLedgerBtn;
-    private javax.swing.JButton storeUpdateBtn;
-    private javax.swing.JButton storeUpdateBtn1;
-    private javax.swing.JButton storeUpdateBtn2;
-    private javax.swing.JButton storeUpdateBtn3;
+    private javax.swing.JButton storeInSumBtn;
+    private javax.swing.JButton storeInUpdateBtn;
+    private javax.swing.JButton storeOutSumBtn;
+    private javax.swing.JButton storeOutUpdateBtn;
     private javax.swing.JButton tempFoodUpdateBtn;
     private javax.swing.JButton tempFoodViewBtn;
     // End of variables declaration//GEN-END:variables
