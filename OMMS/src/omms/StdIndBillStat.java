@@ -8,6 +8,8 @@ package omms;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -51,8 +54,42 @@ public class StdIndBillStat extends javax.swing.JFrame {
         billtabledecoration();
         initialize();
         idtxt.requestFocus();
+        closeBtn();
     }
     
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    conn.close();
+                    if(UserLog.name.equals("accountant")){
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
     
     
     

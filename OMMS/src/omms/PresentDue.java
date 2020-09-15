@@ -19,6 +19,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +29,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -39,7 +42,7 @@ import javax.swing.table.TableRowSorter;
  * @author Ajmir
  */
 public class PresentDue extends javax.swing.JFrame {
-    
+
     Connection conn = null;
     PreparedStatement psmt = null;
     ResultSet rs = null;
@@ -47,8 +50,8 @@ public class PresentDue extends javax.swing.JFrame {
     SimpleDateFormat formatter1;
     TableModel model;
     DefaultTableModel tablemodel = null;
-    int flag=0;
-    Double totaldue,advance;
+    int flag = 0;
+    Double totaldue, advance;
 
     /**
      * Creates new form PresentDue
@@ -57,41 +60,70 @@ public class PresentDue extends javax.swing.JFrame {
         initComponents();
         Tabledecoration();
         initialize();
-        flag=1;
-        
-        
+        flag = 1;
+        closeBtn();
+    }
+
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    conn.close();
+                    if(UserLog.name.equals("accountant")){
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     
-    
-    public void initialize(){
-       
+    public void initialize() {
+
         conn = Jconnection.ConnecrDb(); // set connection with database
-       
+
         formatter = new SimpleDateFormat("MMM dd,yyyy");
         formatter1 = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
-        
+
         model = duetable.getModel();
         tablemodel = (DefaultTableModel) duetable.getModel();
-        
+
         //TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tablemodel);
         //duetable.setRowSorter(sorter);
-        
-        int type= typecombo.getSelectedIndex();
-        totaldue=0.0;
-        advance=0.0;
+        int type = typecombo.getSelectedIndex();
+        totaldue = 0.0;
+        advance = 0.0;
         settable(type);
         idtxt.requestFocus();
     }
-    
-    
-    
-    public void Tabledecoration(){
+
+    public void Tabledecoration() {
         duetable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 14));
         duetable.getTableHeader().setOpaque(false);
-        duetable.getTableHeader().setBackground(new Color(32,136,203));
-        duetable.getTableHeader().setForeground(new Color(255,255,255));
+        duetable.getTableHeader().setBackground(new Color(32, 136, 203));
+        duetable.getTableHeader().setForeground(new Color(255, 255, 255));
         duetable.setRowHeight(25);
-        
+
         DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
         centerRender.setHorizontalAlignment(JLabel.CENTER);
         duetable.getColumnModel().getColumn(0).setCellRenderer(centerRender);
@@ -104,157 +136,146 @@ public class PresentDue extends javax.swing.JFrame {
         duetable.getColumnModel().getColumn(7).setCellRenderer(centerRender);
         duetable.getColumnModel().getColumn(8).setCellRenderer(centerRender);
     }
-    
-    
-    public void settable(int type){
-        String sql="", strfrom="",strdue="";
-        int serial=1;
-        
-        Date fromdate=null;
-        
-        
+
+    public void settable(int type) {
+        String sql = "", strfrom = "", strdue = "";
+        int serial = 1;
+
+        Date fromdate = null;
+
         switch (type) {
             case 0:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue ASC";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue ASC";
                 break;
             case 1:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue desc";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by totaldue desc";
                 break;
             case 2:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by hallid";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by hallid";
                 break;
             case 3:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by roomno desc";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by roomno desc";
                 break;
             case 4:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by entrydate";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by entrydate";
                 break;
             case 5:
-                sql="select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by dept";
+                sql = "select hallid,name,roll,entrydate,dept,roomno,totaldue,contno from stuinfo ORDER by dept";
                 break;
             default:
                 break;
         }
-        
-        if(tablemodel.getRowCount() >0){
+
+        if (tablemodel.getRowCount() > 0) {
             tablemodel.setRowCount(0);
         }
-        
-        try{
+
+        try {
             psmt = conn.prepareStatement(sql);
             rs = psmt.executeQuery();
-            while(rs.next()){
-                try{
+            while (rs.next()) {
+                try {
                     fromdate = formatter1.parse(rs.getString(4));
                     strfrom = formatter.format(fromdate);
-                }catch(Exception e){
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Failed to set date", "Date set error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if(rs.getDouble(7)<0){
-                    strdue = Double.toString(rs.getDouble(7)*-1)+" (A)";
-                    advance = advance-rs.getDouble(7);
-                    
-                }
-                else{
+                if (rs.getDouble(7) < 0) {
+                    strdue = Double.toString(rs.getDouble(7) * -1) + " (A)";
+                    advance = advance - rs.getDouble(7);
+
+                } else {
                     strdue = Double.toString(rs.getDouble(7));
-                    totaldue = totaldue+rs.getDouble(7);
+                    totaldue = totaldue + rs.getDouble(7);
                 }
-                Object o [] = {serial,rs.getInt(1),rs.getString(2),rs.getString(3),strfrom,rs.getString(5),rs.getString(6),strdue,rs.getString(8)};
+                Object o[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), strfrom, rs.getString(5), rs.getString(6), strdue, rs.getString(8)};
                 tablemodel.addRow(o);
                 serial++;
             }
             psmt.close();
             rs.close();
-            
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-            
+
         }
-        
+
     }
-    
-    public void search(String id){
-        int totalrow =0, flag=0;
+
+    public void search(String id) {
+        int totalrow = 0, flag = 0;
         totalrow = tablemodel.getRowCount();
-        for(int i=0; i<totalrow;i++){
-            if(model.getValueAt(i, 1).toString().equals(id) || model.getValueAt(i, 3).toString().equals(id)){
+        for (int i = 0; i < totalrow; i++) {
+            if (model.getValueAt(i, 1).toString().equals(id) || model.getValueAt(i, 3).toString().equals(id)) {
                 duetable.requestFocus();
-                duetable.changeSelection(i,0,false, false);
-                flag=1;
+                duetable.changeSelection(i, 0, false, false);
+                flag = 1;
                 break;
             }
         }
-        if( flag == 0){
+        if (flag == 0) {
             JOptionPane.showMessageDialog(null, "Id does not exist", "search", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
-    
-    
-    public void genpdf()
-    {
-        String path="", date="",ser="",hallid="",name="",roll="",dept="",room="",due="",mobile="";
-        JFileChooser j=new JFileChooser();
+
+    public void genpdf() {
+        String path = "", date = "", ser = "", hallid = "", name = "", roll = "", dept = "", room = "", due = "", mobile = "";
+        JFileChooser j = new JFileChooser();
         //j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        int x=j.showSaveDialog(this);
-        
-        if(x==JFileChooser.APPROVE_OPTION)
-        {
-            path=j.getSelectedFile().getPath();
+        int x = j.showSaveDialog(this);
+
+        if (x == JFileChooser.APPROVE_OPTION) {
+            path = j.getSelectedFile().getPath();
         }
-        
-        Document doc=new Document ();
-        
-        try{
-            
-         
-            PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
-             
+
+        Document doc = new Document();
+
+        try {
+
+            PdfWriter.getInstance(doc, new FileOutputStream(path + ".pdf"));
+
             doc.open();
-                
-                
+
             Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
             image1.setAlignment(Element.ALIGN_CENTER);
             image1.scaleAbsolute(100, 70);
             //Add to document
             doc.add(image1);
-            
-            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+
+            Paragraph osmany = new Paragraph("OSMANY HALL", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
             osmany.setAlignment(Element.ALIGN_CENTER);
             doc.add(osmany);
-            
-            
-            Paragraph p=new Paragraph("DUE MESS BILL REPORT\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
-             
+
+            Paragraph p = new Paragraph("DUE MESS BILL REPORT\n", FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));
+
             p.setAlignment(Element.ALIGN_CENTER);
-             
+
             doc.add(p);
-            
-            Date todaysdate =new Date();
+
+            Date todaysdate = new Date();
             date = formatter.format(todaysdate);
-            
-            
-            Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+
+            Paragraph q = new Paragraph("Date: " + date + "\n\n", FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
             q.setAlignment(Element.ALIGN_CENTER);
-            
+
             doc.add(q);
             //System.err.println("called "+due);
-            
-            Paragraph total=new Paragraph("Total Due: "+totaldue,FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+
+            Paragraph total = new Paragraph("Total Due: " + totaldue, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);
-            
-            Paragraph newline=new Paragraph("\n");
+
+            Paragraph newline = new Paragraph("\n");
             doc.add(newline);
-             
-            String[] header = new String[] { "Sl","Hall Id","Name","Roll","Dept","Room",
-            "Due","Mobile No"};
-            
+
+            String[] header = new String[]{"Sl", "Hall Id", "Name", "Roll", "Dept", "Room",
+                "Due", "Mobile No"};
+
             PdfPTable table = new PdfPTable(header.length);
             table.setHeaderRows(1);
-            table.setWidths(new int[] { 2, 2, 4, 3,2,2,3,4});
+            table.setWidths(new int[]{2, 2, 4, 3, 2, 2, 3, 4});
             table.setWidthPercentage(98);
             table.setSpacingBefore(15);
             table.setSplitLate(false);
@@ -266,29 +287,27 @@ public class PresentDue extends javax.swing.JFrame {
                 headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
                 headerCell.setPadding(8);
                 table.addCell(headerCell);
-            } 
-             
-             
-            for(int i=0; i<duetable.getRowCount(); i++){
+            }
 
-                ser= duetable.getValueAt(i, 0).toString();
-                hallid= duetable.getValueAt(i, 1).toString();
-                name= duetable.getValueAt(i, 2).toString();
-                roll= duetable.getValueAt(i,3).toString();
-                dept= duetable.getValueAt(i,5).toString();
-                room= duetable.getValueAt(i,6).toString();
-                due= duetable.getValueAt(i,7).toString();
-                mobile= duetable.getValueAt(i,8).toString();
-                 String[] content = new String[] { ser, hallid,name,roll,
-                dept, room, due,mobile};
+            for (int i = 0; i < duetable.getRowCount(); i++) {
+
+                ser = duetable.getValueAt(i, 0).toString();
+                hallid = duetable.getValueAt(i, 1).toString();
+                name = duetable.getValueAt(i, 2).toString();
+                roll = duetable.getValueAt(i, 3).toString();
+                dept = duetable.getValueAt(i, 5).toString();
+                room = duetable.getValueAt(i, 6).toString();
+                due = duetable.getValueAt(i, 7).toString();
+                mobile = duetable.getValueAt(i, 8).toString();
+                String[] content = new String[]{ser, hallid, name, roll,
+                    dept, room, due, mobile};
 
                 for (String text : content) {
                     PdfPCell cell = new PdfPCell();
-                    if(text.contains("(A)")){
+                    if (text.contains("(A)")) {
                         //System.out.println("called");
                         cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
-                    }
-                    else{
+                    } else {
                         cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
                     }
                     cell.setBorderColor(BaseColor.LIGHT_GRAY);
@@ -300,39 +319,36 @@ public class PresentDue extends javax.swing.JFrame {
             }
             doc.add(table);
             doc.add(new Phrase("\n\n\n"));
-            
+
             LineSeparator separator = new LineSeparator();
             separator.setPercentage(24);
             separator.setAlignment(Element.ALIGN_RIGHT);
             separator.setLineColor(BaseColor.BLACK);
             Chunk linebreak = new Chunk(separator);
             doc.add(linebreak);
-            
-            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ", FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
             name1.setAlignment(Element.ALIGN_RIGHT);
             doc.add(name1);
-            
+
             doc.add(new Phrase("\n\n\n"));
-            
+
             LineSeparator separator1 = new LineSeparator();
             separator1.setPercentage(24);
             separator1.setAlignment(Element.ALIGN_RIGHT);
             separator1.setLineColor(BaseColor.BLACK);
             Chunk linebreak1 = new Chunk(separator1);
             doc.add(linebreak1);
-            
-            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+
+            Paragraph name2 = new Paragraph("Hall Provost                 ", FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
             name2.setAlignment(Element.ALIGN_RIGHT);
             doc.add(name2);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Pdf generation error", "File Error", JOptionPane.ERROR_MESSAGE);
         }
-        catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
+
         doc.close();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -490,10 +506,10 @@ public class PresentDue extends javax.swing.JFrame {
 
     private void typecomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typecomboActionPerformed
         // TODO add your handling code here:
-        int type=-1;
-        if(flag==1){
+        int type = -1;
+        if (flag == 1) {
             type = typecombo.getSelectedIndex();
-            
+
             settable(type);
         }
         idtxt.requestFocus();
@@ -501,13 +517,12 @@ public class PresentDue extends javax.swing.JFrame {
 
     private void searchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtnActionPerformed
         // TODO add your handling code here:
-        String id="";
-        id= idtxt.getText().trim();
-        if(!id.equals("")){
+        String id = "";
+        id = idtxt.getText().trim();
+        if (!id.equals("")) {
             search(id);
             idtxt.setText("");
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Enter an Id", "search", JOptionPane.WARNING_MESSAGE);
         }
         idtxt.requestFocus();

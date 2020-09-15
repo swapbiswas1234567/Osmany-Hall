@@ -1,9 +1,10 @@
-
 package omms;
 
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -19,13 +21,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 public class NSitemHistory extends javax.swing.JFrame {
-   
-     ///Variable declaration
+
+    ///Variable declaration
     Connection conn = null;
     PreparedStatement psmt = null;
     ResultSet rs = null;
     DefaultTableModel tm = null;
-    StoredItem st ;
+    StoredItem st;
     SimpleDateFormat formatter;
     SimpleDateFormat formatter1;
     SimpleDateFormat formatter2;
@@ -34,13 +36,11 @@ public class NSitemHistory extends javax.swing.JFrame {
     DecimalFormat dec;
     int selectedRow;
     DecimalFormat dec2;
-   
+
     int flag;
     PreparedStatement psmt1 = null;
     ResultSet rs1 = null;
-    int ser=0;
-  
-
+    int ser = 0;
 
     public NSitemHistory() {
         initComponents();
@@ -48,39 +48,67 @@ public class NSitemHistory extends javax.swing.JFrame {
         tabledecoration();
         dateNtableset();
         itemcombo_set();
-        flag=1; 
+        flag = 1;
         initialtbl();
-       
+        closeBtn();
     }
 
-    
-    
-      /**Initializing Variable Function **/
-    public void initialize()
-    {
-        conn= Jconnection.ConnecrDb();
-        psmt=null;
-        rs=null;
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    conn.close();
+                    if (UserLog.name.equals("accountant")) {
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    } else if (UserLog.name.equals("provost")) {
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    } else if (UserLog.name.equals("mess")) {
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    } else if (UserLog.name.equals("captain")) {
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+
+    /**
+     * Initializing Variable Function *
+     */
+    public void initialize() {
+        conn = Jconnection.ConnecrDb();
+        psmt = null;
+        rs = null;
         formatter = new SimpleDateFormat("dd-MM-yyyy");
-        formatter1 = new SimpleDateFormat("yyyyMMdd");  
+        formatter1 = new SimpleDateFormat("yyyyMMdd");
         formatter2 = new SimpleDateFormat("MMM dd,yyyy");
         dec2 = new DecimalFormat("#0.00");
-        
+
         selectedRow = -1;
         this.setTitle("Non Stored ItemHistory");
-        
+
     }
-    
-     ///Table decoration
-    
-    public void tabledecoration(){
+
+    ///Table decoration
+    public void tabledecoration() {
         nsStore_log.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 20));
         nsStore_log.getTableHeader().setOpaque(false);
-        nsStore_log.getTableHeader().setBackground(new Color(32,136,203));
-        nsStore_log.getTableHeader().setForeground(new Color(255,255,255));
+        nsStore_log.getTableHeader().setBackground(new Color(32, 136, 203));
+        nsStore_log.getTableHeader().setForeground(new Color(255, 255, 255));
         nsStore_log.setRowHeight(30);
         nsStore_log.setFont(new Font("Segeo UI", Font.PLAIN, 18));
-        
 
         DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
         centerRender.setHorizontalAlignment(JLabel.CENTER);
@@ -92,167 +120,139 @@ public class NSitemHistory extends javax.swing.JFrame {
         nsStore_log.getColumnModel().getColumn(5).setCellRenderer(centerRender);
         nsStore_log.getColumnModel().getColumn(6).setCellRenderer(centerRender);
         nsStore_log.getColumnModel().getColumn(7).setCellRenderer(centerRender);
-               
-        
+
     }
 
-       public void dateNtableset()
-    {
-        tm=(DefaultTableModel)nsStore_log.getModel();
+    public void dateNtableset() {
+        tm = (DefaultTableModel) nsStore_log.getModel();
         tm.setRowCount(0);
-        /***Date Setting**/
-        Date date= new Date();
+        /**
+         * *Date Setting*
+         */
+        Date date = new Date();
         fromdt_ch.setDate(date);
         todt_ch.setDate(date);
         JTextFieldDateEditor editor = (JTextFieldDateEditor) fromdt_ch.getDateEditor();
         editor.setEditable(false);
         editor = (JTextFieldDateEditor) todt_ch.getDateEditor();
         editor.setEditable(false);
-        
-    }
-   
 
-  
-    //Combo Name of item setting
-    public void itemcombo_set()  
-    {
-        try{
-           psmt=conn.prepareStatement("select name from nonstoreditemlist ");
-           rs=psmt.executeQuery();
-           
-           while(rs.next())
-           {
-               String item = firstupperCaseMaker(rs.getString(1).toLowerCase());
-               Item_cmb.addItem(item);
-           }
-           
-           psmt.close();
-           rs.close();
-           
-       }
-       catch(Exception e)
-       {
-         JOptionPane.showMessageDialog(null, "No item found!", "An Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
-            
-       }
     }
-    
-    
-    
-    
+
+    //Combo Name of item setting
+    public void itemcombo_set() {
+        try {
+            psmt = conn.prepareStatement("select name from nonstoreditemlist ");
+            rs = psmt.executeQuery();
+
+            while (rs.next()) {
+                String item = firstupperCaseMaker(rs.getString(1).toLowerCase());
+                Item_cmb.addItem(item);
+            }
+
+            psmt.close();
+            rs.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No item found!", "An Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
     ///Setting function of  for table to show  stored item log
-    public void setnsItemtable(Date from, Date to, String item){
-        
-        
+    public void setnsItemtable(Date from, Date to, String item) {
+
         int fromserial = 0, toserial = 0;
-      
+
         String strdate = "";
-        ser=0;
-        Date date=null;
+        ser = 0;
+        Date date = null;
         tm = (DefaultTableModel) nsStore_log.getModel();
-       
-        try{
+
+        try {
             fromserial = Integer.parseInt(formatter1.format(from));
             toserial = Integer.parseInt(formatter1.format(to));
-            
-            if(fromserial >toserial)
-            {
-                JOptionPane.showMessageDialog(null, "From date Invalid","Date Error",JOptionPane.ERROR_MESSAGE);
+
+            if (fromserial > toserial) {
+                JOptionPane.showMessageDialog(null, "From date Invalid", "Date Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Date format in setedittablevalue", "Date parsing error", JOptionPane.ERROR_MESSAGE);
         }
-        catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Date format in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
-        }
-   
-        
-        try{
-            
-            
+
+        try {
+
             psmt = conn.prepareStatement("select  * from nonstoreditemlog where serial>= ? and serial <=? and name=?   order by serial ");
             psmt.setInt(1, fromserial);
             psmt.setInt(2, toserial);
             psmt.setString(3, item.toLowerCase());
             rs = psmt.executeQuery();
-            
-            while(rs.next()){
-                
-                try{
-                date = formatter1.parse(rs.getString(1));
-                strdate = formatter2.format(date);
-                }
-                catch(ParseException e){
-                    JOptionPane.showMessageDialog(null, "Date Parse "
-                            + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
-                }
-                    if(rs.getString(5).equals("###") ){
-                
-                        ser++;
-                        Object o [] = {ser,strdate,item,rs.getDouble(3),rs.getDouble(4),"",firstupperCaseMaker(rs.getString(6)),firstupperCaseMaker(rs.getString(7))};
-                        tm.addRow(o);
-                
-                    }
-                    else{
-                           
-                        ser++;
-                        Object o [] = {ser,strdate,item,rs.getDouble(3),rs.getDouble(4),rs.getString(5),firstupperCaseMaker(rs.getString(6)),firstupperCaseMaker(rs.getString(7))};
-                        
-                  tm.addRow(o);
-                    
-                    }
-                }
 
-            
+            while (rs.next()) {
+
+                try {
+                    date = formatter1.parse(rs.getString(1));
+                    strdate = formatter2.format(date);
+                } catch (ParseException e) {
+                    JOptionPane.showMessageDialog(null, "Date Parse "
+                            + "in setedittablevalue", "Date parsing error", JOptionPane.ERROR_MESSAGE);
+                }
+                if (rs.getString(5).equals("###")) {
+
+                    ser++;
+                    Object o[] = {ser, strdate, item, rs.getDouble(3), rs.getDouble(4), "", firstupperCaseMaker(rs.getString(6)), firstupperCaseMaker(rs.getString(7))};
+                    tm.addRow(o);
+
+                } else {
+
+                    ser++;
+                    Object o[] = {ser, strdate, item, rs.getDouble(3), rs.getDouble(4), rs.getString(5), firstupperCaseMaker(rs.getString(6)), firstupperCaseMaker(rs.getString(7))};
+
+                    tm.addRow(o);
+
+                }
+            }
+
             psmt.close();
             rs.close();
-    }catch(SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch data for"
                     + "set table ", "Data fetch error", JOptionPane.ERROR_MESSAGE);
-        } 
-        
+        }
+
     }
-    
-    
-    
-    
-    
+
     /* intial data set*/
-    public void initialtbl()
-    {
-            
-        Date from=null, to =null;
-        String item="";
-        String stat="";
+    public void initialtbl() {
+
+        Date from = null, to = null;
+        String item = "";
+        String stat = "";
         from = fromdt_ch.getDate();
-         to = todt_ch.getDate(); 
- 
-       
+        to = todt_ch.getDate();
+
         tm = (DefaultTableModel) nsStore_log.getModel();
-        if(tm.getColumnCount() > 0){
+        if (tm.getColumnCount() > 0) {
             tm.setRowCount(0);
         }
-        
-        
-        
-        if( from != null && to != null && flag==1){
+
+        if (from != null && to != null && flag == 1) {
             item = firstupperCaseMaker(Item_cmb.getSelectedItem().toString().toLowerCase());
             setnsItemtable(from, to, item);
         }
     }
-    
-    
-    public String firstupperCaseMaker(String s){
+
+    public String firstupperCaseMaker(String s) {
         int len = s.length();
         char[] c = s.toCharArray();
-        int temp = (int)c[0] - 32;
-        c[0] = (char)temp;
-        
+        int temp = (int) c[0] - 32;
+        c[0] = (char) temp;
+
         return new String(c);
     }
-    
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -330,7 +330,7 @@ public class NSitemHistory extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(todt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(79, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -400,7 +400,7 @@ public class NSitemHistory extends javax.swing.JFrame {
     }//GEN-LAST:event_Item_cmbActionPerformed
 
     private void fromdt_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_fromdt_chPropertyChange
-       initialtbl();
+        initialtbl();
     }//GEN-LAST:event_fromdt_chPropertyChange
 
     private void todt_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_todt_chPropertyChange
@@ -437,7 +437,8 @@ public class NSitemHistory extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NSitemHistory().setVisible(true);  }
+                new NSitemHistory().setVisible(true);
+            }
         });
     }
 

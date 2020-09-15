@@ -35,6 +35,8 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         //this.setBackground(new Color(0,0,0,0));frame.setUndecorated(true);
         initialize();
+        this.setBackground(new Color(0,0,0,0));
+        jPanel1.setBackground(new Color(0,0,0,0));
     }
 
     public void initialize() {
@@ -126,12 +128,14 @@ public class Login extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel1.setOpaque(false);
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setBackground(new Color(0,0,0,0));
 
         usernameLbl.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
         usernameLbl.setForeground(new java.awt.Color(255, 255, 255));
         usernameLbl.setText("Username");
-        jPanel1.add(usernameLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 160, 130, 50));
+        jPanel1.add(usernameLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 160, 130, 50));
 
         usernameTxt.setFont(new java.awt.Font("Berlin Sans FB", 0, 22)); // NOI18N
         usernameTxt.setForeground(new java.awt.Color(102, 102, 102));
@@ -150,10 +154,10 @@ public class Login extends javax.swing.JFrame {
                 usernameTxtActionPerformed(evt);
             }
         });
-        jPanel1.add(usernameTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 230, 440, 40));
+        jPanel1.add(usernameTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 230, 440, 40));
 
         jSeparator1.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 450, 440, 20));
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 450, 440, 20));
 
         passwordTxt.setFont(new java.awt.Font("Calibri", 0, 22)); // NOI18N
         passwordTxt.setForeground(new java.awt.Color(153, 153, 153));
@@ -171,15 +175,15 @@ public class Login extends javax.swing.JFrame {
                 passwordTxtActionPerformed(evt);
             }
         });
-        jPanel1.add(passwordTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 410, 440, 40));
+        jPanel1.add(passwordTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 410, 440, 40));
 
         jSeparator2.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 280, 440, 20));
+        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 280, 440, 20));
 
         passwordLbl.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
         passwordLbl.setForeground(new java.awt.Color(255, 255, 255));
         passwordLbl.setText("Password");
-        jPanel1.add(passwordLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 350, 130, 50));
+        jPanel1.add(passwordLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 350, 130, 50));
 
         crossLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         crossLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/criss-cross (1).png"))); // NOI18N
@@ -188,7 +192,7 @@ public class Login extends javax.swing.JFrame {
                 crossLblMouseClicked(evt);
             }
         });
-        jPanel1.add(crossLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 40, 60, 50));
+        jPanel1.add(crossLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 40, 60, 50));
 
         loginLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         loginLbl.setForeground(new java.awt.Color(255, 255, 255));
@@ -199,19 +203,19 @@ public class Login extends javax.swing.JFrame {
                 loginLblMouseClicked(evt);
             }
         });
-        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 180, 80));
+        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 490, 180, 80));
 
         rightLbl.setForeground(new java.awt.Color(255, 255, 255));
         rightLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         rightLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/right.png"))); // NOI18N
-        rightLbl.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        jPanel1.add(rightLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 0, 670, 760));
+        rightLbl.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel1.add(rightLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 0, 670, 760));
 
         leftLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         leftLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/leftLbl.png"))); // NOI18N
-        jPanel1.add(leftLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 0, 670, 760));
+        jPanel1.add(leftLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 760));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1280, 750));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1160, 750));
 
         pack();
         setLocationRelativeTo(null);

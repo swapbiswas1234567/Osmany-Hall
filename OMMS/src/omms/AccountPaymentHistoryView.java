@@ -57,7 +57,7 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
         setDateChoosers();
         Tabledecoration();
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        //closeBtn();
+        closeBtn();
 
         JTextFieldDateEditor jt = new JTextFieldDateEditor();
         jt = (JTextFieldDateEditor) fromDate.getDateEditor();

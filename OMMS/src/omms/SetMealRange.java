@@ -5,12 +5,15 @@
  */
 package omms;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -38,8 +41,42 @@ public class SetMealRange extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb();
         setrange();
         fromdatetxt.requestFocus();
+        closeBtn();
     }
     
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    conn.close();
+                    if(UserLog.name.equals("accountant")){
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
     
     public int[] getrange(){
         int []date = new int[2];

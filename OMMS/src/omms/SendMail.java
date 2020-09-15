@@ -11,6 +11,8 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -42,93 +45,172 @@ public class SendMail extends javax.swing.JFrame {
     TableModel model;
     DefaultTableModel tablemodel = null;
     DecimalFormat dec;
-    int combo=0;
+    int combo = 0;
     public static int flag;
     public static ArrayList<String> hallid;
-    
+
     public SendMail() {
         initComponents();
         initialize();
-        flag=0;
-        combo=1;
-        
+        flag = 0;
+        combo = 1;
+
     }
-    
-    
-    public void initialize(){
+
+    public void initialize() {
         conn = Jconnection.ConnecrDb(); // set connection with database
         int year = Calendar.getInstance().get(Calendar.YEAR);
         yeartxt.setText(Integer.toString(year));
-        
+
         int month = Calendar.getInstance().get(Calendar.MONTH);
         //System.out.println(month+" "+year);
         monthcombo.setSelectedIndex(month);
         hallid = new ArrayList<>();
-        
+
         formatter = new SimpleDateFormat("MMM dd,yyyy");
         formatter1 = new SimpleDateFormat("yyyyMMdd");  //date formate to covert into serial
         
+        closeBtn();
     }
+
+    public void closeBtn() {
+        JFrame frame = this;
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                try {
+                    conn.close();
+                    if(UserLog.name.equals("accountant")){
+                        DashboardAccountant das = new DashboardAccountant();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("provost")){
+                        DashboardHallAutho das = new DashboardHallAutho();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("mess")){
+                        DashboardMess das = new DashboardMess();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                    else if(UserLog.name.equals("captain")){
+                        DashboardMessCap das = new DashboardMessCap();
+                        das.setVisible(true);
+                        frame.setVisible(false);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+
     
-    public void sendmail(boolean single,int hallid, int month, String monthname, int year)
-    
-    
-    public void genpdf(){
-        String date= null;
-        Document doc=new Document ();
-        try{
-            
-            
-            PdfWriter.getInstance(doc,new FileOutputStream("C:\\Users\\Ajmir\\Desktop\\Mailerror.pdf"));
-             
+    public void sendmail(boolean single, int hallid, int month, String monthname, int year) {
+        String body = "", greetings = "", billinfo = "", tail = "", msg = "", strhallid = "";
+        boolean isval = false;
+        Double bill = 0.00, others = 0.00, fine = 0.00, waive = 0.00, due = 0.00, total = 0.0;
+        String subject = "Mess Bill of OSMANY HALL(" + monthname + ", " + year + ")";
+
+        try {
+            if (single && hallid > 0) {
+                psmt = conn.prepareStatement("select st.name,st.email,bh.bill, bh.others, bh.fine, bh.waive, bh.due,st.hallid from stuinfo st join billhistory bh on st.hallid = bh.hallid and st.hallid =? and bh.month=? and bh.year=?");
+                psmt.setInt(1, hallid);
+                psmt.setInt(2, month);
+                psmt.setInt(3, year);
+                rs = psmt.executeQuery();
+            } else if (!single) {
+                psmt = conn.prepareStatement("select st.name,st.email,bh.bill, bh.others, bh.fine, bh.waive, bh.due,st.hallid from stuinfo st join billhistory bh on st.hallid = bh.hallid and bh.month=? and bh.year=?");
+                psmt.setInt(1, month);
+                psmt.setInt(2, year);
+                rs = psmt.executeQuery();
+            }
+            greetings = "Assalamualaikum";
+            body = "Your mess bill of " + monthname + "," + Integer.toString(year) + " has been published. You are requested to pay the mess bill in due time. Total bill description is given below\n";
+            tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
+            while (rs.next()) {
+                greetings = greetings + " " + rs.getString(1) + ",\n";
+                bill = rs.getDouble(3);
+                others = rs.getDouble(4);
+                fine = rs.getDouble(5);
+                waive = rs.getDouble(6);
+                due = rs.getDouble(7);
+                strhallid = rs.getString(8);
+                total = bill + others + fine - waive - due;
+                body = body + "\n Mess Bill: " + Double.toString(bill) + " \n Others: " + Double.toString(others) + "\n Fine: " + Double.toString(fine) + "\n Waive: "
+                        + Double.toString(waive) + "\n Previous Due: " + Double.toString(due) + "\n Total: " + total + "\n\n For further details contact with the hall office\n\n";
+                msg = greetings + body + tail;
+                Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg, strhallid);
+                isval = true;
+            }
+            psmt.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Fetch for Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+        //System.out.println("called "+flag);
+        if (flag == 1 && !single) {
+            genpdf();
+            JOptionPane.showMessageDialog(null, "Failed to send mail check the pdf", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        } else if (single && flag == 1) {
+            JOptionPane.showMessageDialog(null, "Failed to send mail to hallid: " + strhallid, "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (!isval) {
+            JOptionPane.showMessageDialog(null, "No Bill has generated in " + monthname + "," + year, "Mail send failed", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void genpdf() {
+        String date = null;
+        Document doc = new Document();
+        try {
+
+            PdfWriter.getInstance(doc, new FileOutputStream("C:\\Users\\Ajmir\\Desktop\\Mailerror.pdf"));
+
             doc.open();
-                
-                
+
             Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
             image1.setAlignment(Element.ALIGN_CENTER);
             image1.scaleAbsolute(100, 70);
             //Add to document
             doc.add(image1);
-            
-            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+
+            Paragraph osmany = new Paragraph("OSMANY HALL", FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
             osmany.setAlignment(Element.ALIGN_CENTER);
             doc.add(osmany);
-            
-            
-            Paragraph p=new Paragraph("List of Students Did not Received Mail\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
-             
+
+            Paragraph p = new Paragraph("List of Students Did not Received Mail\n", FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));
+
             p.setAlignment(Element.ALIGN_CENTER);
-             
+
             doc.add(p);
-            
-            Date todaysdate =new Date();
+
+            Date todaysdate = new Date();
             date = formatter.format(todaysdate);
-            
-            
-            Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+
+            Paragraph q = new Paragraph("Date: " + date + "\n\n", FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
             q.setAlignment(Element.ALIGN_CENTER);
             doc.add(q);
-            
-            Paragraph name=new Paragraph("Serial     Hallid");
+
+            Paragraph name = new Paragraph("Serial     Hallid");
             name.setAlignment(Element.ALIGN_LEFT);
             doc.add(name);
-            
-            int serial=1;
+
+            int serial = 1;
             for (String phone1 : hallid) {
-                Paragraph numbers=new Paragraph(serial+".           "+phone1);
+                Paragraph numbers = new Paragraph(serial + ".           " + phone1);
                 numbers.setAlignment(Element.ALIGN_LEFT);
                 doc.add(numbers);
                 serial++;
             }
-              
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Pdf generation error", "File Error", JOptionPane.ERROR_MESSAGE);
         }
         doc.close();
     }
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -261,56 +343,56 @@ public class SendMail extends javax.swing.JFrame {
 
     private void sendbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendbtnActionPerformed
         // TODO add your handling code here:
-        stdIndBillStat sb= new stdIndBillStat();
-        String strid ="",monthname="",stryear="";
-        int id=0,hallid=0,month=-1,year=0;
-        boolean check=false;
-        
+        StdIndBillStat sb = new StdIndBillStat();
+        String strid = "", monthname = "", stryear = "";
+        int id = 0, hallid = 0, month = -1, year = 0;
+        boolean check = false;
+
         strid = idtxt.getText().trim();
         stryear = yeartxt.getText().trim();
-        
-        try{
+
+        try {
             id = Integer.parseInt(strid);
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Id Format Error", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        try{
+        try {
             year = Integer.parseInt(stryear);
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Year Format Error", "Data error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if(id>0 && combo==1 && year > 0){
+
+        if (id > 0 && combo == 1 && year > 0) {
             monthname = monthcombo.getSelectedItem().toString();
             month = monthcombo.getSelectedIndex();
             check = allcheck.isSelected();
-            
-            if(sb.checkhallid(strid)){
-                if(check){
-                    sendmail(false, id, month+1, monthname,year);
-                }else{
-                    sendmail(true, id, month+1, monthname,year);
+
+            if (sb.checkhallid(strid)) {
+                if (check) {
+                    sendmail(false, id, month + 1, monthname, year);
+                } else {
+                    sendmail(true, id, month + 1, monthname, year);
                 }
-                
-            }else{
+
+            } else {
                 hallid = sb.checkroll(strid);
-                if(hallid > 0){
-                    if(check){
-                        sendmail(false, id, month+1, monthname,year);
-                    }else{
-                        sendmail(true, id, month+1, monthname,year);
+                if (hallid > 0) {
+                    if (check) {
+                        sendmail(false, id, month + 1, monthname, year);
+                    } else {
+                        sendmail(true, id, month + 1, monthname, year);
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Id does not exist", "Data error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Id is not valid", "Data error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
+
+
     }//GEN-LAST:event_sendbtnActionPerformed
 
     /**
