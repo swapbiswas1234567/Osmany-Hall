@@ -22,7 +22,9 @@ public class OMMS {
 
 
     public static void main(String[] args) {
-           Login lg = new Login();
+           //Login lg = new Login();
+           //stdIndBillStat lg  = new stdIndBillStat();
+           SendMail lg = new SendMail();
            lg.setVisible(true);
 
 
