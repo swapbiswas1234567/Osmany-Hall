@@ -6,7 +6,11 @@
 package omms;
 
 import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -20,7 +24,18 @@ public class AboutUs extends javax.swing.JFrame {
     public AboutUs() {
         initComponents();
         setImage();
-        
+        try {
+            
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
@@ -39,7 +54,6 @@ public class AboutUs extends javax.swing.JFrame {
 	scaleImage = icon.getImage().getScaledInstance(174,180,Image.SCALE_DEFAULT);
 	icon = new ImageIcon(scaleImage);
 	mahinlbl.setIcon(icon);
-
 
     }
     
