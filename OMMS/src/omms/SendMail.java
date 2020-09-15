@@ -70,60 +70,7 @@ public class SendMail extends javax.swing.JFrame {
         
     }
     
-    public void sendmail(boolean single,int hallid, int month, String monthname, int year){
-        String body="", greetings="",billinfo="",tail="",msg="",strhallid="";
-        boolean isval=false;
-        Double bill=0.00,others=0.00,fine=0.00,waive=0.00,due=0.00,total=0.0;
-        String subject="Mess Bill of OSMANY HALL("+monthname+", "+year+")";
-        
-        try{
-            if(single && hallid > 0){
-                psmt = conn.prepareStatement("select st.name,st.email,bh.bill, bh.others, bh.fine, bh.waive, bh.due,st.hallid from stuinfo st join billhistory bh on st.hallid = bh.hallid and st.hallid =? and bh.month=? and bh.year=?");
-                psmt.setInt(1, hallid);
-                psmt.setInt(2, month);
-                psmt.setInt(3, year);
-                rs = psmt.executeQuery();
-            }else if(!single){
-                psmt = conn.prepareStatement("select st.name,st.email,bh.bill, bh.others, bh.fine, bh.waive, bh.due,st.hallid from stuinfo st join billhistory bh on st.hallid = bh.hallid and bh.month=? and bh.year=?");
-                psmt.setInt(1, month);
-                psmt.setInt(2, year);
-                rs = psmt.executeQuery();
-            }
-            greetings ="Assalamualaikum";
-            body="Your mess bill of "+monthname+","+Integer.toString(year)+" has been published. You are requested to pay the mess bill in due time. Total bill description is given below\n";
-            tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
-            while(rs.next()){
-                greetings = greetings+" "+rs.getString(1)+",\n";
-                bill = rs.getDouble(3);
-                others = rs.getDouble(4);
-                fine = rs.getDouble(5);
-                waive = rs.getDouble(6);
-                due = rs.getDouble(7);
-                strhallid = rs.getString(8);
-                total = bill+others+fine-waive-due;
-                body = body+"\n Mess Bill: "+Double.toString(bill)+" \n Others: "+Double.toString(others)+"\n Fine: "+Double.toString(fine)+"\n Waive: "+
-                        Double.toString(waive)+"\n Previous Due: "+Double.toString(due)+"\n Total: "+total+"\n\n For further details contact with the hall office\n\n";
-                msg= greetings+body+tail;
-                Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg,strhallid);
-                isval= true;
-            }
-            psmt.close();
-            rs.close();
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Data Fetch for Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
-        }
-        //System.out.println("called "+flag);
-        if(flag == 1 && !single){
-            genpdf();
-            JOptionPane.showMessageDialog(null, "Failed to send mail check the pdf", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(single && flag == 1){
-            JOptionPane.showMessageDialog(null, "Failed to send mail to hallid: "+strhallid, "Sending Mail error", JOptionPane.ERROR_MESSAGE);
-        }
-        if(!isval){
-            JOptionPane.showMessageDialog(null, "No Bill has generated in "+monthname+","+year, "Mail send failed", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    public void sendmail(boolean single,int hallid, int month, String monthname, int year)
     
     
     public void genpdf(){

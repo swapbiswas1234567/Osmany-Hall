@@ -244,7 +244,7 @@ public class SecurityMoney extends javax.swing.JFrame {
         // TODO add your handling code here:
         int hallid=0,id;
         String strid="";
-        stdIndBillStat sb= new stdIndBillStat();
+        StdIndBillStat sb= new StdIndBillStat();
         strid = idtxt.getText().trim();
         
         try{
@@ -277,7 +277,7 @@ public class SecurityMoney extends javax.swing.JFrame {
         String strsecurity="", strmess="", stridfee="", strid="";
         Double security = 0.0,messad = 0.0,idfee = 0.0;
         int hallid = 0,id=0;
-        stdIndBillStat sb= new stdIndBillStat();
+        StdIndBillStat sb= new StdIndBillStat();
         
         strid = idtxt.getText().trim();
         strsecurity = securitytxt.getText().trim();

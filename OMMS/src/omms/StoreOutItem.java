@@ -102,6 +102,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
+                    conn.close();
                     if(UserLog.name.equals("accountant")){
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
@@ -122,7 +123,6 @@ public class StoreOutItem extends javax.swing.JFrame {
                         das.setVisible(true);
                         frame.setVisible(false);
                     }
-                    conn.close();
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }

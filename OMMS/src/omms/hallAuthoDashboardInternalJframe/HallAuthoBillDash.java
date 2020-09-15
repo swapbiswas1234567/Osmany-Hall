@@ -12,7 +12,6 @@ import omms.AccountPaymentHistoryView;
 import omms.BillPermission;
 import omms.MessBillView;
 import omms.SetMealRange;
-import omms.stdIndBillStat;
 
 /**
  *
@@ -182,10 +181,10 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_billDateRanBtnActionPerformed
 
     private void viewDaiBillBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDaiBillBtnActionPerformed
-        // TODO add your handling code here:
-        stdIndBillStat st = new stdIndBillStat();
-        st.setVisible(true);
-        SwingUtilities.getWindowAncestor(this).dispose();
+//        // TODO add your handling code here:
+//        stdIndBillStat st = new stdIndBillStat();
+//        st.setVisible(true);
+//        SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_viewDaiBillBtnActionPerformed
 
 
