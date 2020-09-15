@@ -5,7 +5,9 @@
  */
 package omms.hallAuthoDashboardInternalJframe;
 
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.StdInfoView;
 
 /**
  *
@@ -33,34 +35,34 @@ public class HallAuthoViewDash extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        viewBill = new javax.swing.JButton();
-        viewBill1 = new javax.swing.JButton();
+        curStdInfBtn = new javax.swing.JButton();
+        prevStdinfBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        viewBill.setBackground(new java.awt.Color(255, 255, 255));
-        viewBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        viewBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        viewBill.setText("Current Students Info ");
-        viewBill.setBorder(null);
-        viewBill.setFocusPainted(false);
-        viewBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        viewBill.addActionListener(new java.awt.event.ActionListener() {
+        curStdInfBtn.setBackground(new java.awt.Color(255, 255, 255));
+        curStdInfBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        curStdInfBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
+        curStdInfBtn.setText("Current Students Info ");
+        curStdInfBtn.setBorder(null);
+        curStdInfBtn.setFocusPainted(false);
+        curStdInfBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        curStdInfBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewBillActionPerformed(evt);
+                curStdInfBtnActionPerformed(evt);
             }
         });
 
-        viewBill1.setBackground(new java.awt.Color(255, 255, 255));
-        viewBill1.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        viewBill1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        viewBill1.setText("Previous Students Info ");
-        viewBill1.setBorder(null);
-        viewBill1.setFocusPainted(false);
-        viewBill1.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        viewBill1.addActionListener(new java.awt.event.ActionListener() {
+        prevStdinfBtn.setBackground(new java.awt.Color(255, 255, 255));
+        prevStdinfBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        prevStdinfBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
+        prevStdinfBtn.setText("Previous Students Info ");
+        prevStdinfBtn.setBorder(null);
+        prevStdinfBtn.setFocusPainted(false);
+        prevStdinfBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        prevStdinfBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewBill1ActionPerformed(evt);
+                prevStdinfBtnActionPerformed(evt);
             }
         });
 
@@ -71,17 +73,17 @@ public class HallAuthoViewDash extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(255, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(viewBill1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(viewBill, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(prevStdinfBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(curStdInfBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(244, 244, 244))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(124, 124, 124)
-                .addComponent(viewBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(curStdInfBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(84, 84, 84)
-                .addComponent(viewBill1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(prevStdinfBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(162, Short.MAX_VALUE))
         );
 
@@ -90,18 +92,24 @@ public class HallAuthoViewDash extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void viewBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBillActionPerformed
+    private void curStdInfBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curStdInfBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_viewBillActionPerformed
+        StdInfoView st = new StdInfoView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_curStdInfBtnActionPerformed
 
-    private void viewBill1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBill1ActionPerformed
+    private void prevStdinfBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevStdinfBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_viewBill1ActionPerformed
+        StdInfoView st = new StdInfoView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_prevStdinfBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton curStdInfBtn;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton viewBill;
-    private javax.swing.JButton viewBill1;
+    private javax.swing.JButton prevStdinfBtn;
     // End of variables declaration//GEN-END:variables
 }

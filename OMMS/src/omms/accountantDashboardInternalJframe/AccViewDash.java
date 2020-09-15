@@ -7,6 +7,7 @@ package omms.accountantDashboardInternalJframe;
 
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.NSItemView;
 import omms.NonStoredItemUpdate;
 import omms.ShowLedger;
 import omms.TempFoodView;
@@ -38,7 +39,7 @@ public class AccViewDash extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         showLedgerBtn = new javax.swing.JButton();
-        nonStrUpdtBtn = new javax.swing.JButton();
+        nonStrViewtBtn = new javax.swing.JButton();
         tempFoodViewBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -56,16 +57,16 @@ public class AccViewDash extends javax.swing.JInternalFrame {
             }
         });
 
-        nonStrUpdtBtn.setBackground(new java.awt.Color(255, 255, 255));
-        nonStrUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
-        nonStrUpdtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        nonStrUpdtBtn.setText("  Non Store Item View");
-        nonStrUpdtBtn.setBorder(null);
-        nonStrUpdtBtn.setFocusPainted(false);
-        nonStrUpdtBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        nonStrUpdtBtn.addActionListener(new java.awt.event.ActionListener() {
+        nonStrViewtBtn.setBackground(new java.awt.Color(255, 255, 255));
+        nonStrViewtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        nonStrViewtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
+        nonStrViewtBtn.setText("  Non Store Item View");
+        nonStrViewtBtn.setBorder(null);
+        nonStrViewtBtn.setFocusPainted(false);
+        nonStrViewtBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        nonStrViewtBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nonStrUpdtBtnActionPerformed(evt);
+                nonStrViewtBtnActionPerformed(evt);
             }
         });
 
@@ -88,7 +89,7 @@ public class AccViewDash extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(254, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nonStrViewtBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tempFoodViewBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(showLedgerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(246, 246, 246))
@@ -99,7 +100,7 @@ public class AccViewDash extends javax.swing.JInternalFrame {
                 .addGap(74, 74, 74)
                 .addComponent(showLedgerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54)
-                .addComponent(nonStrUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nonStrViewtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(65, 65, 65)
                 .addComponent(tempFoodViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(97, Short.MAX_VALUE))
@@ -117,12 +118,12 @@ public class AccViewDash extends javax.swing.JInternalFrame {
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_showLedgerBtnActionPerformed
 
-    private void nonStrUpdtBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonStrUpdtBtnActionPerformed
+    private void nonStrViewtBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonStrViewtBtnActionPerformed
         // TODO add your handling code here:
-        NonStoredItemUpdate st = new NonStoredItemUpdate();
+        NSItemView st = new NSItemView();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_nonStrUpdtBtnActionPerformed
+    }//GEN-LAST:event_nonStrViewtBtnActionPerformed
 
     private void tempFoodViewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempFoodViewBtnActionPerformed
         // TODO add your handling code here:
@@ -134,7 +135,7 @@ public class AccViewDash extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton nonStrUpdtBtn;
+    private javax.swing.JButton nonStrViewtBtn;
     private javax.swing.JButton showLedgerBtn;
     private javax.swing.JButton tempFoodViewBtn;
     // End of variables declaration//GEN-END:variables

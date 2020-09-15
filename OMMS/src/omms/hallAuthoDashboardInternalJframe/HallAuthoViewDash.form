@@ -34,8 +34,8 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="255" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="viewBill1" max="32767" attributes="0"/>
-                      <Component id="viewBill" min="-2" pref="361" max="-2" attributes="0"/>
+                      <Component id="prevStdinfBtn" max="32767" attributes="0"/>
+                      <Component id="curStdInfBtn" min="-2" pref="361" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="244" max="-2" attributes="0"/>
               </Group>
@@ -45,16 +45,16 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
-                  <Component id="viewBill" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="curStdInfBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-                  <Component id="viewBill1" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="prevStdinfBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace pref="162" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="viewBill">
+        <Component class="javax.swing.JButton" name="curStdInfBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -73,10 +73,10 @@
             <Property name="horizontalAlignment" type="int" value="10"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewBillActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="curStdInfBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="viewBill1">
+        <Component class="javax.swing.JButton" name="prevStdinfBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -95,7 +95,7 @@
             <Property name="horizontalAlignment" type="int" value="10"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewBill1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="prevStdinfBtnActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

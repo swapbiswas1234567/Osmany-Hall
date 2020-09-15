@@ -7,8 +7,12 @@ package omms.hallAuthoDashboardInternalJframe;
 
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.AccountPayment;
+import omms.AccountPaymentHistoryView;
 import omms.BillPermission;
 import omms.MessBillView;
+import omms.SetMealRange;
+import omms.stdIndBillStat;
 
 /**
  *
@@ -158,7 +162,7 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
 
     private void payViewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payViewBtnActionPerformed
         // TODO add your handling code here:
-        MessBillView st = new MessBillView();
+        AccountPaymentHistoryView st = new AccountPaymentHistoryView();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_payViewBtnActionPerformed
@@ -172,14 +176,14 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
 
     private void billDateRanBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_billDateRanBtnActionPerformed
         // TODO add your handling code here:
-        MessBillView st = new MessBillView();
+        SetMealRange st = new SetMealRange();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_billDateRanBtnActionPerformed
 
     private void viewDaiBillBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDaiBillBtnActionPerformed
         // TODO add your handling code here:
-        MessBillView st = new MessBillView();
+        stdIndBillStat st = new stdIndBillStat();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_viewDaiBillBtnActionPerformed

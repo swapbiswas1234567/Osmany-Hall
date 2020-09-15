@@ -34,7 +34,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="254" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="nonStrUpdtBtn" alignment="0" max="32767" attributes="0"/>
+                      <Component id="nonStrViewtBtn" alignment="0" max="32767" attributes="0"/>
                       <Component id="tempFoodViewBtn" alignment="0" max="32767" attributes="0"/>
                       <Component id="showLedgerBtn" min="-2" pref="360" max="-2" attributes="0"/>
                   </Group>
@@ -48,7 +48,7 @@
                   <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                   <Component id="showLedgerBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                  <Component id="nonStrUpdtBtn" min="-2" pref="80" max="-2" attributes="0"/>
+                  <Component id="nonStrViewtBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                   <Component id="tempFoodViewBtn" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace pref="97" max="32767" attributes="0"/>
@@ -79,7 +79,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showLedgerBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="nonStrUpdtBtn">
+        <Component class="javax.swing.JButton" name="nonStrViewtBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -98,7 +98,7 @@
             <Property name="horizontalAlignment" type="int" value="10"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nonStrUpdtBtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nonStrViewtBtnActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="tempFoodViewBtn">

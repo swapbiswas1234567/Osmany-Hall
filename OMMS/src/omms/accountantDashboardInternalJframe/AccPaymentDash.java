@@ -5,7 +5,11 @@
  */
 package omms.accountantDashboardInternalJframe;
 
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.AccountPayment;
+import omms.AccountPaymentDelete;
+import omms.AccountPaymentHistoryView;
 
 /**
  *
@@ -18,8 +22,8 @@ public class AccPaymentDash extends javax.swing.JInternalFrame {
      */
     public AccPaymentDash() {
         initComponents();
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
-        BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
     }
 
@@ -33,46 +37,46 @@ public class AccPaymentDash extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        genBillBtn = new javax.swing.JButton();
-        genBillBtn1 = new javax.swing.JButton();
-        genBillBtn2 = new javax.swing.JButton();
+        stdPayBtn = new javax.swing.JButton();
+        payDelBtn = new javax.swing.JButton();
+        payViewBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        genBillBtn.setBackground(new java.awt.Color(255, 255, 255));
-        genBillBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        genBillBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/cash_in_hand_64px.png"))); // NOI18N
-        genBillBtn.setText("  Student's Payment");
-        genBillBtn.setBorder(null);
-        genBillBtn.setFocusPainted(false);
-        genBillBtn.addActionListener(new java.awt.event.ActionListener() {
+        stdPayBtn.setBackground(new java.awt.Color(255, 255, 255));
+        stdPayBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        stdPayBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/cash_in_hand_64px.png"))); // NOI18N
+        stdPayBtn.setText("  Student's Payment");
+        stdPayBtn.setBorder(null);
+        stdPayBtn.setFocusPainted(false);
+        stdPayBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                genBillBtnActionPerformed(evt);
+                stdPayBtnActionPerformed(evt);
             }
         });
 
-        genBillBtn1.setBackground(new java.awt.Color(255, 255, 255));
-        genBillBtn1.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        genBillBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/no_entry_64px.png"))); // NOI18N
-        genBillBtn1.setText("  Payment Delete    ");
-        genBillBtn1.setBorder(null);
-        genBillBtn1.setFocusPainted(false);
-        genBillBtn1.addActionListener(new java.awt.event.ActionListener() {
+        payDelBtn.setBackground(new java.awt.Color(255, 255, 255));
+        payDelBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        payDelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/no_entry_64px.png"))); // NOI18N
+        payDelBtn.setText("  Payment Delete    ");
+        payDelBtn.setBorder(null);
+        payDelBtn.setFocusPainted(false);
+        payDelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                genBillBtn1ActionPerformed(evt);
+                payDelBtnActionPerformed(evt);
             }
         });
 
-        genBillBtn2.setBackground(new java.awt.Color(255, 255, 255));
-        genBillBtn2.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        genBillBtn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/file_preview_64px.png"))); // NOI18N
-        genBillBtn2.setText("  Payment View");
-        genBillBtn2.setBorder(null);
-        genBillBtn2.setFocusPainted(false);
-        genBillBtn2.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        genBillBtn2.addActionListener(new java.awt.event.ActionListener() {
+        payViewBtn.setBackground(new java.awt.Color(255, 255, 255));
+        payViewBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        payViewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/file_preview_64px.png"))); // NOI18N
+        payViewBtn.setText("  Payment View");
+        payViewBtn.setBorder(null);
+        payViewBtn.setFocusPainted(false);
+        payViewBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        payViewBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                genBillBtn2ActionPerformed(evt);
+                payViewBtnActionPerformed(evt);
             }
         });
 
@@ -83,20 +87,20 @@ public class AccPaymentDash extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(279, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(genBillBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(genBillBtn2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(genBillBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stdPayBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(payViewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(payDelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(260, 260, 260))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(92, 92, 92)
-                .addComponent(genBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(stdPayBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
-                .addComponent(genBillBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(payViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addComponent(genBillBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(payDelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(105, Short.MAX_VALUE))
         );
 
@@ -105,26 +109,32 @@ public class AccPaymentDash extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void genBillBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genBillBtnActionPerformed
-        // TODO add your handling code here:
-        //        ShowLedger st = new ShowLedger();
-        //        st.setVisible(true);
-        //        SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_genBillBtnActionPerformed
+    private void stdPayBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stdPayBtnActionPerformed
+        //TODO add your handling code here
+        AccountPayment st = new AccountPayment();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_stdPayBtnActionPerformed
 
-    private void genBillBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genBillBtn1ActionPerformed
+    private void payDelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payDelBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_genBillBtn1ActionPerformed
+        AccountPaymentDelete st = new AccountPaymentDelete();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_payDelBtnActionPerformed
 
-    private void genBillBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genBillBtn2ActionPerformed
+    private void payViewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payViewBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_genBillBtn2ActionPerformed
+        AccountPaymentHistoryView st = new AccountPaymentHistoryView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_payViewBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton genBillBtn;
-    private javax.swing.JButton genBillBtn1;
-    private javax.swing.JButton genBillBtn2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton payDelBtn;
+    private javax.swing.JButton payViewBtn;
+    private javax.swing.JButton stdPayBtn;
     // End of variables declaration//GEN-END:variables
 }
