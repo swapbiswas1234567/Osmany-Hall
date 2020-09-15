@@ -1610,7 +1610,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                         frame.setVisible(false);
                     }
                     conn.close();
-                } catch (SQLException ex) {
+                }catch (SQLException ex) {
                     Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 

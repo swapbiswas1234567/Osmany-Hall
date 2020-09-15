@@ -1,18 +1,16 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package omms;
 
-
-
-
-import com.itextpdf.text.DocumentException;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
  *
  * @author Ajmir
  */
-
 public class OMMS {
 
     //Connection con=null; 
@@ -22,9 +20,12 @@ public class OMMS {
      * @param args the command line arguments
      */
 
+
     public static void main(String[] args) {
            Login lg = new Login();
            lg.setVisible(true);
-    }
 
+
+    }
 }
+    
