@@ -27,10 +27,10 @@ public class OMMS {
         //PaymentHistory st= new PaymentHistory();
         //NSItemView st= new NSItemView();
         //GenerateBill st= new GenerateBill();
-        //stdIndBillStat st= new stdIndBillStat();
+        stdIndBillStat st= new stdIndBillStat();
         //TmpFoodUpdate st= new TmpFoodUpdate();
         //TemporaryFoodIn st= new TemporaryFoodIn();
-        AboutUs st= new AboutUs();
+        //AboutUs st= new AboutUs();
         st.setVisible(true);
         
     }
