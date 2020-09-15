@@ -7,7 +7,8 @@ package omms.hallAuthoDashboardInternalJframe;
 
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import omms.StdInfoView;
+import omms.StdInfoViewCur;
+import omms.StdInfoViewPrev;
 
 /**
  *
@@ -94,14 +95,14 @@ public class HallAuthoViewDash extends javax.swing.JInternalFrame {
 
     private void curStdInfBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_curStdInfBtnActionPerformed
         // TODO add your handling code here:
-        StdInfoView st = new StdInfoView();
+        StdInfoViewCur st = new StdInfoViewCur();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_curStdInfBtnActionPerformed
 
     private void prevStdinfBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevStdinfBtnActionPerformed
         // TODO add your handling code here:
-        StdInfoView st = new StdInfoView();
+        StdInfoViewPrev st = new StdInfoViewPrev();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_prevStdinfBtnActionPerformed

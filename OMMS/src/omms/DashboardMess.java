@@ -318,7 +318,7 @@ public class DashboardMess extends javax.swing.JFrame {
         logoPanel.setBackground(new java.awt.Color(253, 253, 253));
 
         jLabel15.setBackground(new java.awt.Color(253, 253, 253));
-        jLabel15.setIcon(new javax.swing.ImageIcon("D:\\CSE-MIST\\MIST Project\\CSE Alumni Website\\assets\\img\\mist_pattern_logo.png")); // NOI18N
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/mist_pattern_logo.png"))); // NOI18N
 
         javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);
         logoPanel.setLayout(logoPanelLayout);
