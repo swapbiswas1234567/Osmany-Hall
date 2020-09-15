@@ -454,10 +454,7 @@ public class PresentDue extends javax.swing.JFrame {
 
         duetable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Sl", "Hall Id", "Name", "Roll", "Admission", "Dept", "Room", "Due", "Mobile No"
