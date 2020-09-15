@@ -11,7 +11,9 @@ import omms.AccountPayment;
 import omms.AccountPaymentHistoryView;
 import omms.BillPermission;
 import omms.MessBillView;
+import omms.PresentDue;
 import omms.SetMealRange;
+import omms.StdIndBillStat;
 
 /**
  *
@@ -43,12 +45,13 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         payViewBtn = new javax.swing.JButton();
         billGenPerBtn = new javax.swing.JButton();
         billDateRanBtn = new javax.swing.JButton();
-        viewDaiBillBtn = new javax.swing.JButton();
+        viewDailyBill = new javax.swing.JButton();
+        presDueBill = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         viewMonBillBtn.setBackground(new java.awt.Color(255, 255, 255));
-        viewMonBillBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        viewMonBillBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         viewMonBillBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
         viewMonBillBtn.setText("  Student's Monthly Bill ");
         viewMonBillBtn.setBorder(null);
@@ -61,7 +64,7 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         });
 
         payViewBtn.setBackground(new java.awt.Color(255, 255, 255));
-        payViewBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        payViewBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         payViewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/file_preview_64px.png"))); // NOI18N
         payViewBtn.setText("  Payment View                  ");
         payViewBtn.setBorder(null);
@@ -73,7 +76,7 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         });
 
         billGenPerBtn.setBackground(new java.awt.Color(255, 255, 255));
-        billGenPerBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        billGenPerBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         billGenPerBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/receipt_64px.png"))); // NOI18N
         billGenPerBtn.setText("Bill Generate Permission");
         billGenPerBtn.setBorder(null);
@@ -85,7 +88,7 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         });
 
         billDateRanBtn.setBackground(new java.awt.Color(255, 255, 255));
-        billDateRanBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        billDateRanBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         billDateRanBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/pay_date_64px.png"))); // NOI18N
         billDateRanBtn.setText("  Bill Date Range Set");
         billDateRanBtn.setBorder(null);
@@ -97,16 +100,29 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
             }
         });
 
-        viewDaiBillBtn.setBackground(new java.awt.Color(255, 255, 255));
-        viewDaiBillBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
-        viewDaiBillBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
-        viewDaiBillBtn.setText("  Student's Daily Bill ");
-        viewDaiBillBtn.setBorder(null);
-        viewDaiBillBtn.setFocusPainted(false);
-        viewDaiBillBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        viewDaiBillBtn.addActionListener(new java.awt.event.ActionListener() {
+        viewDailyBill.setBackground(new java.awt.Color(255, 255, 255));
+        viewDailyBill.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        viewDailyBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/bill_acc.png"))); // NOI18N
+        viewDailyBill.setText("  Student's Daily Bill ");
+        viewDailyBill.setBorder(null);
+        viewDailyBill.setFocusPainted(false);
+        viewDailyBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        viewDailyBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewDaiBillBtnActionPerformed(evt);
+                viewDailyBillActionPerformed(evt);
+            }
+        });
+
+        presDueBill.setBackground(new java.awt.Color(255, 255, 255));
+        presDueBill.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        presDueBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/invoice.png"))); // NOI18N
+        presDueBill.setText("  Student's Current Due");
+        presDueBill.setBorder(null);
+        presDueBill.setFocusPainted(false);
+        presDueBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        presDueBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                presDueBillActionPerformed(evt);
             }
         });
 
@@ -115,36 +131,34 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(47, 47, 47)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(billGenPerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                        .addComponent(viewMonBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(billDateRanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(viewDaiBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(payViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(billGenPerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(billDateRanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(payViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewMonBillBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(viewDailyBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(73, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(billGenPerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(viewMonBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(68, 68, 68)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(billDateRanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(viewDaiBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80)
-                .addComponent(payViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57))
+                    .addComponent(viewDailyBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(69, 69, 69)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(payViewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(80, 80, 80))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 530));
@@ -180,12 +194,19 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_billDateRanBtnActionPerformed
 
-    private void viewDaiBillBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDaiBillBtnActionPerformed
-//        // TODO add your handling code here:
-//        stdIndBillStat st = new stdIndBillStat();
-//        st.setVisible(true);
-//        SwingUtilities.getWindowAncestor(this).dispose();
-    }//GEN-LAST:event_viewDaiBillBtnActionPerformed
+    private void viewDailyBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDailyBillActionPerformed
+        // TODO add your handling code here:
+        StdIndBillStat st = new StdIndBillStat();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_viewDailyBillActionPerformed
+
+    private void presDueBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_presDueBillActionPerformed
+        // TODO add your handling code here:
+        PresentDue st = new PresentDue();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_presDueBillActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -193,7 +214,8 @@ public class HallAuthoBillDash extends javax.swing.JInternalFrame {
     private javax.swing.JButton billGenPerBtn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton payViewBtn;
-    private javax.swing.JButton viewDaiBillBtn;
+    private javax.swing.JButton presDueBill;
+    private javax.swing.JButton viewDailyBill;
     private javax.swing.JButton viewMonBillBtn;
     // End of variables declaration//GEN-END:variables
 }

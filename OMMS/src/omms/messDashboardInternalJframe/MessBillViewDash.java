@@ -5,6 +5,12 @@
  */
 package omms.messDashboardInternalJframe;
 
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.MessBillView;
+import omms.PresentDue;
+import omms.StdIndBillStat;
+
 /**
  *
  * @author Asus
@@ -16,6 +22,9 @@ public class MessBillViewDash extends javax.swing.JInternalFrame {
      */
     public MessBillViewDash() {
         initComponents();
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+        bi.setNorthPane(null);
     }
 
     /**
@@ -27,21 +36,106 @@ public class MessBillViewDash extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 827, Short.MAX_VALUE)
+        jPanel1 = new javax.swing.JPanel();
+        viewDailyBill = new javax.swing.JButton();
+        presDueBill = new javax.swing.JButton();
+        viewMonBill = new javax.swing.JButton();
+
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        viewDailyBill.setBackground(new java.awt.Color(255, 255, 255));
+        viewDailyBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        viewDailyBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/bill_acc.png"))); // NOI18N
+        viewDailyBill.setText("  Student's Daily Bill ");
+        viewDailyBill.setBorder(null);
+        viewDailyBill.setFocusPainted(false);
+        viewDailyBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        viewDailyBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewDailyBillActionPerformed(evt);
+            }
+        });
+
+        presDueBill.setBackground(new java.awt.Color(255, 255, 255));
+        presDueBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        presDueBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/invoice.png"))); // NOI18N
+        presDueBill.setText("  Student's Current Due");
+        presDueBill.setBorder(null);
+        presDueBill.setFocusPainted(false);
+        presDueBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                presDueBillActionPerformed(evt);
+            }
+        });
+
+        viewMonBill.setBackground(new java.awt.Color(255, 255, 255));
+        viewMonBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        viewMonBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
+        viewMonBill.setText("  Student's Monthly Bill ");
+        viewMonBill.setBorder(null);
+        viewMonBill.setFocusPainted(false);
+        viewMonBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        viewMonBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewMonBillActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(251, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewMonBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(viewDailyBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(229, 229, 229))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 572, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(99, Short.MAX_VALUE)
+                .addComponent(viewMonBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(viewDailyBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
         );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 530));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void viewDailyBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDailyBillActionPerformed
+        // TODO add your handling code here:
+        StdIndBillStat st = new StdIndBillStat();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_viewDailyBillActionPerformed
+
+    private void presDueBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_presDueBillActionPerformed
+        // TODO add your handling code here:
+        PresentDue st = new PresentDue();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_presDueBillActionPerformed
+
+    private void viewMonBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMonBillActionPerformed
+        // TODO add your handling code here:
+        MessBillView st = new MessBillView();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_viewMonBillActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton presDueBill;
+    private javax.swing.JButton viewDailyBill;
+    private javax.swing.JButton viewMonBill;
     // End of variables declaration//GEN-END:variables
 }

@@ -82,7 +82,7 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/receipt_dollar_36px.png"))); // NOI18N
 
-        billMngLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        billMngLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         billMngLbl.setForeground(new java.awt.Color(255, 255, 255));
         billMngLbl.setText("Bill Management");
 
@@ -93,9 +93,8 @@ public class DashboardHallAutho extends javax.swing.JFrame {
             .addGroup(billMngPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(billMngLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(20, 20, 20)
+                .addComponent(billMngLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
         );
         billMngPanelLayout.setVerticalGroup(
             billMngPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,7 +142,7 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_32px.png"))); // NOI18N
 
-        stdInfLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        stdInfLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         stdInfLbl.setForeground(new java.awt.Color(255, 255, 255));
         stdInfLbl.setText("Student Info ");
 
@@ -154,9 +153,8 @@ public class DashboardHallAutho extends javax.swing.JFrame {
             .addGroup(stdInfPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(stdInfLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(20, 20, 20)
+                .addComponent(stdInfLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
         );
         stdInfPanelLayout.setVerticalGroup(
             stdInfPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,7 +181,7 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/money_bag_28px.png"))); // NOI18N
 
-        foodMngLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        foodMngLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         foodMngLbl.setForeground(new java.awt.Color(255, 255, 255));
         foodMngLbl.setText("Food Management");
 
@@ -194,9 +192,8 @@ public class DashboardHallAutho extends javax.swing.JFrame {
             .addGroup(foodMngPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(foodMngLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(20, 20, 20)
+                .addComponent(foodMngLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
         );
         foodMngPanelLayout.setVerticalGroup(
             foodMngPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

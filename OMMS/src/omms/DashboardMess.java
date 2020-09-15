@@ -6,6 +6,7 @@
 package omms;
 
 import java.awt.Color;
+import omms.messDashboardInternalJframe.MessBillViewDash;
 import omms.messDashboardInternalJframe.MessGroupingDash;
 import omms.messDashboardInternalJframe.MessHallAdmissionDash;
 import omms.messDashboardInternalJframe.MessNonStoredItemDash;
@@ -18,7 +19,7 @@ import omms.messDashboardInternalJframe.MessTempFoodDash;
  */
 public class DashboardMess extends javax.swing.JFrame {
 
-    int si = 0, fi = 0, tf = 0, dms = 0, grp = 0, ha = 0;
+    int si = 0, fi = 0, tf = 0, dms = 0, grp = 0, ha = 0, bv = 0;
 
     /**
      * Creates new form MessDashboard
@@ -92,7 +93,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/shop_store.png"))); // NOI18N
 
-        storeItemLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        storeItemLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         storeItemLbl.setForeground(new java.awt.Color(255, 255, 255));
         storeItemLbl.setText("Stored Item");
 
@@ -103,7 +104,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(storeItemPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(storeItemLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -132,7 +133,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/storeinput.png"))); // NOI18N
 
-        nonStoreLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        nonStoreLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         nonStoreLbl.setForeground(new java.awt.Color(255, 255, 255));
         nonStoreLbl.setText("Non-Stored Item");
 
@@ -143,7 +144,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(nonStorePanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(nonStoreLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -172,7 +173,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/tempFoodDash.png"))); // NOI18N
 
-        tempLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        tempLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         tempLbl.setForeground(new java.awt.Color(255, 255, 255));
         tempLbl.setText("Temporay Food");
 
@@ -183,7 +184,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(tempFoodPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(tempLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -212,7 +213,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/mealsheet.png"))); // NOI18N
 
-        mealSheetLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        mealSheetLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         mealSheetLbl.setForeground(new java.awt.Color(255, 255, 255));
         mealSheetLbl.setText("Daily Meal Sheet");
 
@@ -223,7 +224,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(mealSheetPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(mealSheetLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -252,7 +253,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/clients.png"))); // NOI18N
 
-        grpLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        grpLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         grpLbl.setForeground(new java.awt.Color(255, 255, 255));
         grpLbl.setText("Grouping");
 
@@ -263,7 +264,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(groupingPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(grpLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -292,7 +293,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/admission.png"))); // NOI18N
 
-        hallAddLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        hallAddLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         hallAddLbl.setForeground(new java.awt.Color(255, 255, 255));
         hallAddLbl.setText("Hall Admission");
 
@@ -303,7 +304,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(hallAddPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(hallAddLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -353,7 +354,7 @@ public class DashboardMess extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/billMess.png"))); // NOI18N
 
-        billViewLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        billViewLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         billViewLbl.setForeground(new java.awt.Color(255, 255, 255));
         billViewLbl.setText("Bill View");
 
@@ -364,7 +365,7 @@ public class DashboardMess extends javax.swing.JFrame {
             .addGroup(billViewPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addComponent(billViewLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -469,14 +470,18 @@ public class DashboardMess extends javax.swing.JFrame {
         mealSheetPanel.setBackground(new Color(33, 102, 142));
         groupingPanel.setBackground(new Color(33, 102, 142));
         hallAddPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
+        
         si = 1;
-        fi = tf = dms = grp = ha = 0;
+        fi = tf = dms = grp = ha = bv = 0;
+        
         storeItemLbl.setForeground(Color.BLACK);
         nonStoreLbl.setForeground(Color.WHITE);
         tempLbl.setForeground(Color.WHITE);
         mealSheetLbl.setForeground(Color.WHITE);
         grpLbl.setForeground(Color.WHITE);
         hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.WHITE);
         
         
         dashhboardPanel.removeAll();
@@ -503,19 +508,22 @@ public class DashboardMess extends javax.swing.JFrame {
         // TODO add your handling code here:
         nonStorePanel.setBackground(new Color(129, 214, 163));
         storeItemPanel.setBackground(new Color(33, 102, 142));
-        //freshPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
         tempFoodPanel.setBackground(new Color(33, 102, 142));
         mealSheetPanel.setBackground(new Color(33, 102, 142));
         groupingPanel.setBackground(new Color(33, 102, 142));
         hallAddPanel.setBackground(new Color(33, 102, 142));
+        
         fi = 1;
-        si = tf = dms = grp = ha = 0;
+        si = tf = dms = grp = ha = bv = 0;
+        
         storeItemLbl.setForeground(Color.WHITE);
         nonStoreLbl.setForeground(Color.BLACK);
         tempLbl.setForeground(Color.WHITE);
         mealSheetLbl.setForeground(Color.WHITE);
         grpLbl.setForeground(Color.WHITE);
         hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
         MessNonStoredItemDash nsid = new MessNonStoredItemDash();
@@ -542,18 +550,21 @@ public class DashboardMess extends javax.swing.JFrame {
         tempFoodPanel.setBackground(new Color(129, 214, 163));
         storeItemPanel.setBackground(new Color(33, 102, 142));
         nonStorePanel.setBackground(new Color(33, 102, 142));
-        //tempFoodPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
         mealSheetPanel.setBackground(new Color(33, 102, 142));
         groupingPanel.setBackground(new Color(33, 102, 142));
         hallAddPanel.setBackground(new Color(33, 102, 142));
+        
         tf = 1;
-        si = fi = dms = grp = ha = 0;
+        si = fi = dms = grp = ha = bv = 0 ;
+        
         storeItemLbl.setForeground(Color.WHITE);
         nonStoreLbl.setForeground(Color.WHITE);
         tempLbl.setForeground(Color.BLACK);
         mealSheetLbl.setForeground(Color.WHITE);
         grpLbl.setForeground(Color.WHITE);
         hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();        
         MessTempFoodDash tmd = new MessTempFoodDash();
@@ -581,17 +592,20 @@ public class DashboardMess extends javax.swing.JFrame {
         storeItemPanel.setBackground(new Color(33, 102, 142));
         nonStorePanel.setBackground(new Color(33, 102, 142));
         tempFoodPanel.setBackground(new Color(33, 102, 142));
-        //mealSheetPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
         groupingPanel.setBackground(new Color(33, 102, 142));
         hallAddPanel.setBackground(new Color(33, 102, 142));
+        
         dms = 1;
-        si = fi = tf = grp = ha = 0;
+        si = fi = tf = grp = ha = bv = 0;
+        
         storeItemLbl.setForeground(Color.WHITE);
         nonStoreLbl.setForeground(Color.WHITE);
         tempLbl.setForeground(Color.WHITE);
         mealSheetLbl.setForeground(Color.BLACK);
         grpLbl.setForeground(Color.WHITE);
         hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
         MealSheet st = new MealSheet();
@@ -620,16 +634,19 @@ public class DashboardMess extends javax.swing.JFrame {
         nonStorePanel.setBackground(new Color(33, 102, 142));
         tempFoodPanel.setBackground(new Color(33, 102, 142));
         mealSheetPanel.setBackground(new Color(33, 102, 142));
-        //groupingPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
         hallAddPanel.setBackground(new Color(33, 102, 142));
+        
         grp = 1;
-        si = fi = tf = dms = ha = 0;
+        si = fi = tf = dms = ha = bv = 0;
+        
         storeItemLbl.setForeground(Color.WHITE);
         nonStoreLbl.setForeground(Color.WHITE);
         tempLbl.setForeground(Color.WHITE);
         mealSheetLbl.setForeground(Color.WHITE);
         grpLbl.setForeground(Color.BLACK);
         hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.WHITE);
         
         dashhboardPanel.removeAll();
         MessGroupingDash gd = new MessGroupingDash();
@@ -672,16 +689,19 @@ public class DashboardMess extends javax.swing.JFrame {
         tempFoodPanel.setBackground(new Color(33, 102, 142));
         mealSheetPanel.setBackground(new Color(33, 102, 142));
         groupingPanel.setBackground(new Color(33, 102, 142));
-        //hallAddPanel.setBackground(new Color(33, 102, 142));
+        billViewPanel.setBackground(new Color(33, 102, 142));
+        
         ha = 1;
-        si = fi = tf = dms = grp = 0;
+        si = fi = tf = dms = grp = bv = 0;
+        
         storeItemLbl.setForeground(Color.WHITE);
         nonStoreLbl.setForeground(Color.WHITE);
         tempLbl.setForeground(Color.WHITE);
         mealSheetLbl.setForeground(Color.WHITE);
         grpLbl.setForeground(Color.WHITE);
         hallAddLbl.setForeground(Color.BLACK);
-
+        billViewLbl.setForeground(Color.WHITE);
+        
         dashhboardPanel.removeAll();
         MessHallAdmissionDash had = new MessHallAdmissionDash();
         dashhboardPanel.add(had).setVisible(true);
@@ -689,14 +709,43 @@ public class DashboardMess extends javax.swing.JFrame {
 
     private void billViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_billViewPanelMouseClicked
         // TODO add your handling code here:
+        billViewPanel.setBackground(new Color(129, 214, 163));
+        storeItemPanel.setBackground(new Color(33, 102, 142));
+        nonStorePanel.setBackground(new Color(33, 102, 142));
+        tempFoodPanel.setBackground(new Color(33, 102, 142));
+        mealSheetPanel.setBackground(new Color(33, 102, 142));
+        groupingPanel.setBackground(new Color(33, 102, 142));
+        hallAddPanel.setBackground(new Color(33, 102, 142));
+        
+        bv = 1;
+        ha = si = fi = tf = dms = grp = 0;
+        
+        storeItemLbl.setForeground(Color.WHITE);
+        nonStoreLbl.setForeground(Color.WHITE);
+        tempLbl.setForeground(Color.WHITE);
+        mealSheetLbl.setForeground(Color.WHITE);
+        grpLbl.setForeground(Color.WHITE);
+        hallAddLbl.setForeground(Color.WHITE);
+        billViewLbl.setForeground(Color.BLACK);
+        
+        dashhboardPanel.removeAll();
+        MessBillViewDash had = new MessBillViewDash();
+        dashhboardPanel.add(had).setVisible(true);
+        
     }//GEN-LAST:event_billViewPanelMouseClicked
 
     private void billViewPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_billViewPanelMouseEntered
         // TODO add your handling code here:
+        if (bv != 1) {
+            billViewPanel.setBackground(new Color(45, 45, 45));
+        }
     }//GEN-LAST:event_billViewPanelMouseEntered
 
     private void billViewPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_billViewPanelMouseExited
         // TODO add your handling code here:
+        if (bv != 1) {
+            billViewPanel.setBackground(new Color(33, 102, 142));
+        }
     }//GEN-LAST:event_billViewPanelMouseExited
 
     /**

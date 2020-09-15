@@ -514,6 +514,7 @@ public class StdIndBillStat extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void shwobtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shwobtnActionPerformed

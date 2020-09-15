@@ -38,9 +38,10 @@ public class StdHallAdmission extends javax.swing.JFrame {
     ResultSet rs = null;
 
     SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
-    
+
     String filename = "";
-    byte [] person_image = null;
+    byte[] person_image = null;
+
     /**
      * Creates new form stdHallAdmission
      */
@@ -53,7 +54,7 @@ public class StdHallAdmission extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb(); // set connection with database        
         setDateChoosers(); // setting todays date to the date chooser
         stdNameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        closeBtn();
+        //closeBtn();
         JTextFieldDateEditor dtedit;
         dtedit = (JTextFieldDateEditor) entryDateChooser.getDateEditor();
         dtedit.setEditable(false);
@@ -69,22 +70,19 @@ public class StdHallAdmission extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     conn.close();
-                    if(UserLog.name.equals("accountant")){
+                    if (UserLog.name.equals("accountant")) {
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("provost")){
+                    } else if (UserLog.name.equals("provost")) {
                         DashboardHallAutho das = new DashboardHallAutho();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("mess")){
+                    } else if (UserLog.name.equals("mess")) {
                         DashboardMess das = new DashboardMess();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("captain")){
+                    } else if (UserLog.name.equals("captain")) {
                         DashboardMessCap das = new DashboardMessCap();
                         das.setVisible(true);
                         frame.setVisible(false);
@@ -112,9 +110,9 @@ public class StdHallAdmission extends javax.swing.JFrame {
         contactNoTxt.setText("");
         setDateChoosers();
         deptComboBox.setSelectedIndex(0);
-        showImageLbl.setText("Add Image"); 
+        showImageLbl.setText("Add Image");
         showImageLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/landscape.png")));
-        
+
     }
 
     public boolean rollValidity(String stdRoll) {
@@ -418,7 +416,7 @@ public class StdHallAdmission extends javax.swing.JFrame {
         // TODO add your handling code here:
         String stdName = stdNameTxt.getText().toString().trim();
         String stdRoll = stdRollTxt.getText().toString().trim();
-        String stdDept =deptComboBox.getSelectedItem().toString().trim();
+        String stdDept = deptComboBox.getSelectedItem().toString().trim();
         String stdBatch = batchTxt.getText().toString().trim();
         String stdRoomNo = roomNoTxt.getText().toString().trim();
         int entryDate = Integer.parseInt(formatDate.format(entryDateChooser.getDate()));
@@ -466,25 +464,27 @@ public class StdHallAdmission extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
-        filename = f.getAbsolutePath();
-        try {
-            File image = new File(filename);
-            FileInputStream fis = new FileInputStream(image);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        if (f != null) {
+            filename = f.getAbsolutePath();
+            try {
+                File image = new File(filename);
+                FileInputStream fis = new FileInputStream(image);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-            byte[] buf = new byte[1024];
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
+                byte[] buf = new byte[1024];
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum);
+                }
+
+                person_image = bos.toByteArray();
+                ImageIcon imgic = new ImageIcon(person_image);
+                Image scaleImg = imgic.getImage().getScaledInstance(256, 256, Image.SCALE_DEFAULT);
+                imgic = new ImageIcon(scaleImg);
+                showImageLbl.setIcon(imgic);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error Fetching Image", "Image", JOptionPane.ERROR_MESSAGE);
             }
-
-            person_image = bos.toByteArray();            
-            ImageIcon imgic = new ImageIcon(person_image);
-            Image scaleImg = imgic.getImage().getScaledInstance(256, 256, Image.SCALE_DEFAULT);
-            imgic = new ImageIcon(scaleImg);
-            showImageLbl.setIcon(imgic);            
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error Fetching Image", "Image", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_attachFileBtnActionPerformed
 
