@@ -19,13 +19,11 @@ public class OMMS {
     /**
      * @param args the command line arguments
      */
-
-
     public static void main(String[] args) {
-           //Login lg = new Login();
-           //StdIndBillStat lg = new StdIndBillStat();
-           StdInfoViewPrev lg = new StdInfoViewPrev();
-           lg.setVisible(true);
+        Login lg = new Login();
+        //StdIndBillStat lg = new StdIndBillStat();
+        //StdInfoViewPrev lg = new StdInfoViewPrev();
+        //StdHallAdmission lg = new StdHallAdmission();
+        lg.setVisible(true);
     }
 }
-    

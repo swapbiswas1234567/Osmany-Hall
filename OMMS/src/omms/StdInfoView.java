@@ -1,5 +1,3 @@
- 
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,11 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +26,7 @@ import javax.swing.table.TableModel;
  *
  * @author Asus
  */
-public class StdInfoViewCur extends javax.swing.JFrame {
+public class StdInfoView extends javax.swing.JFrame {
 
     Connection conn = null;
     PreparedStatement ps = null;
@@ -42,20 +37,20 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
     SimpleDateFormat tableDateFormatter = new SimpleDateFormat("MMM dd,yyyy");
     SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
-
+    
     /**
      * Creates new form StdInfoView
      */
-    public StdInfoViewCur() {
+    public StdInfoView() {
         initComponents();
         initialize();
     }
-
+    
     public void initialize() {
         conn = Jconnection.ConnecrDb(); // set connection with database
         Tabledecoration();
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        //closeBtn();
+        closeBtn();
         setCombo();
     }
 
@@ -65,32 +60,19 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
+                    NewDashboard das = new NewDashboard();
+                    das.setVisible(true);
+                    frame.setVisible(false);
                     conn.close();
-                    if (UserLog.name.equals("accountant")) {
-                        DashboardAccountant das = new DashboardAccountant();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    } else if (UserLog.name.equals("provost")) {
-                        DashboardHallAutho das = new DashboardHallAutho();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    } else if (UserLog.name.equals("mess")) {
-                        DashboardMess das = new DashboardMess();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    } else if (UserLog.name.equals("captain")) {
-                        DashboardMessCap das = new DashboardMessCap();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
         });
     }
-
-    public void setCombo() {
+    
+    public void setCombo(){
         deptCombo.setSelectedIndex(0);
         hallCombo.setSelectedIndex(0);
     }
@@ -121,7 +103,8 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         infoTable.getColumnModel().getColumn(13).setCellRenderer(centerRender);
         infoTable.getColumnModel().getColumn(14).setCellRenderer(centerRender);
     }
-
+    
+    
     public String findHallId() {
         String id = idTxt.getText();
         if (!id.equals("")) {
@@ -133,7 +116,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    //System.out.println("Id - " + hallid + " Roll - " + id);
+                    System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -153,7 +136,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    //System.out.println("Id - " + hallid + " Roll - " + id);
+                    System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -171,73 +154,19 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         }
         return "";
     }
-
-    public void showInfo() {
+    
+    
+    public void showInfo(){
         String id = findHallId();
         String dept = (String) deptCombo.getSelectedItem();
         String hall = (String) hallCombo.getSelectedItem();
-
+        
         String query = "";
-
-        if (!id.equals("")) {
-            query += " WHERE hallid = " + id;
-        } else if (!dept.equals("None")) {
-            query += " WHERE dept LIKE '" + dept + "%'";
-            if (!hall.equals("None")) {
-                switch (hall) {
-                    case "Osmany Hall":
-                        query += " AND roomno > 0 AND roomno < 999";
-                        break;
-                    default:
-                        query += " AND roomno LIKE '" + hall.charAt(4) + "%'";
-                        break;
-                }
-            }
-        } else if (!hall.equals("None")) {
-            idTxt.setText("");
-            switch (hall) {
-                case "Osmany Hall":
-                    query += " WHERE roomno > 0 AND roomno < 999";
-                    break;
-                default:
-                    query += " WHERE roomno LIKE '" + hall.charAt(4) + "%'";
-                    break;
-            }
-            if (!dept.equals("None")) {
-                query += " AND dept LIKE '" + dept + "%'";
-            }
-        }
-
-        tablemodel = (DefaultTableModel) infoTable.getModel();
-        if (tablemodel.getColumnCount() > 0) {
-            tablemodel.setRowCount(0);
-        }
-
-        try {
-            ps = conn.prepareStatement("SELECT * FROM stuinfo" + query);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                String endate = "";
-                try {
-                    Date date = formatDate.parse(rs.getString(8));
-                    endate = tableDateFormatter.format(date);
-                } catch (ParseException ex) {
-                    Logger.getLogger(StdInfoViewCur.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                Object[] obj = {rs.getInt(1), rs.getString(3), rs.getString(2), rs.getString(4),
-                    rs.getString(5), rs.getString(6), endate , rs.getString(9),
-                    rs.getString(10),  rs.getString(11), rs.getString(14), rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(19)};
-                tablemodel.addRow(obj);
-            }
-
-            ps.close();
-            rs.close();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Data Fetching Error", "Database Error", JOptionPane.ERROR_MESSAGE);
-        }
-
+        
+        
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -265,69 +194,50 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Bell MT", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/info_64px.png"))); // NOI18N
         jLabel1.setText("Students Information View");
 
         jLabel2.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/identification_documents_24px.png"))); // NOI18N
         jLabel2.setText("Hall Id / Roll");
 
         jLabel3.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/user_group_24px.png"))); // NOI18N
         jLabel3.setText("Dept. ");
 
         jLabel4.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/building_30px.png"))); // NOI18N
         jLabel4.setText("Hall Wise");
 
         idTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        idTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idTxtActionPerformed(evt);
-            }
-        });
 
         deptCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         deptCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "CE", "CSE", "EECE", "ME", "AE", "ARCHI", "NAME", "IPE", "BME", "PME", "EWCE", " " }));
-        deptCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deptComboActionPerformed(evt);
-            }
-        });
 
         hallCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         hallCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Osmany Hall", "Ext-A", "Ext-B", "Ext-C", "Ext-E" }));
-        hallCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hallComboActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1396, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap(113, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(102, 102, 102)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(139, 139, 139)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deptCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(99, 99, 99)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(111, 111, 111)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(251, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,7 +245,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                     .addComponent(deptCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
 
         infoTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -368,29 +278,12 @@ public class StdInfoViewCur extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
-        // TODO add your handling code here:
-        showInfo();
-    }//GEN-LAST:event_idTxtActionPerformed
-
-    private void deptComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deptComboActionPerformed
-        // TODO add your handling code here:
-        idTxt.setText("");
-        showInfo();
-    }//GEN-LAST:event_deptComboActionPerformed
-
-    private void hallComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hallComboActionPerformed
-        // TODO add your handling code here:
-        idTxt.setText("");
-        showInfo();
-    }//GEN-LAST:event_hallComboActionPerformed
 
     /**
      * @param args the command line arguments
@@ -409,21 +302,20 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StdInfoViewCur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdInfoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StdInfoViewCur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdInfoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StdInfoViewCur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdInfoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StdInfoViewCur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StdInfoView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StdInfoViewCur().setVisible(true);
+                new StdInfoView().setVisible(true);
             }
         });
     }

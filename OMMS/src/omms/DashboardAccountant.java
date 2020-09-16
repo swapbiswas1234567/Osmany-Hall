@@ -79,7 +79,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/receipt_dollar_36px.png"))); // NOI18N
 
-        billLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        billLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         billLbl.setForeground(new java.awt.Color(255, 255, 255));
         billLbl.setText("Bill");
 
@@ -140,7 +140,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_32px.png"))); // NOI18N
 
-        viewLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        viewLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         viewLbl.setForeground(new java.awt.Color(255, 255, 255));
         viewLbl.setText("View");
 
@@ -180,7 +180,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/money_bag_28px.png"))); // NOI18N
 
-        paymentLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        paymentLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
         paymentLbl.setForeground(new java.awt.Color(255, 255, 255));
         paymentLbl.setText("Payment");
 
