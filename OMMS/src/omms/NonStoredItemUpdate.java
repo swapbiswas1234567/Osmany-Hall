@@ -18,9 +18,13 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -66,7 +70,7 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 try {
-                    conn.close();
+                    
                     if(UserLog.name.equals("accountant")){
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
@@ -87,6 +91,7 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
                         das.setVisible(true);
                         frame.setVisible(false);
                     }
+                    conn.close();
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
@@ -103,24 +108,20 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
        boolean select=false;
        Date date =null;
        
-       //select = Boolean.valueOf(model.getValueAt(selectedrow,0).toString());
-       //check = model.getValueAt(selectedrow,0).toString();
-       //strdate = model.getValueAt(selectedrow, 1).toString();
-       //strdate = model.getValueAt(selectedrow, 1).toString();
        
        for(int i=0; i<totalrow ;i++){
            
-           UserLog.name="account";
+           
            select = Boolean.valueOf(model.getValueAt(i,0).toString());
           
            if( select){
                
                 strdate = model.getValueAt(i, 1).toString();
-                name = model.getValueAt(i, 2).toString();
+                name = model.getValueAt(i, 2).toString().toLowerCase();
                 amount= Double.parseDouble(model.getValueAt(i, 3).toString());
                 price = Double.parseDouble(model.getValueAt(i, 4).toString());
                 memo = model.getValueAt(i, 5).toString();
-                state = model.getValueAt(i, 6).toString();
+                state = model.getValueAt(i, 6).toString().toLowerCase();
                 
                 try{
                 date =formatter1.parse(strdate);
@@ -132,7 +133,6 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
                     return;
                 }
                 
-                //System.out.println(dateserial+" "+name+" "+amount+" "+price+" "+memo+" "+state);
                
                 try{
                     psmt = conn.prepareStatement("insert into nonstoreditemlog (serial,name,amount,price, memono,state,user) values (?,?,?,?,?,?,?)");
@@ -151,6 +151,7 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
                     return;
                 }
                 
+                System.out.println(dateserial+" "+name+" "+amount+" "+price+" "+memo+" "+state);
                 try{
                     psmt = conn.prepareStatement("delete from nonstoreditem where serial = ? and name = ? and state = ?");
                     psmt.setInt(1, dateserial);
@@ -169,6 +170,20 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
            }
            //System.out.print(select);
        }
+       
+       date = fromdatechooser.getDate();
+        
+        tablemodel = (DefaultTableModel) updatetable.getModel();
+        if(tablemodel.getColumnCount() > 0){
+            tablemodel.setRowCount(0);
+        }
+        
+        
+        //setupdatetable();
+        if( date != null && flag ==1){
+            name = itemcombobox.getSelectedItem().toString().toLowerCase();
+            setupdatetable(date,name);
+        }
        
        
        
@@ -214,6 +229,19 @@ public class NonStoredItemUpdate extends javax.swing.JFrame {
         
         dec = new DecimalFormat("#0.000");
         model = updatetable.getModel();
+        
+         try {
+            
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
