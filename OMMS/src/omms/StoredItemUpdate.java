@@ -52,6 +52,20 @@ public class StoredItemUpdate extends javax.swing.JFrame {
      */
     public StoredItemUpdate() {
         initComponents();
+        try {
+            
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         Tabledecoration();
         inittialization();
         getAllstoreditem();
@@ -188,25 +202,12 @@ public class StoredItemUpdate extends javax.swing.JFrame {
         model = updatetable.getModel();
         
         
-         try {
-            
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
     }
     
     
     
-     public void Tabledecoration(){
+     public void Tabledecoration(){       
+         
         updatetable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 14));
         updatetable.getTableHeader().setOpaque(false);
         updatetable.getTableHeader().setBackground(new Color(32,136,203));
@@ -442,6 +443,7 @@ public class StoredItemUpdate extends javax.swing.JFrame {
                 "Date", "Item", "In Quantity", "Price", "Memo No", "Breakfast", "Lunch", "Dinner"
             }
         ));
+        updatetable.setIntercellSpacing(new java.awt.Dimension(1, 2));
         jScrollPane1.setViewportView(updatetable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

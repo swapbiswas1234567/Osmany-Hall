@@ -60,6 +60,21 @@ public class StoreInForm extends javax.swing.JFrame {
     
     public void tableDecoration()
     {
+        
+        try {
+            
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         Store_In_table.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 18));
         Store_In_table.getTableHeader().setOpaque(false);
         Store_In_table.getTableHeader().setBackground(new Color(32,136,203));
@@ -117,18 +132,7 @@ public class StoreInForm extends javax.swing.JFrame {
         closeBtn();
         
         
-         try {
-            
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         
     }
     
