@@ -408,7 +408,7 @@ public class AccountPayment extends javax.swing.JFrame {
 
             greetings = "Assalamualaikum ";
             body = "Your Mess bill paid on " + paymentdate + " has inserted on the database successfully. "
-                    + "Your last payment and total due details are given below \n";
+                    + "Your last payment and final bill details are given below \n";
             tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
             while (rs.next()) {
                 greetings = greetings + " " + rs.getString(1) + ",\n";
