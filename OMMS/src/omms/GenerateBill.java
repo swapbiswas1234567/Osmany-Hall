@@ -7,6 +7,7 @@ package omms;
 
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -30,6 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 
 /**
@@ -53,6 +55,11 @@ public class GenerateBill extends javax.swing.JFrame {
      */
     public GenerateBill() {
         initComponents();
+        billtbl.getColumnModel().getColumn(9).setHeaderValue("<html>Previous<br>Due");
+        JTableHeader th = billtbl.getTableHeader();
+        th.setPreferredSize(new Dimension(37, 37));
+        billtbl.getTableHeader().repaint();
+        
         billtabledecoration();
         inittialization();
         flag=1;
@@ -219,6 +226,8 @@ public class GenerateBill extends javax.swing.JFrame {
     
     
     public void billtabledecoration(){
+        
+        
         billtbl.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 15));
         billtbl.getTableHeader().setOpaque(false);
         billtbl.getTableHeader().setBackground(new Color(32,136,203));
@@ -239,7 +248,7 @@ public class GenerateBill extends javax.swing.JFrame {
         billtbl.getColumnModel().getColumn(9).setCellRenderer(centerRender);
         billtbl.getColumnModel().getColumn(10).setCellRenderer(centerRender);
         billtbl.getColumnModel().getColumn(11).setCellRenderer(centerRender);
-        
+
     }
     
     
@@ -1062,7 +1071,7 @@ public class GenerateBill extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Serial", "Hall ID", "Roll", "Name", "Room", "Meal Charge", "Others", "Fine", "Waive", "Previous Due", "Advance", "Total"
+                "Sl", "Hall ID", "Roll", "Name", "Room", "Meal Charge", "Others", "Fine", "Waive", "Previous Due", "Advance", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1076,7 +1085,6 @@ public class GenerateBill extends javax.swing.JFrame {
         billtbl.setRowHeight(26);
         billtbl.setSelectionBackground(new java.awt.Color(232, 57, 97));
         billtbl.setSelectionForeground(new java.awt.Color(240, 240, 240));
-        billtbl.setShowVerticalLines(false);
         billtbl.getTableHeader().setReorderingAllowed(false);
         billtbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

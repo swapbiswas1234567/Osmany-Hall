@@ -243,7 +243,7 @@ public class AccountPayment extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(dt1 + "  " + dt2);
+            //System.out.println(dt1 + "  " + dt2);
             if (inf.hallid == Integer.parseInt(tablemodel.getValueAt(i, 2).toString()) && dt1 == dt2) {
                 msg += tablemodel.getValueAt(i, 0).toString() + ". " + tablemodel.getValueAt(i, 6).toString() + " Tk. \n";
                 dup++;
@@ -391,37 +391,43 @@ public class AccountPayment extends javax.swing.JFrame {
         setDateChoosers();
     }
 
-    public void sendmail(int hallid, String paymentdate, Double previousdue, Double paidamount) {
+    public void sendmail(int hallid, String paymentdate, Double paidamount, Double prevdue) {
         String body = "", greetings = "", tail = "", msg = "", strhallid = "", strcurrentdue = "";
-        boolean isval = false;
+        //boolean isval = false;
         Double currentdue = 0.0;
-        String subject = "Confirmation of Mess Bill Payment(" + paymentdate + ")";
+        String subject = "Confirmation of Mess Bill Payment (" + paymentdate + ")";
 
-        currentdue = previousdue - paidamount;
-        if (currentdue < 0) {
-            strcurrentdue = Double.toString(currentdue) + "(Advanced)";
-        } else if (currentdue > 0) {
-            strcurrentdue = Double.toString(currentdue) + " (Due)";
-        } else {
-            strcurrentdue = Double.toString(currentdue);
-        }
+        
+        
 
         try {
 
-            ps = conn.prepareStatement("select st.name,st.email,from stuinfo st where st.hallid =? ");
+            ps = conn.prepareStatement("select st.name,st.email,st.totaldue from stuinfo st where st.hallid =? ");
             ps.setInt(1, hallid);
             rs = ps.executeQuery();
 
             greetings = "Assalamualaikum ";
-            body = "You Mess bill paid on " + paymentdate + " has inserted on the database successfully. "
+            body = "Your Mess bill paid on " + paymentdate + " has inserted on the database successfully. "
                     + "Your last payment and total due details are given below \n";
             tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
             while (rs.next()) {
                 greetings = greetings + " " + rs.getString(1) + ",\n";
-                body = body + "\n Previous Due: " + previousdue + " \n Paid Amount : " + paidamount + "\n Current Bill : " + strcurrentdue;
+                
+                
+                if (rs.getDouble(3) < 0) {
+                    
+                    strcurrentdue = Double.toString(rs.getDouble(3)) + " (Advanced)";
+                }else if (rs.getDouble(3) > 0) {
+                    strcurrentdue = Double.toString(rs.getDouble(3)) + " (Due)";
+                } else {
+                    strcurrentdue = Double.toString(rs.getDouble(3));
+                }
+                
+                body = body + "\n Previous Due: " + prevdue + " \n Paid Amount : " + paidamount + "\n Current Bill : " + strcurrentdue+" \n"
+                        + "\nFor any query contact with the hall office \n\n";
                 msg = greetings + body + tail;
                 Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg, strhallid);
-                isval = true;
+                //isval = true;
             }
             ps.close();
             rs.close();
@@ -432,6 +438,7 @@ public class AccountPayment extends javax.swing.JFrame {
     }
 
     public void savePayData() {
+        Double prevdue=0.0;
         if (tablemodel.getRowCount() > 0) {
             for (int i = 0; i < tablemodel.getRowCount(); i++) {
                 int id = (int) tablemodel.getValueAt(i, 2);
@@ -468,6 +475,22 @@ public class AccountPayment extends javax.swing.JFrame {
                     Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
+                
+                
+                try {
+
+                    ps = conn.prepareStatement("select st.totaldue from stuinfo st where st.hallid =? ");
+                    ps.setInt(1, id);
+                    rs = ps.executeQuery();
+                    while(rs.next()){
+                        prevdue = rs.getDouble(1);
+                    }
+                }catch (SQLException ex) {
+                    Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
+                }
+                
+                
 
                 try {
                     ps = conn.prepareStatement("UPDATE stuinfo SET totaldue = totaldue - ? WHERE hallid = ?");
@@ -480,6 +503,7 @@ public class AccountPayment extends javax.swing.JFrame {
                     Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
+                sendmail(id,tablemodel.getValueAt(i, 1).toString(),paidAmnt, prevdue);
 
             }
         } else {

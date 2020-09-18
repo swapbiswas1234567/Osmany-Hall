@@ -522,7 +522,10 @@ public class StoreOutSum extends javax.swing.JFrame {
             q1.setAlignment(Element.ALIGN_CENTER);   
             doc.add(q1);
             
-            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+            
+            Paragraph total=new Paragraph("Total Price: ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            Chunk A=new Chunk(" "+dec2.format(totalcost())+"/-",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+            total.add(A);
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);
             
@@ -610,7 +613,7 @@ public class StoreOutSum extends javax.swing.JFrame {
     }
     
     
-    public void totalcost(){
+    public Double totalcost(){
         Double bfprice=0.0, lunchprice=0.0, dinnerprice=0.0, totalprice=0.0;
         int total = store_tbl.getRowCount();
         for(int i=0; i<total; i++){
@@ -619,7 +622,7 @@ public class StoreOutSum extends javax.swing.JFrame {
            dinnerprice = Double.parseDouble(store_tbl.getValueAt(i, 5).toString()) * Double.parseDouble(store_tbl.getValueAt(i, 6).toString());
            totalprice = totalprice + bfprice + lunchprice + dinnerprice ;
         }
-        System.out.println("total prce "+totalprice);
+        return totalprice;
     }
    
     
