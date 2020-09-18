@@ -57,7 +57,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb(); // set connection with database
         Tabledecoration();
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        //closeBtn();
+        closeBtn();
         setCombo();
         
          try {
@@ -282,7 +282,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Bell MT", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/info_64px.png"))); // NOI18N
-        jLabel1.setText("Students Information View");
+        jLabel1.setText("Current Students Information View");
 
         jLabel2.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/identification_documents_24px.png"))); // NOI18N
@@ -389,6 +389,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed

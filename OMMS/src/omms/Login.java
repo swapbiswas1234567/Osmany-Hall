@@ -33,17 +33,23 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        //this.setBackground(new Color(0,0,0,0));frame.setUndecorated(true);
         initialize();
-        this.setBackground(new Color(0,0,0,0));
-        jPanel1.setBackground(new Color(0,0,0,0));
     }
 
     public void initialize() {
         conn = Jconnection.ConnecrDb(); // set connection with database        
         usernameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
+        this.setBackground(new Color(0,0,0,0));
+        jPanel1.setBackground(new Color(0,0,0,0));
+        aboutUsLbl.setFont(new java.awt.Font("Bell MT", 0, 18));
+        aboutUsLbl.setForeground(new Color(255, 255, 255));
+        setTitle("Login");
     }
 
+    
+    
+    
+    
     public void checkLoginValidity() {
         try {
             ps = conn.prepareStatement("SELECT * FROM login");
@@ -102,7 +108,7 @@ public class Login extends javax.swing.JFrame {
         }
 
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -118,6 +124,7 @@ public class Login extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         passwordTxt = new javax.swing.JPasswordField();
         jSeparator2 = new javax.swing.JSeparator();
+        aboutUsLbl = new javax.swing.JLabel();
         passwordLbl = new javax.swing.JLabel();
         crossLbl = new javax.swing.JLabel();
         loginLbl = new javax.swing.JLabel();
@@ -180,6 +187,22 @@ public class Login extends javax.swing.JFrame {
         jSeparator2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 280, 440, 20));
 
+        aboutUsLbl.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
+        aboutUsLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        aboutUsLbl.setText("About Us");
+        aboutUsLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                aboutUsLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                aboutUsLblMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                aboutUsLblMousePressed(evt);
+            }
+        });
+        jPanel1.add(aboutUsLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 680, 90, 30));
+
         passwordLbl.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
         passwordLbl.setForeground(new java.awt.Color(255, 255, 255));
         passwordLbl.setText("Password");
@@ -203,7 +226,7 @@ public class Login extends javax.swing.JFrame {
                 loginLblMouseClicked(evt);
             }
         });
-        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 490, 180, 80));
+        jPanel1.add(loginLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 510, 180, 80));
 
         rightLbl.setForeground(new java.awt.Color(255, 255, 255));
         rightLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -256,6 +279,25 @@ public class Login extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_crossLblMouseClicked
 
+    private void aboutUsLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutUsLblMouseEntered
+        // TODO add your handling code here:
+        aboutUsLbl.setFont(new java.awt.Font("Bell MT", 0, 22));
+        aboutUsLbl.setForeground(new Color(0, 204, 255));
+    }//GEN-LAST:event_aboutUsLblMouseEntered
+
+    private void aboutUsLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutUsLblMouseExited
+        // TODO add your handling code here:
+        aboutUsLbl.setFont(new java.awt.Font("Bell MT", 0, 18));
+        aboutUsLbl.setForeground(new Color(255, 255, 255));
+    }//GEN-LAST:event_aboutUsLblMouseExited
+
+    private void aboutUsLblMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutUsLblMousePressed
+        // TODO add your handling code here:
+        AboutUs st = new AboutUs();
+        st.setVisible(true);
+        //this.dispose();
+    }//GEN-LAST:event_aboutUsLblMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -292,6 +334,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel aboutUsLbl;
     private javax.swing.JLabel crossLbl;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
