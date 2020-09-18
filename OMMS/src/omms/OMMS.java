@@ -30,6 +30,5 @@ public class OMMS {
         //StdInfoUpdate lg = new StdInfoUpdate();
         //AccountPaymentDelete lg = new AccountPaymentDelete();
         lg.setVisible(true);
-        
     }
 }

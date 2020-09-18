@@ -627,7 +627,7 @@ public class StoreInSum extends javax.swing.JFrame {
                 doc.add(image1);
                 
                 
-                Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
+                Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.BOLD));     
 
                 p.setAlignment(Element.ALIGN_CENTER);
 
@@ -636,13 +636,13 @@ public class StoreInSum extends javax.swing.JFrame {
                 Date dt=todt_ch.getDate();
 
 
-                Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\n"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));           
+                Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\n"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
                 q.setAlignment(Element.ALIGN_CENTER);
 
                 doc.add(q);
 
                 if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
-                Paragraph Itemq=new Paragraph("Item:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                Paragraph Itemq=new Paragraph("Item:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
                 Chunk c=new Chunk(" "+Item_cmb.getSelectedItem().toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
                 Itemq.add(c);
                 Itemq.setAlignment(Element.ALIGN_RIGHT);
@@ -650,7 +650,7 @@ public class StoreInSum extends javax.swing.JFrame {
 
                 }
 
-                Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
                 Chunk A=new Chunk(" "+dec2.format(totalprice())+"/-",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
                 total.add(A);
                 total.setAlignment(Element.ALIGN_RIGHT);
@@ -660,7 +660,7 @@ public class StoreInSum extends javax.swing.JFrame {
                 //doc.add(newline);
 
                 if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
-                    Paragraph totalq=new Paragraph("Total Amount:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                    Paragraph totalq=new Paragraph("Total Amount:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
                     Chunk c=new Chunk(" "+totalquantity(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
                     totalq.add(c);
                     totalq.setAlignment(Element.ALIGN_RIGHT);
@@ -681,7 +681,7 @@ public class StoreInSum extends javax.swing.JFrame {
             table.setSplitLate(false);
             for (String columnHeader : header) {
                 PdfPCell headerCell = new PdfPCell();
-                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
                 headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
@@ -704,7 +704,7 @@ public class StoreInSum extends javax.swing.JFrame {
                 
                 for (String text : content) {
                     PdfPCell cell = new PdfPCell();
-                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL)));
+                    cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
                     cell.setBorderColor(BaseColor.LIGHT_GRAY);
                     cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell.setPadding(5);
@@ -713,7 +713,7 @@ public class StoreInSum extends javax.swing.JFrame {
 
              }
             doc.add(table);
-            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n\n\n"));
             
             LineSeparator separator = new LineSeparator();
             separator.setPercentage(24);
@@ -905,6 +905,7 @@ public class StoreInSum extends javax.swing.JFrame {
         tp_lbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tp_lbl.setText("Total Price :");
 
+        all_cb.setBackground(new java.awt.Color(208, 227, 229));
         all_cb.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         all_cb.setText("ALL");
         all_cb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
