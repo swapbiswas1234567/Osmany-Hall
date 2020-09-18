@@ -105,7 +105,7 @@ public class SingleStdntBill {
                 }
                 //System.out.println(dateserial+" "+bfbill+" "+lunchbill+" "+dinnerbill);
                 bill =bill+ (bf*bfbill)+(lunch*lunchbill)+(dinner*dinnerbill);
-                //System.out.println(bill);
+                
             }
             psmt.close();
             rs.close();

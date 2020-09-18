@@ -27,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import static omms.SendMail.flag;
 
 /**
  *
@@ -340,6 +341,51 @@ public class AccountPayment extends javax.swing.JFrame {
         upMediaCombo.setSelectedIndex(0);
         setDateChoosers();
     }
+    
+    
+    
+    public void sendmail(int hallid, String paymentdate, Double previousdue, Double paidamount) {
+        String body = "", greetings = "", tail = "", msg = "", strhallid = "" , strcurrentdue="";
+        boolean isval=false;
+        Double currentdue = 0.0;
+        String subject = "Confirmation of Mess Bill Payment(" +paymentdate+ ")";
+        
+        currentdue = previousdue - paidamount;
+        if( currentdue < 0){
+            strcurrentdue = Double.toString(currentdue)+"(Advanced)";
+        }
+        else if(currentdue > 0){
+            strcurrentdue = Double.toString(currentdue)+ " (Due)";
+        }
+        else{
+            strcurrentdue = Double.toString(currentdue);
+        }
+        
+        try {
+           
+            ps = conn.prepareStatement("select st.name,st.email,from stuinfo st where st.hallid =? ");
+            ps.setInt(1, hallid);
+            rs = ps.executeQuery();
+            
+            greetings = "Assalamualaikum ";
+            body = "You Mess bill paid on " + paymentdate + " has inserted on the database successfully. "
+                    + "Your last payment and total due details are given below \n";
+            tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
+            while (rs.next()) {
+                greetings = greetings + " " + rs.getString(1) + ",\n";
+                body = body + "\n Previous Due: " + previousdue+ " \n Paid Amount : " + paidamount + "\n Current Bill : "+strcurrentdue ;
+                msg = greetings + body + tail;
+                Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg, strhallid);
+                isval = true;
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Fetch for Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+    
 
     public void savePayData() {
         if (tablemodel.getRowCount() > 0) {
@@ -374,7 +420,7 @@ public class AccountPayment extends javax.swing.JFrame {
                     ps.execute();
 
                     ps.close();
-                } catch (SQLException ex) {
+                }catch (SQLException ex) {
                     Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
@@ -390,6 +436,8 @@ public class AccountPayment extends javax.swing.JFrame {
                     Logger.getLogger(AccountPayment.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
+                
+               
 
             }
         } else {

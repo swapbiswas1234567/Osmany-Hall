@@ -606,8 +606,21 @@ public class StoreOutSum extends javax.swing.JFrame {
         }
         
         doc.close();
+        totalcost();
     }
-        //get item unit
+    
+    
+    public void totalcost(){
+        Double bfprice=0.0, lunchprice=0.0, dinnerprice=0.0, totalprice=0.0;
+        int total = store_tbl.getRowCount();
+        for(int i=0; i<total; i++){
+           bfprice = Double.parseDouble(store_tbl.getValueAt(i, 3).toString()) * Double.parseDouble(store_tbl.getValueAt(i, 6).toString());
+           lunchprice = Double.parseDouble(store_tbl.getValueAt(i, 4).toString()) * Double.parseDouble(store_tbl.getValueAt(i, 6).toString());
+           dinnerprice = Double.parseDouble(store_tbl.getValueAt(i, 5).toString()) * Double.parseDouble(store_tbl.getValueAt(i, 6).toString());
+           totalprice = totalprice + bfprice + lunchprice + dinnerprice ;
+        }
+        System.out.println("total prce "+totalprice);
+    }
    
     
     

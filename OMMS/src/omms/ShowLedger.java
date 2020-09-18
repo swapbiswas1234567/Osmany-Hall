@@ -261,7 +261,7 @@ public class ShowLedger extends javax.swing.JFrame {
             psmt.close();
             rs.close();
             
-           //System.out.println("called "+item);
+           //System.out.println(item+" "+lastavl+" "+prevavailable[1]+" "+(lastavl*prevavailable[1]));
             String unit = getunit(item);
             if(flag){
                 namelbl.setText(item);
@@ -588,13 +588,17 @@ public class ShowLedger extends javax.swing.JFrame {
         to = todatechooser.getDate(); 
  
         
-        tablemodel = (DefaultTableModel) ledgertable.getModel();
-        if(tablemodel.getColumnCount() > 0){
-            tablemodel.setRowCount(0);
-        }
+        
         
         
         if( from != null && to != null && flag==1){
+            //System.out.println(from+" called "+to);
+            
+            tablemodel = (DefaultTableModel) ledgertable.getModel();
+            if(tablemodel.getRowCount()> 0){
+                tablemodel.setRowCount(0);
+            }
+            
             item = itemcombobox.getSelectedItem().toString();
             setledgertable(from, to, item);
         }
@@ -610,13 +614,16 @@ public class ShowLedger extends javax.swing.JFrame {
         to = todatechooser.getDate(); 
         //len = itemcombobox.getItemCount();
         
-        tablemodel = (DefaultTableModel) ledgertable.getModel();
-        if(tablemodel.getColumnCount() > 0){
-            tablemodel.setRowCount(0);
-        }
         
         
         if( from != null && to != null && flag ==1 ){
+            
+            tablemodel = (DefaultTableModel) ledgertable.getModel();
+            if(tablemodel.getRowCount() > 0){
+                tablemodel.setRowCount(0);
+            }
+        
+            
             item = itemcombobox.getSelectedItem().toString();
             setledgertable(from, to, item);
         }
@@ -635,13 +642,15 @@ public class ShowLedger extends javax.swing.JFrame {
         to = todatechooser.getDate(); 
         //len = itemcombobox.getItemCount();
         
-        tablemodel = (DefaultTableModel) ledgertable.getModel();
-        if(tablemodel.getColumnCount() > 0){
-            tablemodel.setRowCount(0);
-        }
+        
         
         
         if( from != null && to != null && flag ==1 ){
+            tablemodel = (DefaultTableModel) ledgertable.getModel();
+            if(tablemodel.getRowCount() > 0){
+                tablemodel.setRowCount(0);
+            }
+            
             item = itemcombobox.getSelectedItem().toString();
             setledgertable(from, to, item);
         }

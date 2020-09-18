@@ -56,6 +56,7 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
         Tabledecoration();
         inittialization();
         closeBtn();
+        updatetable.getColumnModel().getColumn(7).setCellRenderer(new WordWrapCellRenderer());
     }
     
     
@@ -102,7 +103,6 @@ public class TmpFoodUpdate extends javax.swing.JFrame {
        Double bill=0.00;
        boolean select=false;
        Date date =null;
-       UserLog.name="account";
        
        //System.out.println(remarks);
        for(int i=0; i<totalrow ;i++){

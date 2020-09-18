@@ -51,9 +51,12 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
      */
     public TemporaryFoodIn() {
         initComponents();
-        Tabledecoration();
+        
+        
         inittialization();
+        Tabledecoration();
         closeBtn();
+        tempfoodtable.getColumnModel().getColumn(6).setCellRenderer(new WordWrapCellRenderer());
     }
     
     public void closeBtn() {
@@ -106,7 +109,7 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
                 return true;
             }
 
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to fetch data checkdatabase", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -184,6 +187,8 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
         }
+         
+         
         
         
     }
@@ -425,10 +430,9 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         tempfoodtable.getColumnModel().getColumn(3).setCellRenderer(centerRender);
         tempfoodtable.getColumnModel().getColumn(4).setCellRenderer(centerRender);
         tempfoodtable.getColumnModel().getColumn(5).setCellRenderer(centerRender);
-        tempfoodtable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
-
-        //TableColumn col = tempfoodtable.getColumnModel().getColumn(6);
-        //col.setPreferredWidth();
+        //tempfoodtable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
+        
+        
     }
 
     /**
@@ -714,6 +718,7 @@ public class TemporaryFoodIn extends javax.swing.JFrame {
         tempfoodtable.setRowHeight(26);
         tempfoodtable.setSelectionBackground(new java.awt.Color(232, 57, 97));
         tempfoodtable.setSelectionForeground(new java.awt.Color(240, 240, 240));
+        tempfoodtable.setShowVerticalLines(false);
         tempfoodtable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tempfoodtableMouseClicked(evt);

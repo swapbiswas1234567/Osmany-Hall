@@ -49,16 +49,16 @@ public class DailyAvgBill {
           
          //System.out.println(" "+previous.get("Rice").avgprice+" "+previous.get("Rice").prevavailable);
           storeditemdailycost(fromdate,todate);  //calculate stored bill
-          //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill);
-          
+          //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill);
+          //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
           nonstoreddailycost(fromdate,todate); //add nonstored bill
 //          for(int i=0; i<billMap.get(20200807).item.size(); i++){
 //              System.out.println(billMap.get(20200807).item.get(i).name+" "+billMap.get(20200807).item.get(i).avgprice+" "+
 //                      billMap.get(20200807).item.get(i).bfamount+" "+billMap.get(20200807).item.get(i).dinneramount);
 //          }
-       // System.out.println(billMap.get(20200501).bfbill+" "+billMap.get(20200501).lunchbill+" "+billMap.get(20200501).dinnerbill);
+        //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
         perheadmeal(fromdate,todate); // divide total bill by total meal on
-        //System.out.println(billMap.get(20200601).bfbill+" "+billMap.get(20200601).lunchbill+" "+billMap.get(20200601).dinnerbill);
+        //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
         return billMap;
           
     }
@@ -101,7 +101,7 @@ public class DailyAvgBill {
                 state = rs.getString(4);
                 name = rs.getString(5);
                 grp = rs.getInt(6);
-                
+                //System.out.println(grp);
                 if(!billMap.containsKey(date)){
                     billMap.put(date, new BillAmount());
                 }
@@ -153,7 +153,7 @@ public class DailyAvgBill {
                 else if (state.equals("dinner")){
                     if( !billMap.get(date).dinnerbill.isEmpty()){
                         price = billMap.get(date).dinnerbill.get(grp) + price;
-                        billMap.get(date).dinnerbill.add(price);
+                        billMap.get(date).dinnerbill.set(grp,price);
                         len =billMap.get(date).item.size()-1;
                         //System.out.println(len);
                         if( billMap.get(date).item.get(len).equals(name)){
@@ -167,6 +167,7 @@ public class DailyAvgBill {
                         
                     }
                     else{
+                        //System.out.println(billMap.get(date).dinnerbill+" grp "+grp+" "+date+" cal "+price);
                         billMap.get(date).dinnerbill.add(price);
                         billMap.get(date).item.add(new DailyItem(name,0.0,0.0,amount,price,0,0,grp));
                     }
@@ -255,14 +256,14 @@ public class DailyAvgBill {
                 totalprice =(prevavailable*avgprice)+rs.getDouble(5);
                 totalamount = prevavailable + rs.getDouble(1);
                 avgprice = totalprice/totalamount;
-                //System.out.println(avgprice+" "+totalprice+" "+totalamount);
+                //System.out.println(name +" "+avgprice+" "+totalprice+" "+totalamount);
                 previous.get(name).prevavailable = totalamount-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
                 previous.get(name).avgprice = avgprice;
                 
                 bfbill = rs.getDouble(2)*avgprice;
                 lunchbill = rs.getDouble(3)*avgprice;
                 dinnerbill = rs.getDouble(4) * avgprice;
-                //System.out.println(bfbill+" "+lunchbill+" "+dinnerbill);
+                //System.out.println(name+" "+bfbill+" "+lunchbill+" "+dinnerbill);
                 date = rs.getInt(7);
                 if(billMap.containsKey(date)){
                     bfbill = billMap.get(date).bfbill.get(bfgrp)+bfbill;
@@ -357,7 +358,7 @@ public class DailyAvgBill {
                         //System.out.println(price+" "+price/meal);
                         price= price/meal;
                         billMap.get(date).lunchbill.set(grp, price);
-                        System.out.println(billMap.get(date).lunchbill);
+                        //System.out.println(billMap.get(date).lunchbill);
                     }
                             
                 }
