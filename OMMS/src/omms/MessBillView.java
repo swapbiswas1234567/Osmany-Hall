@@ -51,6 +51,7 @@ public class MessBillView extends javax.swing.JFrame {
     public MessBillView() {
         initComponents();
         initialize();
+        setTitle("Mess Bill View");
     }
 
     public void initialize() {
@@ -137,12 +138,12 @@ public class MessBillView extends javax.swing.JFrame {
         showBillTable.getColumnModel().getColumn(9).setCellRenderer(centerRender);
         showBillTable.getColumnModel().getColumn(10).setCellRenderer(centerRender);
         showBillTable.getColumnModel().getColumn(11).setCellRenderer(centerRender);
+        showBillTable.getColumnModel().getColumn(12).setCellRenderer(centerRender);
     }
     
     public String findHallId() {
         String id = idTxt.getText();
         if (!id.equals("")) {
-
             try {
                 ps = conn.prepareStatement("SELECT hallid FROM stuinfo WHERE hallid = ?");
                 ps.setString(1, id);
@@ -208,7 +209,6 @@ public class MessBillView extends javax.swing.JFrame {
         if (tablemodel.getRowCount() > 0) {
             tablemodel.setRowCount(0);
         }
-
         try {
             ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, bill, others, fine, waive, due FROM stuinfo JOIN billhistory USING(hallid) WHERE month = ? AND year = ? ORDER BY hallid");
             ps.setInt(1, month);
@@ -231,10 +231,10 @@ public class MessBillView extends javax.swing.JFrame {
                 }
                 if (due < 0) {
                     due *= -1;
-                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, 0, due, str};
+                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, 0, due, str,"Current"};
                     tablemodel.addRow(obj);
                 } else {
-                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, due, 0, str};
+                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, due, 0, str,"Current"};
                     tablemodel.addRow(obj);
                 }
 
@@ -244,6 +244,44 @@ public class MessBillView extends javax.swing.JFrame {
             rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Data Fetching Error From stuinfo and billhistory", "Database ERROR!!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, bill, others, fine, waive, due FROM previousstudents JOIN billhistory USING(hallid) WHERE month = ? AND year = ? ORDER BY hallid");
+            ps.setInt(1, month);
+            ps.setInt(2, year);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int bill = rs.getInt(5);
+                int others = rs.getInt(6);
+                int fine = rs.getInt(7);
+                int waive = rs.getInt(8);
+                int due = rs.getInt(9);
+                String str = "";
+                serial++;
+                int total = bill + others + fine - waive + due;
+                str = Integer.toString(total);
+                if (total < 0) {
+                    total *= -1;
+                    str = Integer.toString(total);
+                    str += "(A)";
+                }
+                if (due < 0) {
+                    due *= -1;
+                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, 0, due, str,"Ex"};
+                    tablemodel.addRow(obj);
+                } else {
+                    Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), bill, others, fine, waive, due, 0, str,"Ex"};
+                    tablemodel.addRow(obj);
+                }
+
+            }
+
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Fetching Error From perviousstudents and billhistory", "Database ERROR!!!", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -375,16 +413,17 @@ public class MessBillView extends javax.swing.JFrame {
                 .addGap(78, 78, 78))
         );
 
+        showBillTable.setAutoCreateRowSorter(true);
         showBillTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "SN", "Hall Id", "Name", "Roll", "Room No", "Meal Charge", "Others", "Fine", "Waive", "Previous Due", "Advance", "Total"
+                "SN", "Hall Id", "Name", "Roll", "Room No", "Meal Charge", "Others", "Fine", "Waive", "Previous Due", "Advance", "Total", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -439,7 +478,7 @@ public class MessBillView extends javax.swing.JFrame {
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
         if (!idTxt.getText().equals("")) {
-            String id = findHallId();
+            String id = idTxt.getText();
             highlightStd(id);
         }
     }//GEN-LAST:event_idTxtActionPerformed
