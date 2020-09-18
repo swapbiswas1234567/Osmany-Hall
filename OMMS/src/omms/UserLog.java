@@ -11,4 +11,5 @@ package omms;
  */
 public class UserLog {
     public static String name;
+    public static int maleFemale = 0;
 }

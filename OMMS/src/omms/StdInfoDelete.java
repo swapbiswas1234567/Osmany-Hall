@@ -349,7 +349,7 @@ public class StdInfoDelete extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(153, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
         jLabel1.setFont(new java.awt.Font("Bell MT", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -429,7 +429,7 @@ public class StdInfoDelete extends javax.swing.JFrame {
             }
         });
         stdDelTable.setSelectionBackground(new java.awt.Color(255, 51, 51));
-        stdDelTable.setSelectionForeground(new java.awt.Color(204, 204, 204));
+        stdDelTable.setSelectionForeground(new java.awt.Color(255, 255, 254));
         jScrollPane1.setViewportView(stdDelTable);
         if (stdDelTable.getColumnModel().getColumnCount() > 0) {
             stdDelTable.getColumnModel().getColumn(0).setMinWidth(40);

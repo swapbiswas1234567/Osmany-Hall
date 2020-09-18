@@ -422,6 +422,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         });
         infoTable.setSelectionBackground(new java.awt.Color(255, 51, 51));
         infoTable.setSelectionForeground(new java.awt.Color(255, 255, 252));
+        infoTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(infoTable);
         if (infoTable.getColumnModel().getColumnCount() > 0) {
             infoTable.getColumnModel().getColumn(0).setMinWidth(35);

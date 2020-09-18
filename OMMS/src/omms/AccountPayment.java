@@ -832,6 +832,7 @@ public class AccountPayment extends javax.swing.JFrame {
         });
         stdPayTable.setSelectionBackground(new java.awt.Color(204, 0, 0));
         stdPayTable.setSelectionForeground(new java.awt.Color(204, 204, 204));
+        stdPayTable.getTableHeader().setReorderingAllowed(false);
         stdPayTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 stdPayTableMousePressed(evt);

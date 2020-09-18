@@ -7,6 +7,7 @@ package omms.messDashboardInternalJframe;
 
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import omms.CreateDept;
 import omms.StdHallAdmission;
 import omms.StdInfoDelete;
 import omms.StdInfoUpdate;
@@ -42,6 +43,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         stdView = new javax.swing.JButton();
         stdUpdtBtn = new javax.swing.JButton();
         stdSeatCanBtn = new javax.swing.JButton();
+        createDeptBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -50,10 +52,9 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         stdAddBtn.setBackground(new java.awt.Color(255, 255, 255));
         stdAddBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
         stdAddBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/admission_64px.png"))); // NOI18N
-        stdAddBtn.setText("  Student Admission");
+        stdAddBtn.setText("  Student Admission      ");
         stdAddBtn.setBorder(null);
         stdAddBtn.setFocusPainted(false);
-        stdAddBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         stdAddBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stdAddBtnActionPerformed(evt);
@@ -76,10 +77,9 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         stdUpdtBtn.setBackground(new java.awt.Color(255, 255, 255));
         stdUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
         stdUpdtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Stdupdate_64px.png"))); // NOI18N
-        stdUpdtBtn.setText("  Student Info Update");
+        stdUpdtBtn.setText("  Student Info Update  ");
         stdUpdtBtn.setBorder(null);
         stdUpdtBtn.setFocusPainted(false);
-        stdUpdtBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         stdUpdtBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stdUpdtBtnActionPerformed(evt);
@@ -99,31 +99,47 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
             }
         });
 
+        createDeptBtn.setBackground(new java.awt.Color(255, 255, 255));
+        createDeptBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        createDeptBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/boxes.png"))); // NOI18N
+        createDeptBtn.setText("  Create Department  ");
+        createDeptBtn.setBorder(null);
+        createDeptBtn.setFocusPainted(false);
+        createDeptBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createDeptBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(269, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(stdView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stdUpdtBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stdAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stdSeatCanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(241, 241, 241))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(createDeptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(46, Short.MAX_VALUE)
-                .addComponent(stdAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(55, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(stdAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createDeptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(49, 49, 49)
                 .addComponent(stdUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(stdView, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(stdSeatCanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addGap(26, 26, 26))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 860, 530));
@@ -159,8 +175,16 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_stdSeatCanBtnActionPerformed
 
+    private void createDeptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDeptBtnActionPerformed
+        // TODO add your handling code here:
+        CreateDept st = new CreateDept();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_createDeptBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton createDeptBtn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton stdAddBtn;
     private javax.swing.JButton stdSeatCanBtn;

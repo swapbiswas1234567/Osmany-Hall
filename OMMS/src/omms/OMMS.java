@@ -27,6 +27,8 @@ public class OMMS {
         //StdInfoViewCur lg = new StdInfoViewCur();
         //MessBillView lg = new MessBillView();
         //StdInfoDelete lg = new StdInfoDelete();
+        //StdInfoUpdate lg = new StdInfoUpdate();
+        //AccountPaymentDelete lg = new AccountPaymentDelete();
         lg.setVisible(true);
         
     }

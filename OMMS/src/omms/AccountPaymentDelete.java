@@ -135,7 +135,7 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
         String id = findHallId();
         showPayFromToDate(from, to, id);
     }
-
+    
     public void Tabledecoration() {
         payHistTable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 16));
         payHistTable.getTableHeader().setOpaque(false);
@@ -157,6 +157,29 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
         payHistTable.getColumnModel().getColumn(8).setCellRenderer(centerRender);
         payHistTable.getColumnModel().getColumn(9).setCellRenderer(centerRender);
         payHistTable.getColumnModel().getColumn(10).setCellRenderer(centerRender);
+    }
+    
+    public void highlightStd(String id) {
+        tablemodel = (DefaultTableModel) payHistTable.getModel();
+        if (tablemodel.getRowCount() > 0) {
+            int chk = 0;
+            for (int i = 0; i < tablemodel.getRowCount(); i++) {//For each row in that column
+                if (tablemodel.getValueAt(i, 2).toString().equals(id)) {//Search the model
+                    payHistTable.requestFocus();
+                    payHistTable.changeSelection(i, 0, false, false);
+                    tablemodel.setValueAt(true, i, 0);
+                    chk++;
+                    break;
+                }
+            }//For loop inner
+            if (chk == 0) {
+                JOptionPane.showMessageDialog(null, id + " Not Found On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No Values On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+        }        
+        idTxt.setText("");
+        idTxt.requestFocusInWindow();
     }
 
     public String findHallId() {
@@ -441,6 +464,8 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        payHistTable.setSelectionBackground(new java.awt.Color(255, 51, 51));
+        payHistTable.setSelectionForeground(new java.awt.Color(255, 255, 254));
         jScrollPane1.setViewportView(payHistTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -465,7 +490,7 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
         if (!idTxt.getText().equals("")) {
-            callShowTableFunction();
+            highlightStd(findHallId());
         } else {
             JOptionPane.showMessageDialog(null, "Enter A Hall Id / Roll", "Empty Id Input", JOptionPane.ERROR_MESSAGE);
             return;
@@ -533,7 +558,8 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
                 }
             }
         }
-
+        idTxt.setText("");
+        idTxt.requestFocusInWindow();
     }//GEN-LAST:event_delPayBtnActionPerformed
 
     /**

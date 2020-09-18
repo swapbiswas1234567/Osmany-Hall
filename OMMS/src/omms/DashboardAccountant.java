@@ -6,6 +6,8 @@
 package omms;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
+import javax.swing.ButtonGroup;
 import omms.accountantDashboardInternalJframe.AccBillDash;
 import omms.accountantDashboardInternalJframe.AccPaymentDash;
 import omms.accountantDashboardInternalJframe.AccViewDash;
@@ -24,6 +26,18 @@ public class DashboardAccountant extends javax.swing.JFrame {
     public DashboardAccountant() {
         initComponents();
         setTitle("Accountant Dashboard");
+        initialize();
+    }
+
+    public void initialize() {
+        ButtonGroup bG = new ButtonGroup();
+        bG.add(male);
+        bG.add(female);
+        if (UserLog.maleFemale == 0) {
+            male.setSelected(true);
+        } else {
+            female.setSelected(true);
+        }
     }
 
     /**
@@ -47,6 +61,8 @@ public class DashboardAccountant extends javax.swing.JFrame {
         paymentPanel = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         paymentLbl = new javax.swing.JLabel();
+        female = new javax.swing.JRadioButton();
+        male = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
@@ -203,6 +219,31 @@ public class DashboardAccountant extends javax.swing.JFrame {
 
         sidePanel.add(paymentPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 310, 60));
 
+        female.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        female.setForeground(new java.awt.Color(204, 204, 204));
+        female.setText("Female Wing");
+        female.setFocusPainted(false);
+        female.setOpaque(false);
+        female.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                femaleActionPerformed(evt);
+            }
+        });
+        sidePanel.add(female, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 740, -1, -1));
+
+        male.setBackground(new java.awt.Color(51, 255, 255));
+        male.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        male.setForeground(new java.awt.Color(204, 204, 204));
+        male.setText("Male Wing");
+        male.setFocusPainted(false);
+        male.setOpaque(false);
+        male.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maleActionPerformed(evt);
+            }
+        });
+        sidePanel.add(male, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 740, -1, -1));
+
         getContentPane().add(sidePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 780));
 
         jPanel2.setBackground(new java.awt.Color(70, 139, 178));
@@ -293,10 +334,10 @@ public class DashboardAccountant extends javax.swing.JFrame {
         viewPanel.setBackground(new Color(33, 102, 142));
         abd = 1;
         avd = apd = 0;
-        billLbl.setForeground(Color.BLACK); 
+        billLbl.setForeground(Color.BLACK);
         viewLbl.setForeground(Color.WHITE);
-        paymentLbl.setForeground(Color.WHITE);     
-        
+        paymentLbl.setForeground(Color.WHITE);
+
         dashhboardPanel.removeAll();
         AccBillDash sid = new AccBillDash();
         dashhboardPanel.add(sid).setVisible(true);
@@ -320,7 +361,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (apd != 1) {
             paymentPanel.setBackground(new Color(45, 45, 45));
-        }        
+        }
     }//GEN-LAST:event_paymentPanelMouseEntered
 
     private void paymentPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paymentPanelMouseExited
@@ -337,10 +378,10 @@ public class DashboardAccountant extends javax.swing.JFrame {
         billPanel.setBackground(new Color(33, 102, 142));
         apd = 1;
         abd = avd = 0;
-        paymentLbl.setForeground(Color.BLACK);   
-        billLbl.setForeground(Color.WHITE); 
-        viewLbl.setForeground(Color.WHITE);  
-        
+        paymentLbl.setForeground(Color.BLACK);
+        billLbl.setForeground(Color.WHITE);
+        viewLbl.setForeground(Color.WHITE);
+
         dashhboardPanel.removeAll();
         AccPaymentDash sid = new AccPaymentDash();
         dashhboardPanel.add(sid).setVisible(true);
@@ -353,10 +394,10 @@ public class DashboardAccountant extends javax.swing.JFrame {
         billPanel.setBackground(new Color(33, 102, 142));
         avd = 1;
         abd = apd = 0;
-        viewLbl.setForeground(Color.BLACK);   
-        billLbl.setForeground(Color.WHITE); 
-        paymentLbl.setForeground(Color.WHITE);      
-        
+        viewLbl.setForeground(Color.BLACK);
+        billLbl.setForeground(Color.WHITE);
+        paymentLbl.setForeground(Color.WHITE);
+
         dashhboardPanel.removeAll();
         AccViewDash sid = new AccViewDash();
         dashhboardPanel.add(sid).setVisible(true);
@@ -376,6 +417,15 @@ public class DashboardAccountant extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewPanelMouseEntered
 
+    private void maleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleActionPerformed
+        // TODO add your handling code here:
+        UserLog.maleFemale = 0;
+    }//GEN-LAST:event_maleActionPerformed
+
+    private void femaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleActionPerformed
+        // TODO add your handling code here:
+        UserLog.maleFemale = 1;
+    }//GEN-LAST:event_femaleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -417,6 +467,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
     private javax.swing.JPanel billPanel;
     private javax.swing.JDesktopPane dashhboardPanel;
     private javax.swing.JLabel exitBtn;
+    private javax.swing.JRadioButton female;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -426,6 +477,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel logoPanel;
+    private javax.swing.JRadioButton male;
     private javax.swing.JLabel paymentLbl;
     private javax.swing.JPanel paymentPanel;
     private javax.swing.JPanel sidePanel;

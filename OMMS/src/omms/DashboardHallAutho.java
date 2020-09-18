@@ -6,6 +6,7 @@
 package omms;
 
 import java.awt.Color;
+import javax.swing.ButtonGroup;
 import omms.accountantDashboardInternalJframe.AccBillDash;
 import omms.accountantDashboardInternalJframe.AccPaymentDash;
 import omms.accountantDashboardInternalJframe.AccViewDash;
@@ -27,6 +28,18 @@ public class DashboardHallAutho extends javax.swing.JFrame {
     public DashboardHallAutho() {
         initComponents();
         setTitle("Hall Authority Dashboard");
+        initialize();
+    }
+    
+    public void initialize() {
+        ButtonGroup bG = new ButtonGroup();
+        bG.add(male);
+        bG.add(female);
+        if (UserLog.maleFemale == 0) {
+            male.setSelected(true);
+        } else {
+            female.setSelected(true);
+        }
     }
 
     /**
@@ -50,6 +63,8 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         foodMngPanel = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         foodMngLbl = new javax.swing.JLabel();
+        female = new javax.swing.JRadioButton();
+        male = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
@@ -202,6 +217,31 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         );
 
         sidePanel.add(foodMngPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 310, 60));
+
+        female.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        female.setForeground(new java.awt.Color(204, 204, 204));
+        female.setText("Female Wing");
+        female.setFocusPainted(false);
+        female.setOpaque(false);
+        female.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                femaleActionPerformed(evt);
+            }
+        });
+        sidePanel.add(female, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 740, -1, -1));
+
+        male.setBackground(new java.awt.Color(51, 255, 255));
+        male.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
+        male.setForeground(new java.awt.Color(204, 204, 204));
+        male.setText("Male Wing");
+        male.setFocusPainted(false);
+        male.setOpaque(false);
+        male.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maleActionPerformed(evt);
+            }
+        });
+        sidePanel.add(male, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 740, -1, -1));
 
         getContentPane().add(sidePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 780));
 
@@ -376,6 +416,16 @@ public class DashboardHallAutho extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_stdInfPanelMouseEntered
 
+    private void femaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleActionPerformed
+        // TODO add your handling code here:
+        UserLog.maleFemale = 1;
+    }//GEN-LAST:event_femaleActionPerformed
+
+    private void maleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleActionPerformed
+        // TODO add your handling code here:
+        UserLog.maleFemale = 0;
+    }//GEN-LAST:event_maleActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -417,6 +467,7 @@ public class DashboardHallAutho extends javax.swing.JFrame {
     private javax.swing.JPanel billMngPanel;
     private javax.swing.JDesktopPane dashhboardPanel;
     private javax.swing.JLabel exitBtn;
+    private javax.swing.JRadioButton female;
     private javax.swing.JLabel foodMngLbl;
     private javax.swing.JPanel foodMngPanel;
     private javax.swing.JLabel jLabel13;
@@ -428,6 +479,7 @@ public class DashboardHallAutho extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel logoPanel;
+    private javax.swing.JRadioButton male;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JLabel stdInfLbl;
     private javax.swing.JPanel stdInfPanel;

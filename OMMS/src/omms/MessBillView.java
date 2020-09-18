@@ -430,6 +430,7 @@ public class MessBillView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        showBillTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(showBillTable);
         if (showBillTable.getColumnModel().getColumnCount() > 0) {
             showBillTable.getColumnModel().getColumn(0).setMinWidth(45);

@@ -18,8 +18,14 @@ public class Jconnection {
         try{
             //Class.forName("com.mysql.jdbc.Driver");
             Class.forName("org.sqlite.JDBC"); // name of the database we are connecting with
+            Connection conn;
+            if (UserLog.maleFemale == 0) {
+                conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhall.db");
+            } else {
+                conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhallF.db");
+            }
             
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhall.db"); // location of the database 
+            // location of the database 
             //System.out.println("Connected");
             return conn;
         }catch(Exception e){
