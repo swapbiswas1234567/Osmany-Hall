@@ -203,7 +203,7 @@ public class AccountPaymentDelete extends javax.swing.JFrame {
                 return "";
             }
 
-            JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll can't be found", "Data No Found", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll can't be found in Current Student's Databases", "Data No Found", JOptionPane.ERROR_MESSAGE);
             return "";
         }
         return "";

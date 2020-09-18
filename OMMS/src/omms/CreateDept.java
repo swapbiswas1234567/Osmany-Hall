@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -90,8 +91,13 @@ public class CreateDept extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Wrong Year Inserted","Insertion Error",JOptionPane.ERROR_MESSAGE);
         }
         try {
-            
-        } catch (Exception e) {
+            ps = conn.prepareStatement("INSERT INTO dept VALUES(?,?)");
+            ps.setString(1, name);
+            ps.setInt(2, year);
+            ps.execute();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Departmnet Can't Be Created","Insertion Error",JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -57,6 +57,18 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
     }
 
     public void initialize() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         conn = Jconnection.ConnecrDb(); // set connection with database        
         setDateChoosers();
         Tabledecoration();
@@ -69,20 +81,7 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
 
         jt = (JTextFieldDateEditor) toDate.getDateEditor();
         jt.setEditable(false);
-        tablemodel = (DefaultTableModel) payHistTable.getModel();
-        
-        try {
-            
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        tablemodel = (DefaultTableModel) payHistTable.getModel();        
     }
 
     public void closeBtn() {
@@ -202,6 +201,7 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
         payHistTable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
         payHistTable.getColumnModel().getColumn(7).setCellRenderer(centerRender);
         payHistTable.getColumnModel().getColumn(8).setCellRenderer(centerRender);
+        payHistTable.getColumnModel().getColumn(9).setCellRenderer(centerRender);
     }
 
     public void showPayAll() {
@@ -227,7 +227,7 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date parse in set Temp food table", "Date parsing error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, id, rs.getString(8)};
+                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, id, rs.getString(8), "Current"};
                 tablemodel.addRow(obj);
             }
             ps.close();
@@ -236,6 +236,33 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Payments Cannot Be Inserted On Table All", "Table Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        try {
+            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, paidamount, paymentdate, insertdate, contno FROM previousstudents JOIN paymenthistory USING(hallid)");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                serial++;
+                String pd;
+                String id;
+                try {
+                    date = formatDate.parse(String.valueOf(rs.getInt(6)));
+                    pd = tableDateFormatter.format(date);
+                    date = formatDate.parse(String.valueOf(rs.getInt(7)));
+                    id = tableDateFormatter.format(date);
+                } catch (SQLException | ParseException e) {
+                    JOptionPane.showMessageDialog(null, "Date parse in set Temp food table", "Date parsing error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, id, rs.getString(8), "Previous"};
+                tablemodel.addRow(obj);
+            }
+            ps.close();
+            rs.close();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Payments Cannot Be Inserted On Table All", "Table Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         //showTotalAmount();
     }
 
@@ -269,7 +296,7 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date parse in set Temp food table", "Date parsing error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, ind, rs.getString(8)};
+                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, ind, rs.getString(8),"Current"};
                 tablemodel.addRow(obj);
             }
             ps.close();
@@ -278,6 +305,35 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Payments Cannot Be Inserted On Table", "Table Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        try {
+            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, paidamount, paymentdate, insertdate, contno FROM previousstudents JOIN paymenthistory USING(hallid) WHERE paymentdate >= ? AND paymentdate <= ? " + query);
+            ps.setInt(1, Integer.parseInt(formatDate.format(from)));
+            ps.setInt(2, Integer.parseInt(formatDate.format(to)));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                serial++;
+                String pd;
+                String ind;
+                try {
+                    date = formatDate.parse(String.valueOf(rs.getInt(6)));
+                    pd = tableDateFormatter.format(date);
+                    date = formatDate.parse(String.valueOf(rs.getInt(7)));
+                    ind = tableDateFormatter.format(date);
+                } catch (SQLException | ParseException e) {
+                    JOptionPane.showMessageDialog(null, "Date parse in set Temp food table", "Date parsing error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Object obj[] = {serial, rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), pd, ind, rs.getString(8),"Previous"};
+                tablemodel.addRow(obj);
+            }
+            ps.close();
+            rs.close();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Payments Cannot Be Inserted On Table", "Table Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         if (tablemodel.getRowCount() == 0 && tc >= 2) {
             JOptionPane.showMessageDialog(null, "No data is found in this date range", "Data Not Found", JOptionPane.ERROR_MESSAGE);
             return;
@@ -429,9 +485,8 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(idTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(fromDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(toDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(totalCollLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -442,17 +497,18 @@ public class AccountPaymentHistoryView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "SL", "Hall Id", "Name", "Roll", "Room No", "Paid Amount", "Payment Date", "Inserted Date", "Mobile"
+                "SL", "Hall Id", "Name", "Roll", "Room No", "Paid Amount", "Payment Date", "Inserted Date", "Mobile", "Current"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        payHistTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(payHistTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

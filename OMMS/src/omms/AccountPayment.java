@@ -27,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import static omms.SendMail.flag;
 
 /**
  *
@@ -93,9 +94,9 @@ public class AccountPayment extends javax.swing.JFrame {
         jt = (JTextFieldDateEditor) upPayDate.getDateEditor();
         jt.setEditable(false);
         tablemodel = (DefaultTableModel) stdPayTable.getModel();
-        
+
         try {
-            
+
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,7 +107,7 @@ public class AccountPayment extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     public void closeBtn() {
@@ -116,31 +117,75 @@ public class AccountPayment extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     conn.close();
-                    if(UserLog.name.equals("accountant")){
-                        DashboardAccountant das = new DashboardAccountant();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("provost")){
-                        DashboardHallAutho das = new DashboardHallAutho();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("mess")){
-                        DashboardMess das = new DashboardMess();
-                        das.setVisible(true);
-                        frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("captain")){
-                        DashboardMessCap das = new DashboardMessCap();
-                        das.setVisible(true);
-                        frame.setVisible(false);
+                    switch (UserLog.name) {
+                        case "accountant": {
+                            DashboardAccountant das = new DashboardAccountant();
+                            das.setVisible(true);
+                            frame.setVisible(false);
+                            break;
+                        }
+                        case "provost": {
+                            DashboardHallAutho das = new DashboardHallAutho();
+                            das.setVisible(true);
+                            frame.setVisible(false);
+                            break;
+                        }
+                        case "mess": {
+                            DashboardMess das = new DashboardMess();
+                            das.setVisible(true);
+                            frame.setVisible(false);
+                            break;
+                        }
+                        case "captain": {
+                            DashboardMessCap das = new DashboardMessCap();
+                            das.setVisible(true);
+                            frame.setVisible(false);
+                            break;
+                        }
+                        default:
+                            break;
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+    }
+
+    public void closeWindow() {
+        try {
+            conn.close();
+            switch (UserLog.name) {
+                case "accountant": {
+                    DashboardAccountant das = new DashboardAccountant();
+                    das.setVisible(true);
+                    this.setVisible(false);
+                    break;
+                }
+                case "provost": {
+                    DashboardHallAutho das = new DashboardHallAutho();
+                    das.setVisible(true);
+                    this.setVisible(false);
+                    break;
+                }
+                case "mess": {
+                    DashboardMess das = new DashboardMess();
+                    das.setVisible(true);
+                    this.setVisible(false);
+                    break;
+                }
+                case "captain": {
+                    DashboardMessCap das = new DashboardMessCap();
+                    das.setVisible(true);
+                    this.setVisible(false);
+                    break;
+                }
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void setDateChoosers() {
@@ -255,9 +300,9 @@ public class AccountPayment extends javax.swing.JFrame {
         String payDate = tableDateFormatter.format(upPayDate.getDate());
         Double paidAmnt;
         try {
-            paidAmnt = Double.parseDouble(stPaidAmntTxt.getText());
+            paidAmnt = Double.parseDouble(upPaidAmntTxt.getText());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Inserted Paid Amount is Worng", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Inserted Paid Amount is Worng in Set", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
             return;
         }
         String media = upMediaCombo.getSelectedItem().toString();
@@ -313,7 +358,7 @@ public class AccountPayment extends javax.swing.JFrame {
             return null;
         }
 
-        JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll can't be found", "Data No Found", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Inserted Hall Id/Roll can't be found in Current Student's Database", "Data No Found", JOptionPane.ERROR_MESSAGE);
         return null;
 
     }
@@ -344,6 +389,46 @@ public class AccountPayment extends javax.swing.JFrame {
         upRefTxt.setText("");
         upMediaCombo.setSelectedIndex(0);
         setDateChoosers();
+    }
+
+    public void sendmail(int hallid, String paymentdate, Double previousdue, Double paidamount) {
+        String body = "", greetings = "", tail = "", msg = "", strhallid = "", strcurrentdue = "";
+        boolean isval = false;
+        Double currentdue = 0.0;
+        String subject = "Confirmation of Mess Bill Payment(" + paymentdate + ")";
+
+        currentdue = previousdue - paidamount;
+        if (currentdue < 0) {
+            strcurrentdue = Double.toString(currentdue) + "(Advanced)";
+        } else if (currentdue > 0) {
+            strcurrentdue = Double.toString(currentdue) + " (Due)";
+        } else {
+            strcurrentdue = Double.toString(currentdue);
+        }
+
+        try {
+
+            ps = conn.prepareStatement("select st.name,st.email,from stuinfo st where st.hallid =? ");
+            ps.setInt(1, hallid);
+            rs = ps.executeQuery();
+
+            greetings = "Assalamualaikum ";
+            body = "You Mess bill paid on " + paymentdate + " has inserted on the database successfully. "
+                    + "Your last payment and total due details are given below \n";
+            tail = "Best regards,\nOsmany Hall Authority\nMIST, Mirpur Cantonment";
+            while (rs.next()) {
+                greetings = greetings + " " + rs.getString(1) + ",\n";
+                body = body + "\n Previous Due: " + previousdue + " \n Paid Amount : " + paidamount + "\n Current Bill : " + strcurrentdue;
+                msg = greetings + body + tail;
+                Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg, strhallid);
+                isval = true;
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Fetch for Mail Send Failed", "Sending Mail error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     public void savePayData() {
@@ -869,16 +954,8 @@ public class AccountPayment extends javax.swing.JFrame {
         if (tablemodel.getRowCount() > 0) {
             int responce = JOptionPane.showConfirmDialog(this, "Do you want to save the data ?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (responce == JOptionPane.YES_OPTION) {
-                try {
-                    savePayData();
-
-                    NewDashboard das = new NewDashboard();
-                    das.setVisible(true);
-                    this.setVisible(false);
-                    conn.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(StoreOutItem.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                savePayData();
+                closeWindow();
             }
         } else {
             JOptionPane.showMessageDialog(null, "No item is inserted on the table", "Table item not found", JOptionPane.ERROR_MESSAGE);

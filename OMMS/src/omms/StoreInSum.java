@@ -5,6 +5,7 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -56,7 +57,7 @@ public class StoreInSum extends javax.swing.JFrame {
     DecimalFormat dec;
     int selectedRow;
     DecimalFormat dec2;
-   
+   ResultSet rs2 = null;
     int flag;
     PreparedStatement psmt1 = null;
     ResultSet rs1 = null;
@@ -450,13 +451,13 @@ public class StoreInSum extends javax.swing.JFrame {
                 }
                     String X="";
                     X=getUnit(rs.getString(2));
-                
+                    //System.out.println("called "+rs.getString(2)+" "+X);
                     if(rs.getString(5).equals("###") && rs.getDouble(3)!=0.0){
                 
                         ser++;
 
                         //System.err.println(""+rs.getDouble(4));
-                        Object o [] = {ser,strdate,rs.getString(2),rs.getDouble(3),rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
+                        Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(3))+" "+X,rs.getDouble(4),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
 
                         //Object o [] = {ser,strdate,rs.getString(2),dec2.format(rs.getDouble(3))+" "+X,dec2.format(rs.getDouble(4)),dec2.format(rs.getDouble(4)/rs.getDouble(3)),""};
 
@@ -494,14 +495,15 @@ public class StoreInSum extends javax.swing.JFrame {
     {
        String X="";
         PreparedStatement ps=null;
-        ResultSet rs=null;
+        
        try{
         ps=conn.prepareStatement("select unit from storeditem where name=?");
         ps.setString(1, Item);
-        rs=ps.executeQuery();
-        X=rs.getString(1);
+        rs1=ps.executeQuery();
+        X=rs1.getString(1);
+           //System.out.println(" "+X);
         ps.close();
-        rs.close();
+        rs1.close();
         return X;
        }
        catch(Exception e)
@@ -543,7 +545,7 @@ public class StoreInSum extends javax.swing.JFrame {
           part1 = parts[0];
           part2 = parts[1];
           
-          //System.out.println(""+part1+" \n"+part2);
+         //System.out.println(""+part1+" "+parts[1]+" ");
           try{
           z=Double.parseDouble(part1) ;
           sum=sum+z; 
@@ -552,7 +554,7 @@ public class StoreInSum extends javax.swing.JFrame {
           {
               JOptionPane.showMessageDialog(null,"Quantity Parsing Error","Quantity Error", JOptionPane.ERROR_MESSAGE);
           }
-          }
+        }
        Xw=dec2.format(sum);
        Xw=Xw+" "+part2;
      return Xw;
@@ -587,9 +589,9 @@ public class StoreInSum extends javax.swing.JFrame {
             }
             else{
                 Tq_lbl.setVisible(true);
-                Tq_lbl.setText("Total Quantity : "+totalquantity());
+                Tq_lbl.setText("Total Quantity : "+ totalquantity());
                 
-            }
+              }
             }
 
     
@@ -618,48 +620,55 @@ public class StoreInSum extends javax.swing.JFrame {
              
                 doc.open();
             
-            Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
-             
-            p.setAlignment(Element.ALIGN_CENTER);
-             
-            doc.add(p);
-            Date ddt=fromdt_ch.getDate();
-            Date dt=todt_ch.getDate();
-            
-            
-            Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\n"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));           
-            q.setAlignment(Element.ALIGN_CENTER);
-            
-            doc.add(q);
-            
-            if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
-            Paragraph Itemq=new Paragraph("Item:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
-            Chunk c=new Chunk(" "+Item_cmb.getSelectedItem().toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
-            Itemq.add(c);
-            Itemq.setAlignment(Element.ALIGN_RIGHT);
-            doc.add(Itemq);
-            
-            }
-            
-            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
-            Chunk A=new Chunk(" "+dec2.format(totalprice())+"/-",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
-            total.add(A);
-            total.setAlignment(Element.ALIGN_RIGHT);
-            doc.add(total);
-            
-            //Paragraph newline=new Paragraph("\n");
-            //doc.add(newline);
-            
-            if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
-            Paragraph totalq=new Paragraph("Total Amount:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
-            Chunk c=new Chunk(" "+totalquantity(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
-            totalq.add(c);
-            totalq.setAlignment(Element.ALIGN_RIGHT);
-            doc.add(totalq);
-            
-            Paragraph newlineq=new Paragraph("\n");
-            doc.add(newlineq);
-            }
+                Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
+                image1.setAlignment(Element.ALIGN_CENTER);
+                image1.scaleAbsolute(100, 70);
+                //Add to document
+                doc.add(image1);
+                
+                
+                Paragraph p=new Paragraph("STORE IN REPORT\n",FontFactory.getFont(FontFactory.HELVETICA, 17, com.itextpdf.text.Font.BOLD));     
+
+                p.setAlignment(Element.ALIGN_CENTER);
+
+                doc.add(p);
+                Date ddt=fromdt_ch.getDate();
+                Date dt=todt_ch.getDate();
+
+
+                Paragraph q=new Paragraph("From :"+formatter2.format(ddt).toString() +"\n"+"To :"+formatter2.format(dt).toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));           
+                q.setAlignment(Element.ALIGN_CENTER);
+
+                doc.add(q);
+
+                if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
+                Paragraph Itemq=new Paragraph("Item:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                Chunk c=new Chunk(" "+Item_cmb.getSelectedItem().toString(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+                Itemq.add(c);
+                Itemq.setAlignment(Element.ALIGN_RIGHT);
+                doc.add(Itemq);
+
+                }
+
+                Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                Chunk A=new Chunk(" "+dec2.format(totalprice())+"/-",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+                total.add(A);
+                total.setAlignment(Element.ALIGN_RIGHT);
+                doc.add(total);
+
+                //Paragraph newline=new Paragraph("\n");
+                //doc.add(newline);
+
+                if(!(Item_cmb.getSelectedItem().toString()).equals("ALL")){
+                    Paragraph totalq=new Paragraph("Total Amount:",FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.NORMAL));
+                    Chunk c=new Chunk(" "+totalquantity(),FontFactory.getFont(FontFactory.HELVETICA, 10, com.itextpdf.text.Font.BOLD));
+                    totalq.add(c);
+                    totalq.setAlignment(Element.ALIGN_RIGHT);
+                    doc.add(totalq);
+
+                    Paragraph newlineq=new Paragraph("\n");
+                    doc.add(newlineq);
+                }
             
             String[] header = new String[] { "Serial", "Date", "Name",
             "Quantity", "Price","Average Price","Memo" };
@@ -703,13 +712,34 @@ public class StoreInSum extends javax.swing.JFrame {
                 }
 
              }
-             doc.add(table);
+            doc.add(table);
             doc.add(new Phrase("\n"));
+            
             LineSeparator separator = new LineSeparator();
-            separator.setPercentage(98);
-            separator.setLineColor(BaseColor.LIGHT_GRAY);
+            separator.setPercentage(24);
+            separator.setAlignment(Element.ALIGN_RIGHT);
+            separator.setLineColor(BaseColor.BLACK);
             Chunk linebreak = new Chunk(separator);
             doc.add(linebreak);
+            
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name1.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name1);
+            
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator1 = new LineSeparator();
+            separator1.setPercentage(24);
+            separator1.setAlignment(Element.ALIGN_RIGHT);
+            separator1.setLineColor(BaseColor.BLACK);
+            Chunk linebreak1 = new Chunk(separator1);
+            doc.add(linebreak1);
+            
+            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name2.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name2);
+            
+            
              
         }
         catch(Exception e)
@@ -745,8 +775,8 @@ public class StoreInSum extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Date Parse "
                             + "in setedittablevalue","Date parsing error", JOptionPane.ERROR_MESSAGE);
                 }
-                        String X="";
-                        X=getUnit(rs.getString(2));
+                    String X="";
+                    X=getUnit(rs.getString(2));
                 
                     if(rs.getString(5).equals("###") && rs.getDouble(3)!=0.0){
                 
@@ -1018,8 +1048,13 @@ public class StoreInSum extends javax.swing.JFrame {
     private void all_cbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_all_cbActionPerformed
         if(all_cb.isSelected())
         {   
-            fromdt_ch.setVisible(false);
-            todt_ch.setVisible(false);
+            fromdt_ch.setEnabled(false);
+            todt_ch.setEnabled(false);
+            
+            if(store_tbl.getRowCount() > 0){
+                tm.setRowCount(0);
+            }
+            
             generateAll();
             tp_lbl.setText("Total Price : "+dec2.format(totalprice()));
             if(Item_cmb.getSelectedItem().toString().equals("ALL")){
@@ -1040,9 +1075,12 @@ public class StoreInSum extends javax.swing.JFrame {
             {
                 tm.removeRow(i);
             }
-            
+            tp_lbl.setText("Total Price : "+dec2.format(totalprice()));
+            Tq_lbl.setText("Total Quantity : "+totalquantity());
             fromdt_ch.setVisible(true);
             todt_ch.setVisible(true);
+            fromdt_ch.setEnabled(true);
+            todt_ch.setEnabled(true);
             
         }
     }//GEN-LAST:event_all_cbActionPerformed

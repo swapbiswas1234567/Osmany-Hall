@@ -50,6 +50,7 @@ public class TempFoodView extends javax.swing.JFrame {
         initComponents();
         Tabledecoration();
         initialize();
+        tempFoodViewTable.getColumnModel().getColumn(7).setCellRenderer(new WordWrapCellRenderer());
     }
 
     public void initialize() {
@@ -161,7 +162,7 @@ public class TempFoodView extends javax.swing.JFrame {
         }
 
         try {
-            ps = conn.prepareStatement("SELECT name, roll, hallid, roomno, dateserial, bill  from tempfood JOIN stuinfo USING (hallid) ORDER BY dateserial, hallid");
+            ps = conn.prepareStatement("SELECT name, roll, hallid, roomno, dateserial, bill,remarks  from tempfood JOIN stuinfo USING (hallid) ORDER BY dateserial, hallid");
             rs = ps.executeQuery();
             while (rs.next()) {
                 try {
@@ -180,7 +181,7 @@ public class TempFoodView extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Cant Get Bill from Temp Food Table", "Data parsing error", JOptionPane.ERROR_MESSAGE);
                     }
                     serialNo++;
-                    Object o[] = {serialNo, rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4), strDate, rs.getDouble(6)};
+                    Object o[] = {serialNo, rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4), strDate, rs.getDouble(6),rs.getString(7)};
                     tablemodel.addRow(o);
                 }
             }
@@ -312,7 +313,6 @@ public class TempFoodView extends javax.swing.JFrame {
         totalBillJlbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(860, 473));
 
         jPanel1.setBackground(new java.awt.Color(208, 227, 229));
 
@@ -363,17 +363,20 @@ public class TempFoodView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Serial", "Name", "Roll", "Hall Id", "Room No", "Date", "Tk"
+                "Serial", "Name", "Roll", "Hall Id", "Room No", "Date", "Tk", "Remarks"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tempFoodViewTable.setSelectionBackground(new java.awt.Color(237, 57, 97));
+        tempFoodViewTable.setSelectionForeground(new java.awt.Color(240, 240, 240));
+        tempFoodViewTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tempFoodViewTable);
         if (tempFoodViewTable.getColumnModel().getColumnCount() > 0) {
             tempFoodViewTable.getColumnModel().getColumn(0).setResizable(false);
@@ -400,7 +403,6 @@ public class TempFoodView extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(tempFoodViewJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,11 +424,12 @@ public class TempFoodView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(toDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(50, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addComponent(tempFoodViewJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -440,9 +443,8 @@ public class TempFoodView extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(totalBillJlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

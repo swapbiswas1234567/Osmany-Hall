@@ -171,7 +171,7 @@ public class StoreInForm extends javax.swing.JFrame {
     public void itemcombo_set()
     {
         try{
-           psmt=conn.prepareStatement("select name from storeditem ");
+           psmt=conn.prepareStatement("select name from storeditem order by name");
            rs=psmt.executeQuery();
            String X="";
            while(rs.next())

@@ -28,5 +28,6 @@ public class OMMS {
         //MessBillView lg = new MessBillView();
         //StdInfoDelete lg = new StdInfoDelete();
         lg.setVisible(true);
+        
     }
 }

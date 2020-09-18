@@ -280,16 +280,19 @@ public class StdInfoViewCur extends javax.swing.JFrame {
             while (rs.next()) {
                 serial++;
                 String endate = "";
+                String dob = "";
                 try {
                     Date date = formatDate.parse(rs.getString(8));
                     endate = tableDateFormatter.format(date);
+                    formatDate.parse(rs.getString(14));
+                    dob = tableDateFormatter.format(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(StdInfoViewCur.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 Object[] obj = {serial, rs.getInt(1), rs.getString(3), rs.getString(2), rs.getString(4),
                     rs.getString(5), rs.getString(6) + "-" + rs.getString(7), endate, rs.getString(9),
-                    rs.getString(10), rs.getString(11), rs.getString(14), rs.getString(15), 
+                    rs.getString(10), rs.getString(11), dob, rs.getString(15), 
                     rs.getString(16), rs.getString(18), rs.getDouble(20)};
                 tablemodel.addRow(obj);
             }
@@ -383,7 +386,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                 .addGap(99, 99, 99)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(

@@ -144,7 +144,6 @@ public class MessBillView extends javax.swing.JFrame {
     public String findHallId() {
         String id = idTxt.getText();
         if (!id.equals("")) {
-
             try {
                 ps = conn.prepareStatement("SELECT hallid FROM stuinfo WHERE hallid = ?");
                 ps.setString(1, id);
@@ -479,7 +478,7 @@ public class MessBillView extends javax.swing.JFrame {
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
         if (!idTxt.getText().equals("")) {
-            String id = findHallId();
+            String id = idTxt.getText();
             highlightStd(id);
         }
     }//GEN-LAST:event_idTxtActionPerformed
