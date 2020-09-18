@@ -53,19 +53,22 @@ public class AccountPayment extends javax.swing.JFrame {
         String name;
         String roll;
         String room;
+        double due;
 
         public Info() {
             hallid = 0;
             name = "";
             roll = "";
             room = "";
+            due = 0;
         }
 
-        public Info(int hi, String nm, String rl, String rm) {
+        public Info(int hi, String nm, String rl, String rm, double d) {
             hallid = hi;
             name = nm;
             roll = rl;
             room = rm;
+            due = d;
         }
     }
 
@@ -165,6 +168,7 @@ public class AccountPayment extends javax.swing.JFrame {
         stdPayTable.getColumnModel().getColumn(6).setCellRenderer(centerRender);
         stdPayTable.getColumnModel().getColumn(7).setCellRenderer(centerRender);
         stdPayTable.getColumnModel().getColumn(8).setCellRenderer(centerRender);
+        stdPayTable.getColumnModel().getColumn(9).setCellRenderer(centerRender);
     }
 
     public void setPayTable(Info inf, String pd, Double pa, String md, String rf) {
@@ -173,6 +177,7 @@ public class AccountPayment extends javax.swing.JFrame {
         String name = inf.name;
         String roll = inf.roll;
         String room = inf.room;
+        double due = inf.due;
         Double paidAmnt = pa;
         String media = md;
         String ref = rf;
@@ -207,7 +212,7 @@ public class AccountPayment extends javax.swing.JFrame {
         }
 
         serial++;
-        Object obj[] = {serial, payDate, id, name, roll, room, paidAmnt, media, ref};
+        Object obj[] = {serial, payDate, id, name, roll, room, paidAmnt, media, ref, due};
         tablemodel.addRow(obj);
         clearAllStdPay();
     }
@@ -271,12 +276,12 @@ public class AccountPayment extends javax.swing.JFrame {
         }
 
         try {
-            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno FROM stuinfo WHERE hallid = ?");
+            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, totaldue FROM stuinfo WHERE hallid = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                inf = new Info(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                inf = new Info(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5));
                 ps.close();
                 rs.close();
                 return inf;
@@ -290,12 +295,12 @@ public class AccountPayment extends javax.swing.JFrame {
         }
 
         try {
-            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno FROM stuinfo WHERE roll = ?");
+            ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, totaldue FROM stuinfo WHERE roll = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                inf = new Info(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                inf = new Info(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5));
                 ps.close();
                 rs.close();
                 return inf;
@@ -729,11 +734,11 @@ public class AccountPayment extends javax.swing.JFrame {
 
             },
             new String [] {
-                "SN", "Payment Date", "Hall Id", "Name", "Roll", "Room No", "Paid Amount", "Media", "Referrence"
+                "SN", "Payment Date", "Hall Id", "Name", "Roll", "Room No", "Paid Amount", "Media", "Referrence", "Previous Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

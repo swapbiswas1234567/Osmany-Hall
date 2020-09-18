@@ -24,6 +24,9 @@ public class OMMS {
         //StdIndBillStat lg = new StdIndBillStat();
         //StdInfoViewPrev lg = new StdInfoViewPrev();
         //StdHallAdmission lg = new StdHallAdmission();
+        //StdInfoViewCur lg = new StdInfoViewCur();
+        //MessBillView lg = new MessBillView();
+        //StdInfoDelete lg = new StdInfoDelete();
         lg.setVisible(true);
     }
 }

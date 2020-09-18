@@ -15,7 +15,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -60,9 +63,8 @@ public class StdInfoDelete extends javax.swing.JFrame {
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
         //closeBtn();
         tablemodel = (DefaultTableModel) stdDelTable.getModel();
-        
-         try {
-            
+
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,10 +75,7 @@ public class StdInfoDelete extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
+
         showAll();
     }
 
@@ -87,22 +86,19 @@ public class StdInfoDelete extends javax.swing.JFrame {
             public void windowClosing(WindowEvent evt) {
                 try {
                     conn.close();
-                    if(UserLog.name.equals("accountant")){
+                    if (UserLog.name.equals("accountant")) {
                         DashboardAccountant das = new DashboardAccountant();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("provost")){
+                    } else if (UserLog.name.equals("provost")) {
                         DashboardHallAutho das = new DashboardHallAutho();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("mess")){
+                    } else if (UserLog.name.equals("mess")) {
                         DashboardMess das = new DashboardMess();
                         das.setVisible(true);
                         frame.setVisible(false);
-                    }
-                    else if(UserLog.name.equals("captain")){
+                    } else if (UserLog.name.equals("captain")) {
                         DashboardMessCap das = new DashboardMessCap();
                         das.setVisible(true);
                         frame.setVisible(false);
@@ -137,12 +133,30 @@ public class StdInfoDelete extends javax.swing.JFrame {
         stdDelTable.getColumnModel().getColumn(10).setCellRenderer(centerRender);
     }
 
+    public void highlightStd(String id) {
+        tablemodel = (DefaultTableModel) stdDelTable.getModel();
+        if (tablemodel.getRowCount() > 0) {
+            int chk = 0;
+            for (int i = 0; i < tablemodel.getRowCount(); i++) {//For each row in that column
+                if (tablemodel.getValueAt(i, 1).toString().equals(id)) {//Search the model
+                    stdDelTable.requestFocus();
+                    stdDelTable.changeSelection(i, 0, false, false);
+                    tablemodel.setValueAt(true, i, 0);
+                    chk++;
+                    break;
+                }
+            }//For loop inner
+            if (chk == 0) {
+                JOptionPane.showMessageDialog(null, id + " Not Found On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No Values On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public void showAll() {
         String hallid = findHallId();
         String query = "";
-        if (!hallid.equals("")) {
-            query = " WHERE hallid = " + hallid;
-        }
         tablemodel = (DefaultTableModel) stdDelTable.getModel();
         if (tablemodel.getRowCount() > 0) {
             tablemodel.setRowCount(0);
@@ -196,7 +210,6 @@ public class StdInfoDelete extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Deletion on Students Info Table Can't be Done", "Deletion Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        showAll();
     }
 
     public String findHallId() {
@@ -210,7 +223,6 @@ public class StdInfoDelete extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -230,7 +242,6 @@ public class StdInfoDelete extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -249,12 +260,74 @@ public class StdInfoDelete extends javax.swing.JFrame {
         return "";
     }
 
-    public String showMsg(int row) {
+    public String showMsg(int row, double due, double bill) {
         String msg = "Hall Id: " + tablemodel.getValueAt(row, 1).toString()
                 + "\nName:  " + tablemodel.getValueAt(row, 2).toString()
                 + "\nRoll: " + tablemodel.getValueAt(row, 3).toString()
-                + "\n cant be deleted because of Due: " + tablemodel.getValueAt(row, 6).toString() + " Tk";
+                + "\nCan't be deleted because of Previous Due: " + due + " Tk"
+                + "\nAnd Meal Charge of current month is: " + bill + " Tk";
         return msg;
+    }
+
+    public String getFromDate() {
+        String strfrom = "";
+        String fromDate = "";
+        String mon = "";
+        int month = 0;
+
+        try {
+            ps = conn.prepareStatement("select fromdate from mealrange where sl =1");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                strfrom = rs.getString(1);
+            }
+
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Failed to fetchname of stored item", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        month = Calendar.getInstance().get(Calendar.MONTH);
+        if (month == 1) {
+            year--;
+            mon = "12";
+        } else if (month <= 9) {
+            mon = "0" + month;
+        } else {
+            mon = Integer.toString(month);
+        }
+
+        fromDate = "" + year;
+        fromDate += mon + strfrom;
+        return fromDate;
+    }
+
+    public double validityCheck(int hallid) {
+        SingleStdntBill st = new SingleStdntBill();
+        DailyAvgBill db = new DailyAvgBill();
+        Map<Integer, BillAmount> billmap = new HashMap<>();
+        String fromDate = getFromDate();
+        Date date = new Date();
+        String toDate = "";
+        toDate = formatDate.format(date);
+
+        int todate;
+        int fromdate;
+        double bill;
+        double tmpbill;
+
+        fromdate = Integer.parseInt(fromDate);
+        todate = Integer.parseInt(toDate);
+
+        billmap = db.setbill(fromdate, todate);
+        bill = st.monthlybill(billmap, fromdate, todate, hallid);
+        tmpbill = st.monthlytmpfoodbill(fromdate, todate, hallid);
+        bill = bill + tmpbill;
+        bill = Math.ceil(bill);
+
+        return bill;
     }
 
     /**
@@ -355,6 +428,8 @@ public class StdInfoDelete extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        stdDelTable.setSelectionBackground(new java.awt.Color(255, 51, 51));
+        stdDelTable.setSelectionForeground(new java.awt.Color(204, 204, 204));
         jScrollPane1.setViewportView(stdDelTable);
         if (stdDelTable.getColumnModel().getColumnCount() > 0) {
             stdDelTable.getColumnModel().getColumn(0).setMinWidth(40);
@@ -404,24 +479,27 @@ public class StdInfoDelete extends javax.swing.JFrame {
             for (int i = 0; i < tablemodel.getRowCount(); i++) {
                 Boolean bool = (Boolean) tablemodel.getValueAt(i, 0);
                 if (bool) {
-                    if (((Double) tablemodel.getValueAt(i, 6)) <= 0) {
-                        updatePrevStd((int) tablemodel.getValueAt(i, 1));
+                    double due = (Double) tablemodel.getValueAt(i, 6);
+                    int hallid = Integer.parseInt(tablemodel.getValueAt(i, 1).toString());
+                    double bill = validityCheck(hallid);
+                    if (bill + due < 0) {
+                        updatePrevStd(hallid);
                     } else {
-                        String msg = showMsg(i);
+                        String msg = showMsg(i, due, bill);
                         JOptionPane.showMessageDialog(null, msg, "Deletion Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         }
+        idTxt.setText("");
+        showAll();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
-        if (!idTxt.equals("")) {
-            showAll();
-        } else {
-            JOptionPane.showMessageDialog(null, "Enter A Hall Id / Roll", "Empty Id Input", JOptionPane.ERROR_MESSAGE);
-            return;
+        String id = findHallId();
+        if (!id.equals("")) {
+            highlightStd(id);
         }
     }//GEN-LAST:event_idTxtActionPerformed
 

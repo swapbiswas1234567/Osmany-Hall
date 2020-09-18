@@ -1,5 +1,3 @@
- 
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -59,9 +57,10 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
         closeBtn();
         setCombo();
-        
-         try {
-            
+        setTitle("Current Students Info");
+
+        try {
+
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +71,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(PresentDue.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     public void closeBtn() {
@@ -107,17 +106,47 @@ public class StdInfoViewCur extends javax.swing.JFrame {
     }
 
     public void setCombo() {
+        try {
+            ps = conn.prepareStatement("SELECT dept from dept");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String dept = rs.getString(1);
+                if (!dept.equals("")) {
+                    deptCombo.addItem(dept);
+                }
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try {
+            ps = conn.prepareStatement("SELECT DISTINCT hall from stuinfo WHERE hall IS NOT NULL");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String hall = rs.getString(1);
+                if (!hall.equals("")) {
+                    hallCombo.addItem(hall);
+                }
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Oops! There are some problems!", "Unknown Error Occured!", JOptionPane.ERROR_MESSAGE);
+        }
+
         deptCombo.setSelectedIndex(0);
         hallCombo.setSelectedIndex(0);
     }
 
     public void Tabledecoration() {
-        infoTable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 16));
+        infoTable.getTableHeader().setFont(new Font("Segeo UI", Font.BOLD, 18));
         infoTable.getTableHeader().setOpaque(false);
         infoTable.getTableHeader().setBackground(new Color(32, 136, 203));
         infoTable.getTableHeader().setForeground(new Color(255, 255, 255));
         infoTable.setRowHeight(25);
-        infoTable.setFont(new Font("Segeo UI", Font.PLAIN, 14));
+        infoTable.setFont(new Font("Segeo UI", Font.PLAIN, 17));
 
         DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();   //alignment of table to center
         centerRender.setHorizontalAlignment(JLabel.CENTER);
@@ -136,12 +165,12 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         infoTable.getColumnModel().getColumn(12).setCellRenderer(centerRender);
         infoTable.getColumnModel().getColumn(13).setCellRenderer(centerRender);
         infoTable.getColumnModel().getColumn(14).setCellRenderer(centerRender);
+        infoTable.getColumnModel().getColumn(15).setCellRenderer(centerRender);
     }
 
     public String findHallId() {
         String id = idTxt.getText();
         if (!id.equals("")) {
-
             try {
                 ps = conn.prepareStatement("SELECT hallid FROM stuinfo WHERE hallid = ?");
                 ps.setString(1, id);
@@ -149,7 +178,6 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    //System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -169,7 +197,6 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
                 while (rs.next()) {
                     String hallid = String.valueOf(rs.getInt(1));
-                    //System.out.println("Id - " + hallid + " Roll - " + id);
                     ps.close();
                     rs.close();
                     return hallid;
@@ -188,18 +215,35 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         return "";
     }
 
-    public void showInfo() {
-        String id = findHallId();
+    public void highlightStd(String id) {
+        tablemodel = (DefaultTableModel) infoTable.getModel();
+        if (tablemodel.getRowCount() > 0) {
+            int chk = 0;
+            for (int i = 0; i < tablemodel.getRowCount(); i++) {//For each row in that column
+                if (tablemodel.getValueAt(i, 1).toString().equals(id)) {//Search the model
+                    infoTable.requestFocus();
+                    infoTable.changeSelection(i, 2, false, false);
+                    chk++;
+                    break;
+                }
+            }//For loop inner
+            if (chk == 0) {
+                JOptionPane.showMessageDialog(null, id + " Not Found On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No Values On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void showInfo() {;
         String dept = (String) deptCombo.getSelectedItem();
         String hall = (String) hallCombo.getSelectedItem();
 
         String query = "";
 
-        if (!id.equals("")) {
-            query += " WHERE hallid = " + id;
-        } else if (!dept.equals("None")) {
+        if (!dept.equals("All")) {
             query += " WHERE dept LIKE '" + dept + "%'";
-            if (!hall.equals("None")) {
+            if (!hall.equals("All")) {
                 switch (hall) {
                     case "Osmany Hall":
                         query += " AND roomno > 0 AND roomno < 999";
@@ -209,7 +253,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                         break;
                 }
             }
-        } else if (!hall.equals("None")) {
+        } else if (!hall.equals("All")) {
             idTxt.setText("");
             switch (hall) {
                 case "Osmany Hall":
@@ -219,7 +263,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                     query += " WHERE roomno LIKE '" + hall.charAt(4) + "%'";
                     break;
             }
-            if (!dept.equals("None")) {
+            if (!dept.equals("All")) {
                 query += " AND dept LIKE '" + dept + "%'";
             }
         }
@@ -232,7 +276,9 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         try {
             ps = conn.prepareStatement("SELECT * FROM stuinfo" + query);
             rs = ps.executeQuery();
+            int serial = 0;
             while (rs.next()) {
+                serial++;
                 String endate = "";
                 try {
                     Date date = formatDate.parse(rs.getString(8));
@@ -240,10 +286,11 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                 } catch (ParseException ex) {
                     Logger.getLogger(StdInfoViewCur.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                Object[] obj = {rs.getInt(1), rs.getString(3), rs.getString(2), rs.getString(4),
-                    rs.getString(5), rs.getString(6), endate , rs.getString(9),
-                    rs.getString(10),  rs.getString(11), rs.getString(14), rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(19)};
+
+                Object[] obj = {serial, rs.getInt(1), rs.getString(3), rs.getString(2), rs.getString(4),
+                    rs.getString(5), rs.getString(6) + "-" + rs.getString(7), endate, rs.getString(9),
+                    rs.getString(10), rs.getString(11), rs.getString(14), rs.getString(15), 
+                    rs.getString(16), rs.getString(18), rs.getDouble(20)};
                 tablemodel.addRow(obj);
             }
 
@@ -304,7 +351,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         });
 
         deptCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        deptCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "CE", "CSE", "EECE", "ME", "AE", "ARCHI", "NAME", "IPE", "BME", "PME", "EWCE", " " }));
+        deptCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
         deptCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deptComboActionPerformed(evt);
@@ -312,7 +359,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         });
 
         hallCombo.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
-        hallCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Osmany Hall", "Ext-A", "Ext-B", "Ext-C", "Ext-E" }));
+        hallCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All" }));
         hallCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hallComboActionPerformed(evt);
@@ -323,7 +370,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1396, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1545, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
@@ -336,7 +383,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
                 .addGap(99, 99, 99)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(hallCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -359,18 +406,32 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Hall Id", "Name", "Roll", "Father's Name", "Mother's Name", "Dept", "Entry Date", "Contact No", "Email", "Blood Group", "Date Of Birth", "Present Address", "Permanent Address", "Room No", "Total Due"
+                "SL", "Hall Id", "Name", "Roll", "Father", "Mother", "Dept", "Entry Date", "Contact", "Email", "Blood Group", "Birthdate", "Pres. Add.", "Perm. Add.", "Room", "Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        infoTable.setSelectionBackground(new java.awt.Color(255, 51, 51));
+        infoTable.setSelectionForeground(new java.awt.Color(255, 255, 252));
         jScrollPane1.setViewportView(infoTable);
+        if (infoTable.getColumnModel().getColumnCount() > 0) {
+            infoTable.getColumnModel().getColumn(0).setMinWidth(35);
+            infoTable.getColumnModel().getColumn(0).setMaxWidth(60);
+            infoTable.getColumnModel().getColumn(1).setMinWidth(80);
+            infoTable.getColumnModel().getColumn(1).setMaxWidth(100);
+            infoTable.getColumnModel().getColumn(2).setMinWidth(250);
+            infoTable.getColumnModel().getColumn(2).setMaxWidth(350);
+            infoTable.getColumnModel().getColumn(14).setMinWidth(80);
+            infoTable.getColumnModel().getColumn(14).setMaxWidth(100);
+            infoTable.getColumnModel().getColumn(15).setMinWidth(100);
+            infoTable.getColumnModel().getColumn(15).setMaxWidth(250);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -383,7 +444,7 @@ public class StdInfoViewCur extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
@@ -394,7 +455,10 @@ public class StdInfoViewCur extends javax.swing.JFrame {
 
     private void idTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTxtActionPerformed
         // TODO add your handling code here:
-        showInfo();
+        String id = findHallId();
+        if (!id.equals("")) {
+            highlightStd(id);
+        }
     }//GEN-LAST:event_idTxtActionPerformed
 
     private void deptComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deptComboActionPerformed
