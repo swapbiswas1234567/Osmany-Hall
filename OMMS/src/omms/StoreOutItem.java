@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -65,6 +66,7 @@ public class StoreOutItem extends javax.swing.JFrame {
     DecimalFormat dec2;
     int flag=0;
     Double avg=0.0;
+    ImageIcon icon;
     /**
      * Creates new form StoreOutItem
      */
@@ -159,6 +161,10 @@ public class StoreOutItem extends javax.swing.JFrame {
         
         insertavgprice.setEditable(false);
         updateavgprice.setEditable(false);
+        
+        
+        icon = new ImageIcon("image/Osmany_icon_1 (1).png");
+        setIconImage(icon.getImage());
         
          try {
             

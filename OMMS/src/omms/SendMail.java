@@ -128,7 +128,7 @@ public class SendMail extends javax.swing.JFrame {
 
     
     public void sendmail(boolean single, int hallid, int month, String monthname, int year) {
-        String body = "", greetings = "", billinfo = "", tail = "", msg = "", strhallid = "";
+        String body = "", greetings = "", billinfo = "", tail = "", msg = "", strhallid = "", strprevd="";
         boolean isval = false;
         Double bill = 0.00, others = 0.00, fine = 0.00, waive = 0.00, due = 0.00, total = 0.0;
         String subject = "Mess Bill of OSMANY HALL(" + monthname + ", " + year + ")";
@@ -157,9 +157,15 @@ public class SendMail extends javax.swing.JFrame {
                 waive = rs.getDouble(6);
                 due = rs.getDouble(7);
                 strhallid = rs.getString(8);
-                total = bill + others + fine - waive - due;
+                total = bill + others + fine - waive + due;
+                if(due < 0){
+                    strprevd = Double.toString(due*-1) +" (Advance)";
+                }else{
+                    strprevd = Double.toString(due);
+                }
+                
                 body = body + "\n Mess Bill: " + Double.toString(bill) + " \n Others: " + Double.toString(others) + "\n Fine: " + Double.toString(fine) + "\n Waive: "
-                        + Double.toString(waive) + "\n Previous Due: " + Double.toString(due) + "\n Total: " + total + "\n\n For further details contact with the hall office\n\n";
+                        + Double.toString(waive) + "\n Previous Due: " + strprevd + "\n Total: " + total + "\n\n For further details contact with the hall office\n\n";
                 msg = greetings + body + tail;
                 Email.send("mist.osmanyhall@gmail.com", "osm@nycse17", rs.getString(2), subject, msg, strhallid);
                 isval = true;

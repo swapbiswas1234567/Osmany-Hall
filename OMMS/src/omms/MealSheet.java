@@ -216,7 +216,7 @@ public class MealSheet extends javax.swing.JFrame {
     }
     
     public int[] search1stgrp(int dateserial){
-        int i=0;
+        //int i=0;
         int []grp = new int[3];
         grp[0] =0;
         grp[1]=0;

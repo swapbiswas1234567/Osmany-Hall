@@ -265,8 +265,8 @@ public class ShowLedger extends javax.swing.JFrame {
             String unit = getunit(item);
             if(flag){
                 namelbl.setText(item);
-                previousavllbl.setText(fromavailable.toString());
-                currevtavllbl.setText(prevavailable[0].toString());
+                previousavllbl.setText(dec.format(fromavailable));
+                currevtavllbl.setText(dec2.format(prevavailable[0]));
                 dayslbl.setText(Integer.toString(tablemodel.getRowCount()));
                 unitlbl.setText(unit);
             }

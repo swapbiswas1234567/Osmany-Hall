@@ -194,7 +194,12 @@ public class MessBillView extends javax.swing.JFrame {
         int month = monthCombo.getSelectedIndex() + 1;
         int year;
         if (!yearTxt.getText().equals("")) {
-            year = Integer.parseInt(yearTxt.getText());
+            try{
+                year = Integer.parseInt(yearTxt.getText());
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Year format error", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (year < 0) {
                 JOptionPane.showMessageDialog(null, "Year Can't be Negetive", "Wrong Insertion", JOptionPane.ERROR_MESSAGE);
                 return;
