@@ -20,6 +20,7 @@ public class Jconnection {
             Class.forName("org.sqlite.JDBC"); // name of the database we are connecting with
             Connection conn;
             if (UserLog.maleFemale == 0) {
+                
                 conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhall.db");
             } else {
                 conn = DriverManager.getConnection("jdbc:sqlite:..\\\\osmanyhallF.db");

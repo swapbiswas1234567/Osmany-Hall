@@ -47,6 +47,8 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         initialize();
         dateNtableset();
        // stcombo_act();
+       
+       
         flag=1;
         
     }
@@ -110,7 +112,8 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         dec = new DecimalFormat("#0.000");
         dec2 = new DecimalFormat("#0.00");
          name_lbl.setVisible(false);
-       // closeBtn();
+         wdt_ch.setEnabled(false);
+// closeBtn();
         
         
          try {
@@ -177,7 +180,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
            {
             psmt=conn.prepareStatement("select hallid,roll,name,dept,securitymoney,messad,idcard,depositdate,withdrawdate,moneystatus from previousstudents where moneystatus=0");
             rs=psmt.executeQuery();
-            System.out.println("prev query ex");
+            
            }
            else if(search_cmb.getSelectedItem().toString().equals("ALL"))
             {
@@ -199,7 +202,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                if(search_cmb.getSelectedItem().toString().equals("PREVIOUS")){
                  try{
                      System.out.println("prev search query ex");
-                 if(rs.getString(8)!=null || rs.getString(9)!=null)   { 
+                 if(rs.getInt(8)!=0 || rs.getInt(9)!=0)   { 
                  da = formatter1.parse(rs.getString(8));
                  getDate = formatter2.format(da);
                  da1 = formatter1.parse(rs.getString(9));
@@ -231,7 +234,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
            
                    
                     try{
-                 if(rs.getString(9)!=null || rs.getString(10)!=null){
+                 if(rs.getInt(9)!=0 || rs.getInt(10)!=0){
                  da = formatter1.parse(rs.getString(9));
                  getDate = formatter2.format(da);
                  da1 = formatter1.parse(rs.getString(10));
@@ -299,7 +302,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                  try{
            
            
-                 if(rs.getString(9)!=null || rs.getString(10)!=null){
+                 if(rs.getInt(9)!=0 || rs.getInt(10)!=0){
                  da = formatter1.parse(rs.getString(9));
                  getDate = formatter2.format(da);
                  da1 = formatter1.parse(rs.getString(10));
@@ -362,7 +365,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                ser++;
                tablemodel = (DefaultTableModel) secDep_tbl.getModel();
                  try{
-                 if(rs2.getString(8)!=null || rs2.getString(9)!=null)   { 
+                 if(rs2.getInt(8)!=0 || rs2.getInt(9)!=0)   { 
                  da = formatter1.parse(rs2.getString(8));
                  getDate = formatter2.format(da);
                  da1 = formatter1.parse(rs2.getString(9));
@@ -384,12 +387,12 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                
               
            
-               if(edate ==0 && rs.getInt(10)==0){
-               Object o [] = {ser,rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),getDate ,getDate2,"Not Deposited"};
+               if(edate ==0 && rs2.getInt(10)==0){
+               Object o [] = {ser,rs2.getInt(1),rs2.getInt(2),rs2.getString(3),rs2.getString(4),rs2.getDouble(5),rs2.getDouble(6),rs2.getDouble(7),getDate ,getDate2,"Not Deposited"};
                tablemodel.addRow(o);
                }
-               else if(edate !=0 && rs.getInt(10)==0){
-               Object o [] = {ser,rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),getDate ,getDate2,"Deposited"};
+               else if(edate !=0 && rs2.getInt(10)==0){
+               Object o [] = {ser,rs2.getInt(1),rs2.getInt(2),rs2.getString(3),rs2.getString(4),rs2.getDouble(5),rs2.getDouble(6),rs2.getDouble(7),getDate ,getDate2,"Deposited"};
                tablemodel.addRow(o);
                }
         }
@@ -451,18 +454,20 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
       public void Updateset(String sedep, String  messadv,String idfee,Date edate,Date wdate)
     {
                try{
-             String getDate =null;
-             String getDate2 =null;
+             String getDate ="";
+             String getDate2 ="";
              
-             int dateserial =-1;
-             int dateserial2 =-1;
+             int dateserial =0;
+             int dateserial2 =0;
              
              try{
                  getDate = formatter2.format(edate);
                  dateserial = Integer.parseInt(formatter1.format(edate));
-                 getDate2 = formatter2.format(wdate);
-                 dateserial2 = Integer.parseInt(formatter1.format(wdate));
-                 
+                 if(stats_cb.isSelected())
+                 {
+                     getDate2 = formatter2.format(wdate);
+                     dateserial2 = Integer.parseInt(formatter1.format(wdate));
+                 }
              }
              catch(Exception e){
                  JOptionPane.showMessageDialog(null, "Date Error","Date Update Error",JOptionPane.ERROR_MESSAGE);
@@ -562,20 +567,20 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
       {
           int flag=0;
           try{
-              psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=1 WHERE hallid=? ");
+              psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=0 WHERE hallid=? ");
               psmt.setDouble(1,sed);
               psmt.setDouble(2,mess);
               psmt.setDouble(3,id);
               psmt.setInt(4,edate);
               psmt.setInt(5,wdate);
               psmt.setInt(6,hid);
-             // System.out.println("Update execute");
+             //System.out.println("Update execute "+hid);
               psmt.execute();
               flag=1;
-              //System.out.println("Update executed");
+              //System.out.println("Update executed"+ sed+" "+mess+" "+id+" "+edate+" "+wdate+" "+hid);
               psmt.close();
         
-              JOptionPane.showMessageDialog(null, "Data is updated");
+              
           
           }
           catch(Exception e)
@@ -583,8 +588,10 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
              JOptionPane.showMessageDialog(null, "Data is not updated");
              return;
          }
-          if(flag!=1){
+          
           try{
+              //System.out.println("called ");
+              if(edate!=0){
               psmt=conn.prepareStatement("UPDATE stuinfo SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=1 WHERE hallid=? ");
               psmt.setDouble(1,sed);
               psmt.setDouble(2,mess);
@@ -593,6 +600,22 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
               psmt.setInt(5,wdate);
               psmt.setInt(6,hid);
               psmt.execute();
+              //System.out.println("Called if");
+              }
+              else
+              {
+              psmt=conn.prepareStatement("UPDATE stuinfo SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=0,moneystatus=0 WHERE hallid=? ");
+              psmt.setDouble(1,sed);
+              psmt.setDouble(2,mess);
+              psmt.setDouble(3,id);
+              psmt.setInt(4,edate);
+              psmt.setInt(5,hid);
+              psmt.execute();
+              //System.out.println("Called else");
+              }
+              
+              
+              
               psmt.close();
               JOptionPane.showMessageDialog(null, "Data is updated");
            
@@ -602,7 +625,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
              JOptionPane.showMessageDialog(null, "Data is not updated");
              return; 
          }
-          }
+          
       }
    
     
@@ -641,19 +664,28 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         String EDATE = tablemodel.getValueAt(selectedRow, 8).toString().trim();
         String WDATE = tablemodel.getValueAt(selectedRow,9).toString().trim();
         
+        
+        int edate=0;
+        int wdate=0;
         secDep_txt.setText(secM);
         messadv_txt.setText(messadv);
         idcard_txt.setText(idfee);
         name_lbl.setVisible(true);
         name_lbl.setText("Name :"+Name+"   Roll:"+roll);
-        
+
         SimpleDateFormat dt = new SimpleDateFormat("MMM d,yyyy"); 
         try{
+            if(!EDATE.equals("") && !WDATE.equals("")){
             Date date = dt.parse(EDATE); 
             dt_ch.setDate(date);
             Date date2 = dt.parse(WDATE); 
             wdt_ch.setDate(date2);
-            
+            }
+            else{
+                Date date= new Date();
+                dt_ch.setDate(date);
+                //wdt_ch.setDate(date);
+            }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Date is not converted .", "Date Error", JOptionPane.ERROR_MESSAGE); 
         }
@@ -674,6 +706,9 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         String EDATE = tablemodel.getValueAt(selectedRow, 8).toString().trim();
         String WDATE = tablemodel.getValueAt(selectedRow,9).toString().trim();
         
+        int edate=0;
+        int wdate=0;
+        
         secDep_txt.setText(secM);
         messadv_txt.setText(messadv);
         idcard_txt.setText(idfee);
@@ -683,11 +718,17 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         
         SimpleDateFormat dt = new SimpleDateFormat("MMM d,yyyy"); 
         try{
+            if(!EDATE.equals("") && !WDATE.equals("")){
             Date date = dt.parse(EDATE); 
             dt_ch.setDate(date);
             Date date2 = dt.parse(WDATE); 
             wdt_ch.setDate(date2);
-            
+            }
+            else{
+                Date date= new Date();
+                dt_ch.setDate(date);
+             //   wdt_ch.setDate(date);
+            }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Date is not converted .", "Date Error", JOptionPane.ERROR_MESSAGE); 
         }
@@ -788,7 +829,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search_cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -860,6 +901,12 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
 
         stats_cb.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         stats_cb.setText("STATUS");
+        stats_cb.setOpaque(false);
+        stats_cb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stats_cbActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -874,39 +921,41 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(100, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(124, 124, 124))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(dt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                            .addComponent(secDep_txt)
+                            .addComponent(messadv_txt)
+                            .addComponent(idcard_txt))
+                        .addGap(87, 87, 87)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dt_ch, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                                    .addComponent(secDep_txt)
-                                    .addComponent(messadv_txt)
-                                    .addComponent(idcard_txt))
-                                .addGap(87, 87, 87)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(wdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(update_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(stats_cb)))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(wdt_ch, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(update_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(stats_cb))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(124, 124, 124))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(name_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -956,6 +1005,8 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        secDep_tbl.setSelectionBackground(new java.awt.Color(232, 57, 97));
+        secDep_tbl.setSelectionForeground(new java.awt.Color(240, 240, 240));
         secDep_tbl.getTableHeader().setReorderingAllowed(false);
         secDep_tbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1043,6 +1094,17 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
     private void idcard_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idcard_txtActionPerformed
         update_btn.doClick();
     }//GEN-LAST:event_idcard_txtActionPerformed
+
+    private void stats_cbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stats_cbActionPerformed
+       if(stats_cb.isSelected())
+       {
+             wdt_ch.setEnabled(true);
+       }
+       else if(!stats_cb.isSelected())
+       {
+             wdt_ch.setEnabled(false);
+       }
+    }//GEN-LAST:event_stats_cbActionPerformed
 
     /**
      * @param args the command line arguments
