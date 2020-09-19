@@ -18,7 +18,7 @@ import omms.accountantDashboardInternalJframe.AccViewDash;
  */
 public class DashboardAccountant extends javax.swing.JFrame {
 
-    int avd = 0, abd = 0, apd = 0;
+    int avd = 0, abd = 0, apd = 0, asm = 0;
 
     /**
      * Creates new form NewDashboard
@@ -63,6 +63,9 @@ public class DashboardAccountant extends javax.swing.JFrame {
         paymentLbl = new javax.swing.JLabel();
         female = new javax.swing.JRadioButton();
         male = new javax.swing.JRadioButton();
+        securityPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        securityLbl = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
@@ -244,6 +247,46 @@ public class DashboardAccountant extends javax.swing.JFrame {
         });
         sidePanel.add(male, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 740, -1, -1));
 
+        securityPanel.setBackground(new java.awt.Color(33, 102, 142));
+        securityPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                securityPanelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                securityPanelMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                securityPanelMousePressed(evt);
+            }
+        });
+
+        jLabel6.setBackground(new java.awt.Color(33, 102, 142));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/coins.png"))); // NOI18N
+
+        securityLbl.setFont(new java.awt.Font("Bell MT", 1, 26)); // NOI18N
+        securityLbl.setForeground(new java.awt.Color(255, 255, 255));
+        securityLbl.setText("Security Money");
+
+        javax.swing.GroupLayout securityPanelLayout = new javax.swing.GroupLayout(securityPanel);
+        securityPanel.setLayout(securityPanelLayout);
+        securityPanelLayout.setHorizontalGroup(
+            securityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(securityPanelLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(securityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        securityPanelLayout.setVerticalGroup(
+            securityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+            .addComponent(securityLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        sidePanel.add(securityPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 310, 60));
+
         getContentPane().add(sidePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 780));
 
         jPanel2.setBackground(new java.awt.Color(70, 139, 178));
@@ -332,11 +375,13 @@ public class DashboardAccountant extends javax.swing.JFrame {
         billPanel.setBackground(new Color(129, 214, 163));
         paymentPanel.setBackground(new Color(33, 102, 142));
         viewPanel.setBackground(new Color(33, 102, 142));
+        securityPanel.setBackground(new Color(33, 102, 142));
         abd = 1;
-        avd = apd = 0;
+        avd = apd = asm = 0;
         billLbl.setForeground(Color.BLACK);
         viewLbl.setForeground(Color.WHITE);
         paymentLbl.setForeground(Color.WHITE);
+        securityLbl.setForeground(Color.WHITE);
 
         dashhboardPanel.removeAll();
         AccBillDash sid = new AccBillDash();
@@ -427,6 +472,18 @@ public class DashboardAccountant extends javax.swing.JFrame {
         UserLog.maleFemale = 1;
     }//GEN-LAST:event_femaleActionPerformed
 
+    private void securityPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_securityPanelMouseEntered
+
+    private void securityPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_securityPanelMouseExited
+
+    private void securityPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_securityPanelMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -474,12 +531,15 @@ public class DashboardAccountant extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JRadioButton male;
     private javax.swing.JLabel paymentLbl;
     private javax.swing.JPanel paymentPanel;
+    private javax.swing.JLabel securityLbl;
+    private javax.swing.JPanel securityPanel;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JLabel viewLbl;
     private javax.swing.JPanel viewPanel;
