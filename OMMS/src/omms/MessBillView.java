@@ -5,11 +5,24 @@
  */
 package omms;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,6 +58,7 @@ public class MessBillView extends javax.swing.JFrame {
     SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
 
     int flag = 0;
+    String saveyear="";
 
     /**
      * Creates new form MessBillView
@@ -214,6 +229,8 @@ public class MessBillView extends javax.swing.JFrame {
         if (tablemodel.getRowCount() > 0) {
             tablemodel.setRowCount(0);
         }
+        saveyear = yearTxt.getText().trim();
+        
         try {
             ps = conn.prepareStatement("SELECT hallid, name, roll, roomno, bill, others, fine, waive, due FROM stuinfo JOIN billhistory USING(hallid) WHERE month = ? AND year = ? ORDER BY hallid");
             ps.setInt(1, month);
@@ -313,6 +330,168 @@ public class MessBillView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No Values On This Table", "Not Found!!!", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    
+    
+    public void genpdf()
+    {
+        String path="", month="",date="",sl="",hallid="", name="", roll="", room="", mess="",
+                others="", fine="", waive="", due ="",total="";
+        Double prev=0.0, advance=0.0;
+        int serial=1;
+        JFileChooser j=new JFileChooser();
+        
+        
+        //j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int x=j.showSaveDialog(this);
+        
+        if(x==JFileChooser.APPROVE_OPTION)
+        {
+            path=j.getSelectedFile().getPath();
+        }
+        
+        Document doc=new Document ();
+        
+        try{
+            
+         
+            PdfWriter.getInstance(doc,new FileOutputStream(path+".pdf"));
+             
+            doc.open();
+                
+                
+            Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
+            image1.setAlignment(Element.ALIGN_CENTER);
+            image1.scaleAbsolute(100, 70);
+            //Add to document
+            doc.add(image1);
+            
+            Paragraph osmany=new Paragraph("OSMANY HALL",FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL));
+            osmany.setAlignment(Element.ALIGN_CENTER);
+            doc.add(osmany);
+            
+            month = monthCombo.getSelectedItem().toString();
+            Paragraph p=new Paragraph("MESS Bill ("+month+","+saveyear+")\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 17, com.itextpdf.text.Font.NORMAL));     
+             
+            p.setAlignment(Element.ALIGN_CENTER);
+             
+            doc.add(p);
+            
+            Date todaysdate =new Date();
+            date = tableDateFormatter.format(todaysdate);
+            
+            
+            Paragraph q=new Paragraph("Date: "+date+"\n\n",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));           
+            q.setAlignment(Element.ALIGN_CENTER);
+            
+            doc.add(q);
+            
+//            Paragraph total=new Paragraph("Total Price:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD));
+//            total.setAlignment(Element.ALIGN_RIGHT);
+//            doc.add(total);
+            
+            Paragraph newline=new Paragraph("\n");
+            doc.add(newline);
+             
+            String[] header = new String[] { "Sl","Hall ID","Name","Roll","Room No","Mess Bill","Others","Fine","Waive","Due","Total"};
+            
+            PdfPTable table = new PdfPTable(header.length);
+            table.setHeaderRows(1);
+            table.setWidths(new int[] { 2, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3});
+            table.setWidthPercentage(98);
+            table.setSpacingBefore(15);
+            table.setSplitLate(false);
+            for (String columnHeader : header) {
+                PdfPCell headerCell = new PdfPCell();
+                headerCell.addElement(new Phrase(columnHeader, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
+                headerCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerCell.setBorderColor(BaseColor.LIGHT_GRAY);
+                headerCell.setPadding(8);
+                table.addCell(headerCell);
+            } 
+             
+             
+            for(int i=0; i<showBillTable.getRowCount(); i++){
+                
+                sl= showBillTable.getValueAt(i, 0).toString();
+                hallid= showBillTable.getValueAt(i, 1).toString();
+                name= showBillTable.getValueAt(i, 2).toString();
+                roll= showBillTable.getValueAt(i, 3).toString();
+                room = showBillTable.getValueAt(i, 4).toString();
+                mess = showBillTable.getValueAt(i, 5).toString();
+                others = showBillTable.getValueAt(i, 6).toString();
+                fine = showBillTable.getValueAt(i, 7).toString();
+                waive = showBillTable.getValueAt(i, 8).toString();
+                prev = Double.parseDouble(showBillTable.getValueAt(i, 9).toString());
+                advance = Double.parseDouble(showBillTable.getValueAt(i, 10).toString());
+                total = showBillTable.getValueAt(i, 11).toString();
+                
+                if( prev != 0){
+                    due = Double.toString(prev);
+                }
+                else if( advance != 0){
+                    due = Double.toString(advance)+" (A)";
+                }
+                else{
+                    due = "0";
+                }
+                
+                String[] content = new String[] {sl, hallid, name , roll, room, mess,
+                others, fine, waive, due, total};
+
+                for (String text : content) {
+                    PdfPCell cell = new PdfPCell();
+                    if( text.contains("(A)")){
+                        cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.BOLD)));
+                    }else{
+                        cell.addElement(new Phrase(text, FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL)));
+                    }
+                    
+                    cell.setBorderColor(BaseColor.LIGHT_GRAY);
+                    cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+                
+
+            }
+            doc.add(table);
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator = new LineSeparator();
+            separator.setPercentage(24);
+            separator.setAlignment(Element.ALIGN_RIGHT);
+            separator.setLineColor(BaseColor.BLACK);
+            Chunk linebreak = new Chunk(separator);
+            doc.add(linebreak);
+            
+            Paragraph name1 = new Paragraph("Asst/Associate Hall Provost   ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name1.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name1);
+            
+            doc.add(new Phrase("\n\n\n"));
+            
+            LineSeparator separator1 = new LineSeparator();
+            separator1.setPercentage(24);
+            separator1.setAlignment(Element.ALIGN_RIGHT);
+            separator1.setLineColor(BaseColor.BLACK);
+            Chunk linebreak1 = new Chunk(separator1);
+            doc.add(linebreak1);
+            
+            Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
+            name2.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(name2);
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        doc.close();
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -333,6 +512,7 @@ public class MessBillView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         showBillTable = new javax.swing.JTable();
+        genpdf = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -448,20 +628,31 @@ public class MessBillView extends javax.swing.JFrame {
             showBillTable.getColumnModel().getColumn(9).setMaxWidth(150);
         }
 
+        genpdf.setFont(new java.awt.Font("Bell MT", 0, 24)); // NOI18N
+        genpdf.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/pdf.png"))); // NOI18N
+        genpdf.setText("Generate PDF");
+        genpdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genpdfActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1)
+            .addComponent(genpdf, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
-                .addGap(0, 0, 0))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(genpdf, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -488,6 +679,11 @@ public class MessBillView extends javax.swing.JFrame {
             highlightStd(id);
         }
     }//GEN-LAST:event_idTxtActionPerformed
+
+    private void genpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genpdfActionPerformed
+        // TODO add your handling code here:
+        genpdf();
+    }//GEN-LAST:event_genpdfActionPerformed
 
     /**
      * @param args the command line arguments
@@ -525,6 +721,7 @@ public class MessBillView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton genpdf;
     private javax.swing.JTextField idTxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

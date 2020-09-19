@@ -20,17 +20,8 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Login lg = new Login();
-        //StdIndBillStat lg = new StdIndBillStat();
-        //StdInfoViewPrev lg = new StdInfoViewPrev();
-        //StdHallAdmission lg = new StdHallAdmission();
-        //StdInfoViewCur lg = new StdInfoViewCur();
-        //MessBillView lg = new MessBillView();
-        //StdInfoDelete lg = new StdInfoDelete();
-        //StdInfoUpdate lg = new StdInfoUpdate();
-        //AccountPaymentDelete lg = new AccountPaymentDelete();
-        UserLog.maleFemale = 0;
-        SecuritDepUpdate lg = new SecuritDepUpdate();
+        Login lg = new Login();
+        
         lg.setVisible(true);
     }
 }

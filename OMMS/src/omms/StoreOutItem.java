@@ -163,7 +163,7 @@ public class StoreOutItem extends javax.swing.JFrame {
         updateavgprice.setEditable(false);
         
         
-        icon = new ImageIcon("image/Osmany_icon_1 (1).png");
+        icon = new ImageIcon("image/logo.png");
         setIconImage(icon.getImage());
         
          try {
