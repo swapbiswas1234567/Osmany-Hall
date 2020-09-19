@@ -1,13 +1,11 @@
 -> LF RF Problem
 
-cmd - git config core.autocrlf true
+git config core.autocrlf true
 
 -> Merge problem
 
 git checkout --ours -- osmanyhall.db
 git add -f osmanyhall.db
-git commit -m "Database Git Error"
-
 
 
 git checkout --ours -- OMMS/dist/OMMS.jar

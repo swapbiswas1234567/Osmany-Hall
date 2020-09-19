@@ -10,6 +10,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import omms.GenerateBill;
 import omms.MessBillView;
 import omms.PresentDue;
+import omms.SendMail;
 import omms.StdIndBillStat;
 
 /**
@@ -42,6 +43,7 @@ public class AccBillDash extends javax.swing.JInternalFrame {
         viewMonBill = new javax.swing.JButton();
         presDueBill = new javax.swing.JButton();
         viewDailyBill = new javax.swing.JButton();
+        sendMailBtn = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -73,10 +75,9 @@ public class AccBillDash extends javax.swing.JInternalFrame {
         presDueBill.setBackground(new java.awt.Color(255, 255, 255));
         presDueBill.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
         presDueBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/invoice.png"))); // NOI18N
-        presDueBill.setText("  Student's Current Due");
+        presDueBill.setText("  Student's Current Due  ");
         presDueBill.setBorder(null);
         presDueBill.setFocusPainted(false);
-        presDueBill.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         presDueBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 presDueBillActionPerformed(evt);
@@ -96,31 +97,51 @@ public class AccBillDash extends javax.swing.JInternalFrame {
             }
         });
 
+        sendMailBtn.setBackground(new java.awt.Color(255, 255, 255));
+        sendMailBtn.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        sendMailBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/paper-plane.png"))); // NOI18N
+        sendMailBtn.setText("  Send Mail                       ");
+        sendMailBtn.setBorder(null);
+        sendMailBtn.setFocusPainted(false);
+        sendMailBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMailBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(253, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(viewMonBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(genBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(viewDailyBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(231, 231, 231))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(viewMonBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(viewDailyBill, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(genBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addComponent(sendMailBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(genBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(genBillBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sendMailBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(viewMonBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(viewDailyBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(presDueBill, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 530));
@@ -156,11 +177,19 @@ public class AccBillDash extends javax.swing.JInternalFrame {
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_viewDailyBillActionPerformed
 
+    private void sendMailBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMailBtnActionPerformed
+        // TODO add your handling code here:
+        SendMail st = new SendMail();
+        st.setVisible(true);
+        SwingUtilities.getWindowAncestor(this).dispose();
+    }//GEN-LAST:event_sendMailBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton genBillBtn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton presDueBill;
+    private javax.swing.JButton sendMailBtn;
     private javax.swing.JButton viewDailyBill;
     private javax.swing.JButton viewMonBill;
     // End of variables declaration//GEN-END:variables
