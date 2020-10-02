@@ -20,8 +20,8 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Login lg = new Login();
-        
+//        Login lg = new Login();
+        SecuritDepUpdate lg=new SecuritDepUpdate();
         lg.setVisible(true);
     }
 }
