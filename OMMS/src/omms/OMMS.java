@@ -5,7 +5,13 @@
  */
 package omms;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,9 +19,7 @@ import java.sql.SQLException;
  */
 public class OMMS {
 
-    //Connection con=null; 
-    //PreparedStatement ps =null;
-    //ResultSet rs = null;
+
     /**
      * @param args the command line arguments
      */
@@ -23,5 +27,9 @@ public class OMMS {
         Login lg = new Login();
         
         lg.setVisible(true);
+        
     }
+    
+    
+    
 }

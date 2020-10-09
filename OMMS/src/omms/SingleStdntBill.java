@@ -28,6 +28,7 @@ public class SingleStdntBill {
     DecimalFormat dec;
     SimpleDateFormat formatter;
     SimpleDateFormat formatter1;
+  
     
     Map<Integer, DailyMealState> mealsheet;
     Map<Integer, Double> bill;
@@ -70,7 +71,7 @@ public class SingleStdntBill {
         String strdate= "";
         
         try{
-            psmt = conn.prepareStatement("SELECT *from mealsheet where date between ? and ? and hallid=? order by date");
+            psmt = conn.prepareStatement("SELECT *from mealsheet where date>= ? and date<=? and hallid=? order by date");
             psmt.setInt(1, fromdate);
             psmt.setInt(2, todate);
             psmt.setInt(3, hallid);
@@ -84,7 +85,7 @@ public class SingleStdntBill {
                 bfgrp= rs.getInt(6);
                 lunchgrp = rs.getInt(7);
                 dinnergrp = rs.getInt(8);
-                
+               
                 try{
                     date = formatter1.parse(Integer.toString(dateserial));
                     strdate = formatter.format(date);
@@ -113,7 +114,7 @@ public class SingleStdntBill {
             JOptionPane.showMessageDialog(null, "Failed to fetch data for combobox", "Data fetch error", JOptionPane.ERROR_MESSAGE);
         }
         
-        
+        //System.out.println(" "+totalbf+" "+totallunch+" "+totaldinner);
         return bill;
     }
     

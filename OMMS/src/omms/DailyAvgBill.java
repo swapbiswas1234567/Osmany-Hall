@@ -49,9 +49,11 @@ public class DailyAvgBill {
           
          //System.out.println(" "+previous.get("Rice").avgprice+" "+previous.get("Rice").prevavailable);
           storeditemdailycost(fromdate,todate);  //calculate stored bill
+          
           //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill);
           //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
           nonstoreddailycost(fromdate,todate); //add nonstored bill
+          //totalst();
 //          for(int i=0; i<billMap.get(20200807).item.size(); i++){
 //              System.out.println(billMap.get(20200807).item.get(i).name+" "+billMap.get(20200807).item.get(i).avgprice+" "+
 //                      billMap.get(20200807).item.get(i).bfamount+" "+billMap.get(20200807).item.get(i).dinneramount);
@@ -61,6 +63,14 @@ public class DailyAvgBill {
         //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
         return billMap;
           
+    }
+    
+    public void totalst(){
+        Double total=0.0;
+        for (Integer key : billMap.keySet()) {
+            total =total+ billMap.get(key).bfbill.get(0)+billMap.get(key).lunchbill.get(0)+billMap.get(key).dinnerbill.get(0);
+        }
+        System.out.println("total store bill "+total);
     }
     
 
