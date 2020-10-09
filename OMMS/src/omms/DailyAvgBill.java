@@ -49,7 +49,7 @@ public class DailyAvgBill {
           
          //System.out.println(" "+previous.get("Rice").avgprice+" "+previous.get("Rice").prevavailable);
           storeditemdailycost(fromdate,todate);  //calculate stored bill
-          
+         // totalst();
           //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill);
           //System.out.println(billMap.get(fromdate).bfbill+" "+billMap.get(fromdate).lunchbill+" "+billMap.get(fromdate).dinnerbill);
           nonstoreddailycost(fromdate,todate); //add nonstored bill
@@ -70,7 +70,7 @@ public class DailyAvgBill {
         for (Integer key : billMap.keySet()) {
             total =total+ billMap.get(key).bfbill.get(0)+billMap.get(key).lunchbill.get(0)+billMap.get(key).dinnerbill.get(0);
         }
-        System.out.println("total store bill "+total);
+        System.out.println("total store bill "+(total+billMap.get(20190201).lunchbill.get(1)+billMap.get(20190201).lunchbill.get(2)));
     }
     
 
@@ -309,8 +309,55 @@ public class DailyAvgBill {
         int grp=-1, date=0,meal=0;
         Double price=0.0;
         
+        
         try{
-            psmt = conn.prepareStatement("select date,sum(breakfast),bfgrp from mealsheet where date >= ? and date <= ? GROUP by date,bfgrp order by date asc, bfgrp DESC");
+            psmt = conn.prepareStatement("select date,sum(breakfast), sum(lunch), sum(dinner) from mealsheet where date >= ? and date <= ? GROUP by date order by date asc, bfgrp DESC");
+            psmt.setInt(1, fromdate);
+            psmt.setInt(2, todate);
+            rs = psmt.executeQuery();
+            //System.out.println(name+" "+dateserial);
+            while(rs.next()){
+                try{
+                    
+                    date = rs.getInt(1);
+                    meal = rs.getInt(2);
+                    //System.out.println(rs.getInt(1)+" "+grp+" "+meal+" "+billMap.get(date).bfbill);
+                    if( meal != 0){
+                        price = billMap.get(date).bfbill.get(0)/meal;
+                        billMap.get(date).bfbill.set(0, price);
+                    }
+                    
+                    if(rs.getInt(3) != 0){
+                        price = billMap.get(date).lunchbill.get(0)/rs.getInt(3);
+                        billMap.get(date).lunchbill.set(0, price);
+                    }
+                    
+                    if ( rs.getInt(4) != 0){
+                        price = billMap.get(date).dinnerbill.get(0)/rs.getInt(4);
+                        billMap.get(date).dinnerbill.set(0, price);
+                    }
+                    
+                            
+                }
+                catch(Exception e){
+                    JOptionPane.showMessageDialog(null,rs.getInt(1)+" has no store out", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+            }
+            //previous.put(name, new PreviousValue(totalamount,totalprice));
+            psmt.close();
+            rs.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Failed to calculate bf perhead meal", "Data fetch error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+        
+        
+        
+        try{
+            psmt = conn.prepareStatement("select date,sum(breakfast),bfgrp from mealsheet where date >= ? and date <= ? and bfgrp!=0 GROUP by date,bfgrp order by date asc, bfgrp DESC");
             psmt.setInt(1, fromdate);
             psmt.setInt(2, todate);
             rs = psmt.executeQuery();
@@ -321,16 +368,17 @@ public class DailyAvgBill {
                     date = rs.getInt(1);
                     meal = rs.getInt(2);
                     //System.out.println(rs.getInt(1)+" "+grp+" "+meal+" "+billMap.get(date).bfbill);
-                    if( grp == 0 && meal != 0){
+                    if( grp != 0 && meal != 0){
                         price = billMap.get(date).bfbill.get(grp)/meal;
+                        price = price + billMap.get(date).bfbill.get(0);
                         billMap.get(date).bfbill.set(grp, price);
                     }
-                    else if(meal !=0){
-                        price = billMap.get(date).bfbill.get(grp) + billMap.get(date).bfbill.get(0);
-                        //System.out.println(price);
-                        price= price/meal;
-                        billMap.get(date).bfbill.set(grp, price);
-                    }
+//                    else if(meal !=0){
+//                        price = billMap.get(date).bfbill.get(grp) + billMap.get(date).bfbill.get(0);
+//                        //System.out.println(price);
+//                        price= price/meal;
+//                        billMap.get(date).bfbill.set(grp, price);
+//                    }
                             
                 }
                 catch(Exception e){
@@ -348,7 +396,7 @@ public class DailyAvgBill {
         
         
         try{
-            psmt = conn.prepareStatement("select date,sum(lunch),lunchgrp from mealsheet where date >= ? and date <= ? GROUP by date,lunchgrp order by date asc, lunchgrp DESC");
+            psmt = conn.prepareStatement("select date,sum(lunch),lunchgrp from mealsheet where date >= ? and date <= ? and lunchgrp != 0 GROUP by date,lunchgrp order by date asc, lunchgrp DESC");
             psmt.setInt(1, fromdate);
             psmt.setInt(2, todate);
             rs = psmt.executeQuery();
@@ -359,17 +407,18 @@ public class DailyAvgBill {
                     date = rs.getInt(1);
                     meal = rs.getInt(2);
                     //System.out.println(rs.getInt(1)+" "+grp+" "+meal+" "+billMap.get(date).lunchbill);
-                    if( grp == 0 && meal != 0){
+                    if( grp != 0 && meal != 0){
                         price = billMap.get(date).lunchbill.get(grp)/meal;
+                        price = price + billMap.get(date).lunchbill.get(0);
                         billMap.get(date).lunchbill.set(grp, price);
                     }
-                    else if(meal !=0){
-                        price = billMap.get(date).lunchbill.get(grp) + billMap.get(date).lunchbill.get(0);
-                        //System.out.println(price+" "+price/meal);
-                        price= price/meal;
-                        billMap.get(date).lunchbill.set(grp, price);
-                        //System.out.println(billMap.get(date).lunchbill);
-                    }
+//                    else if(meal !=0){
+//                        price = billMap.get(date).lunchbill.get(grp) + billMap.get(date).lunchbill.get(0);
+//                        //System.out.println(price+" "+price/meal);
+//                        price= price/meal;
+//                        billMap.get(date).lunchbill.set(grp, price);
+//                        //System.out.println(billMap.get(date).lunchbill);
+//                    }
                             
                 }
                 catch(Exception e){
@@ -387,7 +436,7 @@ public class DailyAvgBill {
         
         
         try{
-            psmt = conn.prepareStatement("select date,sum(dinner),dinnergrp from mealsheet where date >= ? and date <= ? GROUP by date,dinnergrp order by date asc, dinnergrp DESC");
+            psmt = conn.prepareStatement("select date,sum(dinner),dinnergrp from mealsheet where date >= ? and date <= ? and dinnergrp != 0 GROUP by date,dinnergrp order by date asc, dinnergrp DESC");
             psmt.setInt(1, fromdate);
             psmt.setInt(2, todate);
             rs = psmt.executeQuery();
@@ -398,16 +447,17 @@ public class DailyAvgBill {
                     date = rs.getInt(1);
                     meal = rs.getInt(2);
                     //System.out.println(rs.getInt(1)+" "+grp+" "+meal+" "+billMap.get(date).dinnerbill);
-                    if( grp == 0 && meal != 0){
+                    if( grp != 0 && meal != 0){
                         price = billMap.get(date).dinnerbill.get(grp)/meal;
+                        price = price + billMap.get(date).dinnerbill.get(0);
                         billMap.get(date).dinnerbill.set(grp, price);
                     }
-                    else if(meal !=0){
-                        price = billMap.get(date).dinnerbill.get(grp) + billMap.get(date).dinnerbill.get(0);
-                        //System.out.println(price);
-                        price= price/meal;
-                        billMap.get(date).dinnerbill.set(grp, price);
-                    }
+//                    else if(meal !=0){
+//                        price = billMap.get(date).dinnerbill.get(grp) + billMap.get(date).dinnerbill.get(0);
+//                        //System.out.println(price);
+//                        price= price/meal;
+//                        billMap.get(date).dinnerbill.set(grp, price);
+//                    }
                             
                 }
                 catch(Exception e){

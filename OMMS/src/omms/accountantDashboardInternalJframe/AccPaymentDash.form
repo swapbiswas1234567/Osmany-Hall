@@ -32,11 +32,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="279" max="32767" attributes="0"/>
+                  <EmptySpace pref="250" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="stdPayBtn" max="32767" attributes="0"/>
-                      <Component id="payViewBtn" alignment="0" max="32767" attributes="0"/>
-                      <Component id="payDelBtn" alignment="0" min="-2" pref="321" max="-2" attributes="0"/>
+                      <Component id="stdPayBtn" pref="350" max="32767" attributes="0"/>
+                      <Component id="payViewBtn" alignment="0" pref="350" max="32767" attributes="0"/>
+                      <Component id="payDelBtn" alignment="0" pref="350" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="260" max="-2" attributes="0"/>
               </Group>

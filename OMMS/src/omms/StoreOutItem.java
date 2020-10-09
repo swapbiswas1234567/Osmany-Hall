@@ -628,7 +628,7 @@ public class StoreOutItem extends javax.swing.JFrame {
                 totalprice = (prevavailable*avg)+(rs.getDouble(5));
                 totalamount = prevavailable+rs.getDouble(1);
                 avg = totalprice/totalamount;
-               //System.out.println(totalprice+" "+totalamount);
+              
                 prevavailable =prevavailable+ rs.getDouble(1)-(rs.getDouble(2)+rs.getDouble(3)+rs.getDouble(4));
             }
             //System.out.println(totalamount +" "+totalprice);

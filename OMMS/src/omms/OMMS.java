@@ -25,7 +25,7 @@ public class OMMS {
      */
     public static void main(String[] args) {
         Login lg = new Login();
-        
+        //SecDepUpd lg=new SecDepUpd();
         lg.setVisible(true);
         
     }

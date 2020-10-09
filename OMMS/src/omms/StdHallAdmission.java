@@ -57,7 +57,7 @@ public class StdHallAdmission extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb(); // set connection with database        
         setDateChoosers(); // setting todays date to the date chooser
         stdNameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        //closeBtn();
+        closeBtn();
         JTextFieldDateEditor dtedit;
         dtedit = (JTextFieldDateEditor) entryDateChooser.getDateEditor();
         dtedit.setEditable(false);

@@ -528,6 +528,7 @@ public class NSItemView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void frdt_chPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_frdt_chPropertyChange

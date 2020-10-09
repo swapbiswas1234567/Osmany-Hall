@@ -331,13 +331,13 @@ public class GroupStdAssign extends javax.swing.JFrame {
         }
         
         if(state.equals("Breakfast")){
-            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.bfgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.bfgrp != ? and mealsheet.bfgrp != 0";
+            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.bfgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.bfgrp != ? and mealsheet.breakfast != 0";
         }
         else if(state.equals("Lunch")){
-            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.lunchgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.lunchgrp != ? and mealsheet.lunchgrp != 0";
+            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.lunchgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.lunchgrp != ? and mealsheet.lunch != 0";
         }
         else if(state.equals("Dinner")){
-            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.dinnergrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.dinnergrp != ? and mealsheet.dinnergrp != 0";
+            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.dinnergrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.dinnergrp != ? and mealsheet.dinner != 0";
         }
         
         //System.out.println(grpserial+" "+state);
@@ -387,15 +387,15 @@ public class GroupStdAssign extends javax.swing.JFrame {
                     + "in on all","Date parsing error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        //System.out.println(state);
+        //System.out.println(state+" "+grpserial);
         if(state.equals("Breakfast")){
             sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.bfgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.bfgrp=? and mealsheet.breakfast!=0";
         }
         else if(state.equals("Lunch")){
-            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.lunchgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.lunchgrp=? and mealsheet.breakfast!=0";
+            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.lunchgrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.lunchgrp=? and mealsheet.lunch!=0";
         }
         else if(state.equals("Dinner")){
-            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.dinnergrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.dinnergrp=? and mealsheet.breakfast!=0";
+            sql="select stuinfo.hallid, stuinfo.name, stuinfo.roomno, mealsheet.dinnergrp from stuinfo JOIN mealsheet on stuinfo.hallid = mealsheet.hallid and mealsheet.date = ? and mealsheet.dinnergrp=? and mealsheet.dinner!=0";
         }
         
         //System.out.println(sql+" "+grpserial);
@@ -404,7 +404,7 @@ public class GroupStdAssign extends javax.swing.JFrame {
             psmt.setInt(1, dateserial);
             psmt.setInt(2, grpserial);
             rs = psmt.executeQuery();
-            //System.out.println("called");
+            //System.out.println("called\n");
             while(rs.next()){
                 //System.out.print(rs.getInt(1));
                 Object o [] = {serial,rs.getInt(1),rs.getString(2), rs.getString(3),grpname};
@@ -634,7 +634,7 @@ public class GroupStdAssign extends javax.swing.JFrame {
                 tablemodel.setRowCount(0);
             }
             grpname = grpcombo.getSelectedItem().toString();
-            ///System.out.println(date+" "+state+" "+grpname+" "+grpserial);
+            //System.out.println(date+" "+state+" "+grpname+" "+grpserial);
             setsingletable(date,state,grpname,grpserial);
             setalltable(date, state, grpname, grpserial);
             searchsingletable(hallid);
