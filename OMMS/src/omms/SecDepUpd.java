@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class SecuritDepUpdate extends javax.swing.JFrame {
+public class SecDepUpd extends javax.swing.JFrame {
 
     Connection conn = null;
     PreparedStatement psmt = null;
@@ -41,7 +41,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
     
 
 
-    public SecuritDepUpdate() {
+    public SecDepUpd() {
         initComponents();
         tableDecoration();
         initialize();
@@ -1073,6 +1073,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void messadv_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messadv_txtActionPerformed
@@ -1155,20 +1156,21 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SecuritDepUpdate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SecDepUpd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SecuritDepUpdate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SecDepUpd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SecuritDepUpdate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SecDepUpd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SecuritDepUpdate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SecDepUpd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SecuritDepUpdate().setVisible(true);
+                new SecDepUpd().setVisible(true);
             }
         });
     }

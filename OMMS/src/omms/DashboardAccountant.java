@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import javax.swing.ButtonGroup;
 import omms.accountantDashboardInternalJframe.AccBillDash;
 import omms.accountantDashboardInternalJframe.AccPaymentDash;
+import omms.accountantDashboardInternalJframe.AccSecurity;
 import omms.accountantDashboardInternalJframe.AccViewDash;
 
 /**
@@ -421,11 +422,13 @@ public class DashboardAccountant extends javax.swing.JFrame {
         paymentPanel.setBackground(new Color(129, 214, 163));
         viewPanel.setBackground(new Color(33, 102, 142));
         billPanel.setBackground(new Color(33, 102, 142));
+        securityPanel.setBackground(new Color(33, 102, 142));
         apd = 1;
-        abd = avd = 0;
+        abd = avd = asm = 0;
         paymentLbl.setForeground(Color.BLACK);
         billLbl.setForeground(Color.WHITE);
         viewLbl.setForeground(Color.WHITE);
+        securityLbl.setForeground(Color.WHITE);
 
         dashhboardPanel.removeAll();
         AccPaymentDash sid = new AccPaymentDash();
@@ -437,11 +440,13 @@ public class DashboardAccountant extends javax.swing.JFrame {
         viewPanel.setBackground(new Color(129, 214, 163));
         paymentPanel.setBackground(new Color(33, 102, 142));
         billPanel.setBackground(new Color(33, 102, 142));
+        securityPanel.setBackground(new Color(33, 102, 142));
         avd = 1;
-        abd = apd = 0;
+        abd = apd = asm = 0;
         viewLbl.setForeground(Color.BLACK);
         billLbl.setForeground(Color.WHITE);
         paymentLbl.setForeground(Color.WHITE);
+        securityLbl.setForeground(Color.WHITE);
 
         dashhboardPanel.removeAll();
         AccViewDash sid = new AccViewDash();
@@ -474,14 +479,34 @@ public class DashboardAccountant extends javax.swing.JFrame {
 
     private void securityPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMouseEntered
         // TODO add your handling code here:
+        if (asm != 1) {
+            securityPanel.setBackground(new Color(45, 45, 45));
+        }
     }//GEN-LAST:event_securityPanelMouseEntered
 
     private void securityPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMouseExited
         // TODO add your handling code here:
+        if (asm != 1) {
+            securityPanel.setBackground(new Color(33, 102, 142));
+        }
     }//GEN-LAST:event_securityPanelMouseExited
 
     private void securityPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_securityPanelMousePressed
         // TODO add your handling code here:
+        securityPanel.setBackground(new Color(129, 214, 163));
+        paymentPanel.setBackground(new Color(33, 102, 142));
+        billPanel.setBackground(new Color(33, 102, 142));
+        viewPanel.setBackground(new Color(33, 102, 142));
+        avd = 1;
+        abd = apd = asm = 0;
+        securityLbl.setForeground(Color.BLACK);
+        billLbl.setForeground(Color.WHITE);
+        paymentLbl.setForeground(Color.WHITE);
+        viewLbl.setForeground(Color.WHITE);
+
+        dashhboardPanel.removeAll();
+        AccSecurity sid = new AccSecurity();
+        dashhboardPanel.add(sid).setVisible(true);
     }//GEN-LAST:event_securityPanelMousePressed
 
     /**
