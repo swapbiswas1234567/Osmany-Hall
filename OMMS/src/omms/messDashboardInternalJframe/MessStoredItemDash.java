@@ -12,6 +12,7 @@ import omms.StoreInForm;
 import omms.StoreInSum;
 import omms.StoreOutItem;
 import omms.StoreOutSum;
+import omms.StoredItemOutUpdate;
 import omms.StoredItemUpdate;
 
 /**
@@ -222,7 +223,7 @@ public class MessStoredItemDash extends javax.swing.JInternalFrame {
 
     private void storeOutUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeOutUpdateBtnActionPerformed
         // TODO add your handling code here:
-        StoredItemUpdate st = new StoredItemUpdate();
+        StoredItemOutUpdate st = new StoredItemOutUpdate();
         st.setVisible(true);
         SwingUtilities.getWindowAncestor(this).dispose();
     }//GEN-LAST:event_storeOutUpdateBtnActionPerformed

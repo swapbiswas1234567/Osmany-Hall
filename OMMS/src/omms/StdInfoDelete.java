@@ -61,7 +61,7 @@ public class StdInfoDelete extends javax.swing.JFrame {
         conn = Jconnection.ConnecrDb(); // set connection with database  
         Tabledecoration();
         idTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
-        //closeBtn();
+        closeBtn();
         tablemodel = (DefaultTableModel) stdDelTable.getModel();
 
         try {

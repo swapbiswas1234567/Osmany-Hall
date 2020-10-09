@@ -31,6 +31,7 @@ public class CreateDept extends javax.swing.JFrame {
      */
     public CreateDept() {
         initComponents();
+        initialize();
     }
     
     public void initialize() {

@@ -201,7 +201,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                tablemodel = (DefaultTableModel) secDep_tbl.getModel();
                if(search_cmb.getSelectedItem().toString().equals("PREVIOUS")){
                  try{
-                     System.out.println("prev search query ex");
+                  
                  if(rs.getInt(8)!=0 || rs.getInt(9)!=0)   { 
                  da = formatter1.parse(rs.getString(8));
                  getDate = formatter2.format(da);
@@ -217,7 +217,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                  }
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, " Date error","Input Error",JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "1st Date error","Input Error",JOptionPane.ERROR_MESSAGE);
              }
                
                if(edate ==0 && rs.getInt(10)==0){
@@ -247,7 +247,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                  }
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, " Date error","Input Error",JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "2nd Date error","Input Error",JOptionPane.ERROR_MESSAGE);
              }
             if(edate ==0 && rs.getInt(11)==0){
                   
@@ -318,7 +318,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                  }
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, " Date error","Input Error",JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "3rd Date error","Input Error",JOptionPane.ERROR_MESSAGE);
              }
                
             if(edate ==0 && rs.getInt(11)==0){
@@ -350,9 +350,9 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
              
            
            
-            psmt2=conn.prepareStatement("select hallid,roll,name,dept,securitymoney,messad,idcard,depositdate,withdrawdate,moneystatus from previousstudents where moneystatus=0");
+           psmt2=conn.prepareStatement("select hallid,roll,name,dept,securitymoney,messad,idcard,depositdate,withdrawdate,moneystatus from previousstudents where moneystatus=0");
            
-            rs2=psmt2.executeQuery();
+           rs2=psmt2.executeQuery();
            String getDate="";
            String getDate2="";
            int edate=0;
@@ -364,27 +364,31 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
            {
                ser++;
                tablemodel = (DefaultTableModel) secDep_tbl.getModel();
-                 try{
-                 if(rs2.getInt(8)!=0 || rs2.getInt(9)!=0)   { 
+               //System.out.println("ca "+rs2.getString(1)+" "+rs2.getString(8));  
+               try{
+                 
+                 if(rs2.getInt(8)!=0 && rs2.getInt(9)==0)   { 
+                System.out.println("ca "+rs2.getString(1)+" "+rs2.getString(8)+" "+rs2.getString(9));  
                  da = formatter1.parse(rs2.getString(8));
                  getDate = formatter2.format(da);
-                 da1 = formatter1.parse(rs2.getString(9));
-                 getDate2 = formatter2.format(da1); 
-                 edate=Integer.parseInt(getDate);
-                 wdate=Integer.parseInt(getDate2);
+                 //a1 = formatter1.parse(rs2.getString(9));
+                 //getDate2 = formatter2.format(da1); 
+                 edate=Integer.parseInt(rs2.getString(8));
+                 //wdate=Integer.parseInt(getDate2);
            
                  }
+                 
                  else
-                 {
-                     getDate="";
-                     getDate2="";
-                 }
+                     {
+                         getDate="";
+                         getDate2="";
+                     }
                  }
              
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, " Date error","Input Error",JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "4thn Date error","Input Error",JOptionPane.ERROR_MESSAGE);
              }
-               
+//               
               
            
                if(edate ==0 && rs2.getInt(10)==0){
@@ -459,7 +463,7 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
              
              int dateserial =0;
              int dateserial2 =0;
-             
+            // System.out.println("called");
              try{
                  getDate = formatter2.format(edate);
                  dateserial = Integer.parseInt(formatter1.format(edate));
@@ -470,8 +474,9 @@ public class SecuritDepUpdate extends javax.swing.JFrame {
                  }
              }
              catch(Exception e){
-                 JOptionPane.showMessageDialog(null, "Date Error","Date Update Error",JOptionPane.ERROR_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "update set Date Error","Date Update Error",JOptionPane.ERROR_MESSAGE);
              }
+             //System.out.println("again called");
              
               //quantity check
                  if(sedep.equals("") == true)
