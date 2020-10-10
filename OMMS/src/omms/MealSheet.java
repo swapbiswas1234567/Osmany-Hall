@@ -69,7 +69,7 @@ public class MealSheet extends javax.swing.JFrame {
         Offtabledecoration();
         inittialization();
         closeBtn();
-        
+        setTitle("Daily Meal Sheet");
     }
     
     /*
