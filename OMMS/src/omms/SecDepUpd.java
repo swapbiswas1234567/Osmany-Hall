@@ -570,6 +570,13 @@ public class SecDepUpd extends javax.swing.JFrame {
                        tablemodel.setValueAt(dec2.format(me), selectedRow, 6);
                        tablemodel.setValueAt(dec2.format(id), selectedRow, 7);
                        tablemodel.setValueAt(getDate, selectedRow,8);
+            int flag1=currst(h_id);
+            System.out.println("Currst"+flag1);
+                       if(flag1==1)
+                       {
+                           JOptionPane.showMessageDialog(null, "Current student can withdraw","Exception Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                       }
                        if(wdt_ch.isEnabled())
                        { 
                            tablemodel.setValueAt(getDate2, selectedRow,9);
@@ -582,10 +589,10 @@ public class SecDepUpd extends javax.swing.JFrame {
                        if(!stats_cb.isSelected())
                        {
                            tablemodel.setValueAt("Deposited", selectedRow,10);
-                           updatedatabase(h_id,sedp,me,id,dateserial,dateserial2);
+                           updatedatabase(h_id,sedp,me,id,dateserial,0);
     
                        }
-                       else if(stats_cb.isSelected())
+                       else if(stats_cb.isSelected() && flag1==0)
                        {
                            tablemodel.setValueAt("Withdraw", selectedRow,10);
                            updatedatabase(h_id,sedp,me,id,dateserial,dateserial2);
@@ -605,7 +612,7 @@ public class SecDepUpd extends javax.swing.JFrame {
             if(stats_cb.isSelected()){
               psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=1 WHERE hallid=? ");
             }
-            else{
+            else if(!stats_cb.isSelected()){
             psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=0 WHERE hallid=? ");
                 
             }
@@ -761,7 +768,37 @@ public class SecDepUpd extends javax.swing.JFrame {
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Date is not converted .", "Date Error", JOptionPane.ERROR_MESSAGE); 
         }
+        secDep_txt.requestFocus();
     }
+     
+     public int currst(int h_id)
+     {
+         int flag=0;
+         try{
+             psmt=conn.prepareStatement("select hallid from stuinfo where hallid=?");
+             psmt.setInt(1, h_id);
+             rs=psmt.executeQuery();
+             while(rs.next())
+             {
+                 if(rs.getInt(1)==h_id)
+                 {
+                    flag=1;
+                    break;
+             }else{
+                     flag=0;
+                     break;
+                 
+             }
+             }
+             
+             
+         }
+         catch(Exception e)
+         {
+         JOptionPane.showMessageDialog(null, "No id in the table.", "Exception Error", JOptionPane.ERROR_MESSAGE); 
+         }
+         return flag;
+     }
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
