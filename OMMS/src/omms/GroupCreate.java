@@ -125,7 +125,7 @@ public class GroupCreate extends javax.swing.JFrame {
         dtedit1.setEditable(false);
         
         model = grptable.getModel();
-        
+        createnametxt.requestFocus();
     }
     
     
@@ -149,7 +149,7 @@ public class GroupCreate extends javax.swing.JFrame {
         int totalrow=-1, found=-1;
         totalrow= grptable.getRowCount();
         for(int i=0; i<totalrow; i++){
-            if(model.getValueAt(i, 0).toString().equals(date) && model.getValueAt(i, 1).toString().equals(name)
+            if(model.getValueAt(i, 0).toString().equals(date) && model.getValueAt(i, 1).toString().toLowerCase().equals(name)
                     && model.getValueAt(i, 2).toString().equals(state) && i!= row){
                 found=i;
                 break;  
@@ -199,7 +199,7 @@ public class GroupCreate extends javax.swing.JFrame {
         //System.out.print(dateserial+" "+state);
       
         database= searchdatabase(dateserial,name,state);
-        jtable = checkinjtable(strdate,name,state,-1);
+        jtable = checkinjtable(strdate,name.toLowerCase(),state,-1);
        // System.out.print(database);
         if(jtable == -1 && !database){
             Object o [] = {strdate, name,state};

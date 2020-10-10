@@ -625,7 +625,6 @@ public class StoreOutItem extends javax.swing.JFrame {
             rs = psmt.executeQuery();
             
             while(rs.next()){
-
                 totalprice = (prevavailable*avg)+(rs.getDouble(5));
                 totalamount = prevavailable+rs.getDouble(1);
                 avg = totalprice/totalamount;
