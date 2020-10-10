@@ -266,6 +266,7 @@ public class GenerateBill extends javax.swing.JFrame {
         billmap = db.setbill(fromdate, todate);
         
 //        //System.out.println(bill);
+        
         try{
             psmt = conn.prepareStatement("select hallid,roll,name,roomno,totaldue from stuinfo ORDER by hallid");
             rs = psmt.executeQuery();
