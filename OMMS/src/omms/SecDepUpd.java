@@ -50,8 +50,11 @@ public class SecDepUpd extends javax.swing.JFrame {
        
        
         flag=1;
-        
+        closeBtn();
     }
+    
+    
+    
 
      public void tableDecoration()
     {
@@ -483,8 +486,6 @@ public class SecDepUpd extends javax.swing.JFrame {
              String getDate2 ="",gd2="";
              int dateserial =0;
              int dateserial2 =0;
-             System.out.println("Entrydate" +dt);
-             System.out.println("WEntrydate" +dt1);
              SimpleDateFormat dat = new SimpleDateFormat("MMM d,yyyy");
           
           try{
@@ -516,7 +517,6 @@ public class SecDepUpd extends javax.swing.JFrame {
                        getDate2=dat.format(d1).toString();
                        gd2=formatter1.format(d1).toString();
                        dateserial2=Integer.parseInt(gd2);
-                       System.out.println(dateserial2);
                        
                        
                    
@@ -570,13 +570,7 @@ public class SecDepUpd extends javax.swing.JFrame {
                        tablemodel.setValueAt(dec2.format(me), selectedRow, 6);
                        tablemodel.setValueAt(dec2.format(id), selectedRow, 7);
                        tablemodel.setValueAt(getDate, selectedRow,8);
-            int flag1=currst(h_id);
-            System.out.println("Currst"+flag1);
-                       if(flag1==1)
-                       {
-                           JOptionPane.showMessageDialog(null, "Current student can withdraw","Exception Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                       }
+            
                        if(wdt_ch.isEnabled())
                        { 
                            tablemodel.setValueAt(getDate2, selectedRow,9);
@@ -592,7 +586,7 @@ public class SecDepUpd extends javax.swing.JFrame {
                            updatedatabase(h_id,sedp,me,id,dateserial,0);
     
                        }
-                       else if(stats_cb.isSelected() && flag1==0)
+                       else if(stats_cb.isSelected())
                        {
                            tablemodel.setValueAt("Withdraw", selectedRow,10);
                            updatedatabase(h_id,sedp,me,id,dateserial,dateserial2);
@@ -608,13 +602,25 @@ public class SecDepUpd extends javax.swing.JFrame {
     
     public void updatedatabase(int hid,double se,double me,double idfe,int ed,int wd)
     {
+        int flag1=prevst(hid);
+        int flag=0;
         try{
-            if(stats_cb.isSelected()){
+            if(stats_cb.isSelected()&& flag1==1){
               psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=1 WHERE hallid=? ");
+            flag=1;
             }
-            else if(!stats_cb.isSelected()){
+            else if(!stats_cb.isSelected() && flag1==1){
             psmt=conn.prepareStatement("UPDATE previousstudents SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=0 WHERE hallid=? ");
+                flag=1;
+            }
+            else if(stats_cb.isSelected()&& flag1==0){
+             psmt=conn.prepareStatement("UPDATE stuinfo SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=1 WHERE hallid=? ");
                 
+            }
+            else if(!stats_cb.isSelected() && flag1==0)
+            {
+                psmt=conn.prepareStatement("UPDATE stuinfo SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=?,moneystatus=0 WHERE hallid=? ");
+             
             }
               psmt.setDouble(1,se);
               psmt.setDouble(2,me);
@@ -624,7 +630,7 @@ public class SecDepUpd extends javax.swing.JFrame {
               psmt.setInt(6,hid);
               psmt.execute();
               psmt.close();
-        
+           JOptionPane.showMessageDialog(null, "Data is updated");
           }
           catch(Exception e)
          {
@@ -632,23 +638,10 @@ public class SecDepUpd extends javax.swing.JFrame {
              return;
          }
         
-        try{
-              psmt=conn.prepareStatement("UPDATE stuinfo SET securitymoney=?,messad=?,idcard=?,depositdate=?,withdrawdate=0,moneystatus=0 WHERE hallid=?");
-              psmt.setDouble(1,se);
-              psmt.setDouble(2,me);
-              psmt.setDouble(3,idfe);
-              psmt.setInt(4,ed);
-              psmt.setInt(5,hid);
-              psmt.execute();
-              psmt.close();
-              JOptionPane.showMessageDialog(null, "Data is updated");
+             
            
-          }
-          catch(Exception e)
-         {
-             JOptionPane.showMessageDialog(null, "Data is not updated");
-             return; 
-         }
+           
+          
         
         
         
@@ -771,11 +764,11 @@ public class SecDepUpd extends javax.swing.JFrame {
         secDep_txt.requestFocus();
     }
      
-     public int currst(int h_id)
+     public int prevst(int h_id)
      {
          int flag=0;
          try{
-             psmt=conn.prepareStatement("select hallid from stuinfo where hallid=?");
+             psmt=conn.prepareStatement("select hallid from previousstudents where hallid=?");
              psmt.setInt(1, h_id);
              rs=psmt.executeQuery();
              while(rs.next())
@@ -790,6 +783,9 @@ public class SecDepUpd extends javax.swing.JFrame {
                  
              }
              }
+             rs.close();
+             psmt.close();
+             return flag;
              
              
          }
