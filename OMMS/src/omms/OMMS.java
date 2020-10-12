@@ -11,7 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -24,9 +28,11 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         Login lg = new Login();
         //SecDepUpd lg=new SecDepUpd();
-        lg.setVisible(true);
+        lg.setVisible(true);  
+        
         
     }
     
