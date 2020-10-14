@@ -49,9 +49,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="345" max="32767" attributes="0"/>
+                  <EmptySpace pref="373" max="32767" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="345" max="32767" attributes="0"/>
+                  <EmptySpace pref="372" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -69,7 +69,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Bell MT" size="36" style="1"/>
+              <Font name="Bell MT" size="34" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -95,40 +95,38 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="176" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel7" max="32767" attributes="0"/>
+                      <Component id="jLabel9" min="-2" pref="144" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel7" max="32767" attributes="0"/>
-                              <Component id="jLabel9" min="-2" pref="144" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="emailTxt" max="32767" attributes="0"/>
-                                  <Component id="entryDateChooser" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="stdRollTxt" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="roomNoTxt" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="deptComboBox" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="batchTxt" min="-2" pref="87" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="contactNoTxt" alignment="1" min="-2" pref="315" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="stdNameTxt" min="-2" pref="315" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
                           <Component id="clearBtn" min="-2" pref="125" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="submitBtn" min="-2" pref="131" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="submitBtn" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="emailTxt" max="32767" attributes="0"/>
+                              <Component id="entryDateChooser" alignment="0" max="32767" attributes="0"/>
+                              <Component id="stdRollTxt" alignment="0" max="32767" attributes="0"/>
+                              <Component id="roomNoTxt" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="deptComboBox" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="batchTxt" min="-2" pref="87" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="contactNoTxt" alignment="1" min="-2" pref="315" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="stdNameTxt" min="-2" pref="315" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="151" max="32767" attributes="0"/>

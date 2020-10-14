@@ -24,12 +24,9 @@ public class OMMS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-<<<<<<< HEAD
-=======
         Login lg = new Login();
         //SecDepUpd lg=new SecDepUpd();
         lg.setVisible(true);
->>>>>>> 741701c3124d8f23c2a9c7d832194e114b087d4f
         
     }
     
