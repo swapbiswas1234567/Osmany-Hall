@@ -361,7 +361,7 @@ public class MessBillView extends javax.swing.JFrame {
             doc.open();
                 
                 
-            Image image1 = Image.getInstance("..\\\\MIST_Logo.png");
+            Image image1 = Image.getInstance(getClass().getResource("/imagepackage/MIST_Logo.png"));
             image1.setAlignment(Element.ALIGN_CENTER);
             image1.scaleAbsolute(100, 70);
             //Add to document
