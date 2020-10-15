@@ -53,15 +53,13 @@ public class StdInfoUpdate extends javax.swing.JFrame {
     public StdInfoUpdate() {
         initComponents();
         initialize();
-        closeBtn();
+        //closeBtn();
         setTitle("Student's Info Update");
     }
 
     public void initialize() {
-        conn = Jconnection.ConnecrDb(); // set connection with database        
-        //setDateChoosers(); // setting todays date to the date chooser
+        conn = Jconnection.ConnecrDb(); 
         nameTxt.requestFocus();
-        //closeBtn();
         JTextFieldDateEditor dtedit;
         dtedit = (JTextFieldDateEditor) dobDateChooser.getDateEditor();
         dtedit.setEditable(false);
@@ -274,14 +272,15 @@ public class StdInfoUpdate extends javax.swing.JFrame {
                 emailTxt.setText(rs.getString(8));
                 bloodComboBox.setSelectedItem(rs.getString(9));
                 religionComboBox.setSelectedItem(rs.getString(10));
-                String dobstr = rs.getString(11);
-                if (dobstr != null) {
-                    Date dob = formatDate1.parse(dobstr);
+                int dobstr = rs.getInt(11);
+                if (dobstr != 0) {
+                    Date dob = formatDate1.parse(Integer.toString(dobstr));
                     dobDateChooser.setDate(dob);
                 }
                 permAddTxt.setText(rs.getString(14));
                 presAddTxt.setText(rs.getString(13));
                 roomNoTxt.setText(rs.getString(12));
+                System.out.println("Image");
                 person_image = rs.getBytes("image");
                 if (person_image != null) {
                     showImage(person_image);
