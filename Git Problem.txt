@@ -63,8 +63,8 @@ git add -f -- OMMS/src/omms/Login.java
 git checkout --ours -- OMMS/src/omms/NewDashboard.form
 git add -f -- OMMS/src/omms/NewDashboard.form
 
-git checkout --ours -- OMMS/src/omms/NewDashboard.java
-git add -f -- OMMS/src/omms/NewDashboard.java
+git checkout --theirs -- OMMS/src/omms/GenerateBill.java
+git add -f -- OMMS/src/omms/GenerateBill.java
 
 
 

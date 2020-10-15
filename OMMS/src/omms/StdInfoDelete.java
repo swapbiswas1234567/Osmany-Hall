@@ -482,7 +482,7 @@ public class StdInfoDelete extends javax.swing.JFrame {
                     double due = (Double) tablemodel.getValueAt(i, 6);
                     int hallid = Integer.parseInt(tablemodel.getValueAt(i, 1).toString());
                     double bill = validityCheck(hallid);
-                    if (bill + due < 0) {
+                    if (bill + due <= 0) {
                         updatePrevStd(hallid);
                     } else {
                         String msg = showMsg(i, due, bill);
