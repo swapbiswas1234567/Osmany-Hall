@@ -63,6 +63,7 @@ public class GenerateBill extends javax.swing.JFrame {
         billtabledecoration();
         inittialization();
         flag=1;
+        setTitle("Generate Bill");
     }
     
     

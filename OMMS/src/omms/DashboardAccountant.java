@@ -28,6 +28,7 @@ public class DashboardAccountant extends javax.swing.JFrame {
         initComponents();
         setTitle("Accountant Dashboard");
         initialize();
+        setTitle("Acccountant Dashboard");
     }
 
     public void initialize() {

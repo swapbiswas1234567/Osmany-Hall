@@ -415,65 +415,54 @@ public class StdInfoUpdate extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
-        jLabel1.setFont(new java.awt.Font("Bell MT", 1, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Bell MT", 1, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/storeupdate.png"))); // NOI18N
         jLabel1.setText("STUDENT INFO UPDATE ");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-        );
-
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
-        jLabel2.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel2.setText("Name");
 
-        jLabel3.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel3.setText("Father's Name");
 
-        jLabel4.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel4.setText("Roll");
 
-        jLabel5.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel5.setText("Mother's Name");
 
-        jLabel6.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel6.setText("Department");
 
-        jLabel7.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel7.setText("Batch");
 
-        nameTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        nameTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         nameTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameTxtActionPerformed(evt);
             }
         });
 
-        rollTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        rollTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         rollTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rollTxtActionPerformed(evt);
             }
         });
 
-        fNameTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        fNameTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         fNameTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fNameTxtActionPerformed(evt);
             }
         });
 
-        mNameTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        mNameTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         mNameTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mNameTxtActionPerformed(evt);
@@ -481,7 +470,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         });
 
         deptComboBox.setBackground(new java.awt.Color(204, 204, 204));
-        deptComboBox.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        deptComboBox.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         deptComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CE", "CSE", "EECE", "ME", "AE", "NAME ", "EWCE", "BME", "ARCHI", "IPE", "PME" }));
         deptComboBox.setBorder(null);
         deptComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -490,28 +479,28 @@ public class StdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
-        batchTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        batchTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         batchTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 batchTxtActionPerformed(evt);
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel8.setText("Contact No");
 
-        contactNoTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        contactNoTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         contactNoTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 contactNoTxtActionPerformed(evt);
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel9.setText("Blood Group");
 
         bloodComboBox.setBackground(new java.awt.Color(204, 204, 204));
-        bloodComboBox.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        bloodComboBox.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         bloodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A+", "A-", "AB+", "B+", "B-", "AB-", "O+", "O-" }));
         bloodComboBox.setBorder(null);
         bloodComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -520,11 +509,11 @@ public class StdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel10.setText("Religion");
 
         religionComboBox.setBackground(new java.awt.Color(204, 204, 204));
-        religionComboBox.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        religionComboBox.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         religionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Hindu", "Chirstian", "Buddhist", "Jews", "Others" }));
         religionComboBox.setBorder(null);
         religionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -533,35 +522,35 @@ public class StdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel11.setText("Present Address ");
 
-        jLabel12.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel12.setText("Permanent Address ");
 
-        permAddTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        permAddTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         permAddTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 permAddTxtActionPerformed(evt);
             }
         });
 
-        presAddTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        presAddTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         presAddTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 presAddTxtActionPerformed(evt);
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel13.setText("Date of Birth");
 
-        dobDateChooser.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        dobDateChooser.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
 
-        jLabel14.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel14.setText("Room No");
 
-        roomNoTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        roomNoTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         roomNoTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 roomNoTxtActionPerformed(evt);
@@ -569,7 +558,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         });
 
         searchTxt.setBackground(new java.awt.Color(0, 204, 204));
-        searchTxt.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        searchTxt.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         searchTxt.setForeground(new java.awt.Color(153, 153, 153));
         searchTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         searchTxt.setText("Enter Hall Id");
@@ -589,7 +578,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         });
 
         searchBtn.setBackground(new java.awt.Color(0, 153, 153));
-        searchBtn.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        searchBtn.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         searchBtn.setForeground(new java.awt.Color(255, 255, 255));
         searchBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/search.png"))); // NOI18N
         searchBtn.setText("Search");
@@ -599,14 +588,14 @@ public class StdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
-        showImageLbl.setFont(new java.awt.Font("Bell MT", 1, 28)); // NOI18N
+        showImageLbl.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
         showImageLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         showImageLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/landscape.png"))); // NOI18N
         showImageLbl.setText("Add Image");
         showImageLbl.setAutoscrolls(true);
 
         attachFileBtn.setBackground(new java.awt.Color(0, 153, 153));
-        attachFileBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        attachFileBtn.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         attachFileBtn.setForeground(new java.awt.Color(255, 255, 255));
         attachFileBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/paper-clip (1).png"))); // NOI18N
         attachFileBtn.setText("Attach File");
@@ -618,7 +607,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         });
 
         updateBtn.setBackground(new java.awt.Color(0, 153, 153));
-        updateBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        updateBtn.setFont(new java.awt.Font("Bell MT", 1, 20)); // NOI18N
         updateBtn.setForeground(new java.awt.Color(255, 255, 255));
         updateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/update1.png"))); // NOI18N
         updateBtn.setText(" UPDATE");
@@ -629,7 +618,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         });
 
         removeImgBtn.setBackground(new java.awt.Color(255, 51, 51));
-        removeImgBtn.setFont(new java.awt.Font("Bell MT", 1, 24)); // NOI18N
+        removeImgBtn.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
         removeImgBtn.setForeground(new java.awt.Color(255, 255, 255));
         removeImgBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/trash_01.png"))); // NOI18N
         removeImgBtn.setText("Remove Image");
@@ -639,10 +628,10 @@ public class StdInfoUpdate extends javax.swing.JFrame {
             }
         });
 
-        jLabel15.setFont(new java.awt.Font("Bell MT", 1, 22)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Bell MT", 1, 18)); // NOI18N
         jLabel15.setText("Email");
 
-        emailTxt.setFont(new java.awt.Font("Bell MT", 0, 22)); // NOI18N
+        emailTxt.setFont(new java.awt.Font("Bell MT", 0, 18)); // NOI18N
         emailTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailTxtActionPerformed(evt);
@@ -654,56 +643,54 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(168, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addContainerGap(90, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dobDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(30, 30, 30)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(dobDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(fNameTxt)
-                                    .addComponent(mNameTxt)
-                                    .addComponent(permAddTxt)
-                                    .addComponent(presAddTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(bloodComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(religionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(roomNoTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(updateBtn, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(30, 30, 30)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(deptComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(batchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(nameTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rollTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(contactNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(emailTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 147, Short.MAX_VALUE)
+                                .addComponent(fNameTxt)
+                                .addComponent(mNameTxt)
+                                .addComponent(permAddTxt)
+                                .addComponent(presAddTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                    .addComponent(bloodComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(religionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(roomNoTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(updateBtn, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(deptComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(batchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(nameTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(rollTxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(contactNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emailTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 100, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(showImageLbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -716,7 +703,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
                         .addComponent(searchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(9, 9, 9)
                         .addComponent(searchBtn)))
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -744,7 +731,7 @@ public class StdInfoUpdate extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                        .addComponent(deptComboBox, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                        .addComponent(deptComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(batchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -787,8 +774,24 @@ public class StdInfoUpdate extends javax.swing.JFrame {
                     .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dobDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
-                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1070, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -796,17 +799,10 @@ public class StdInfoUpdate extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();

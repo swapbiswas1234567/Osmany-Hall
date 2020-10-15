@@ -38,6 +38,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         stdAddBtn = new javax.swing.JButton();
         stdView = new javax.swing.JButton();
@@ -45,12 +46,14 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         stdSeatCanBtn = new javax.swing.JButton();
         createDeptBtn = new javax.swing.JButton();
 
+        jTextField1.setText("jTextField1");
+
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         stdAddBtn.setBackground(new java.awt.Color(255, 255, 255));
-        stdAddBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        stdAddBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
         stdAddBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/admission_64px.png"))); // NOI18N
         stdAddBtn.setText("  Student Admission      ");
         stdAddBtn.setBorder(null);
@@ -62,7 +65,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         });
 
         stdView.setBackground(new java.awt.Color(255, 255, 255));
-        stdView.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        stdView.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
         stdView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/view_64px.png"))); // NOI18N
         stdView.setText("  Student's Info View");
         stdView.setBorder(null);
@@ -75,9 +78,9 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         });
 
         stdUpdtBtn.setBackground(new java.awt.Color(255, 255, 255));
-        stdUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        stdUpdtBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
         stdUpdtBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/Stdupdate_64px.png"))); // NOI18N
-        stdUpdtBtn.setText("  Student Info Update  ");
+        stdUpdtBtn.setText("  Student Info Update     ");
         stdUpdtBtn.setBorder(null);
         stdUpdtBtn.setFocusPainted(false);
         stdUpdtBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -87,7 +90,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         });
 
         stdSeatCanBtn.setBackground(new java.awt.Color(255, 255, 255));
-        stdSeatCanBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        stdSeatCanBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
         stdSeatCanBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/delete_database_64px.png"))); // NOI18N
         stdSeatCanBtn.setText("  Student's Seat Cancel");
         stdSeatCanBtn.setBorder(null);
@@ -100,7 +103,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         });
 
         createDeptBtn.setBackground(new java.awt.Color(255, 255, 255));
-        createDeptBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 28)); // NOI18N
+        createDeptBtn.setFont(new java.awt.Font("Berlin Sans FB", 0, 26)); // NOI18N
         createDeptBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepackage/boxes.png"))); // NOI18N
         createDeptBtn.setText("  Create Department  ");
         createDeptBtn.setBorder(null);
@@ -118,10 +121,10 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(stdView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stdUpdtBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stdAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stdSeatCanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stdView, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                    .addComponent(stdUpdtBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                    .addComponent(stdAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                    .addComponent(stdSeatCanBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addComponent(createDeptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
@@ -129,15 +132,15 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
+                .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stdAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(createDeptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
+                .addGap(40, 40, 40)
                 .addComponent(stdUpdtBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addGap(40, 40, 40)
                 .addComponent(stdView, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(40, 40, 40)
                 .addComponent(stdSeatCanBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
@@ -186,6 +189,7 @@ public class MessHallAdmissionDash extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createDeptBtn;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton stdAddBtn;
     private javax.swing.JButton stdSeatCanBtn;
     private javax.swing.JButton stdUpdtBtn;

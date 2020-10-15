@@ -26,6 +26,7 @@ public class DashboardMess extends javax.swing.JFrame {
      */
     public DashboardMess() {
         initComponents();
+        setTitle("Mess Authority Dashboard");
     }
 
     /**

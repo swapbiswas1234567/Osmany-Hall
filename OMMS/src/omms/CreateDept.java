@@ -26,14 +26,16 @@ public class CreateDept extends javax.swing.JFrame {
 
     Connection conn = null;
     PreparedStatement ps = null;
+
     /**
      * Creates new form CreateDept
      */
     public CreateDept() {
         initComponents();
         initialize();
+        setTitle("Create Department");
     }
-    
+
     public void initialize() {
         conn = Jconnection.ConnecrDb(); // set connection with database  
         nameTxt.requestFocus(); // setitng the focus to the Hall Id searchDate button
@@ -81,15 +83,15 @@ public class CreateDept extends javax.swing.JFrame {
             }
         });
     }
-    
 
     public void entryDept() {
         String name = nameTxt.getText().toString().trim().toUpperCase();
         int year = 0;
         try {
-            Integer.parseInt(yearTxt.getText());
+            year = Integer.parseInt(yearTxt.getText());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Wrong Year Inserted","Insertion Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Wrong Year Inserted", "Insertion Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         try {
             ps = conn.prepareStatement("INSERT INTO dept VALUES(?,?)");
@@ -98,8 +100,15 @@ public class CreateDept extends javax.swing.JFrame {
             ps.execute();
             ps.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Departmnet Can't Be Created","Insertion Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Departmnet Can't Be Created", "Insertion Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        JOptionPane.showMessageDialog(null, "New " + name + " Departmnet is Created", "Done", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void clearAll() {
+        nameTxt.setText("");
+        yearTxt.setText("");
     }
 
     /**
@@ -228,6 +237,8 @@ public class CreateDept extends javax.swing.JFrame {
 
     private void submitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBtnActionPerformed
         // TODO add your handling code here:
+        entryDept();
+        clearAll();
     }//GEN-LAST:event_submitBtnActionPerformed
 
     /**
