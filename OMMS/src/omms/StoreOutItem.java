@@ -1029,12 +1029,13 @@ public class StoreOutItem extends javax.swing.JFrame {
             Paragraph name2 = new Paragraph("Hall Provost                 ",FontFactory.getFont(FontFactory.TIMES_ROMAN, 10, com.itextpdf.text.Font.NORMAL));
             name2.setAlignment(Element.ALIGN_RIGHT);
             doc.add(name2);
+            doc.close();
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Pdf generation error","File Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.toString(),"File Error", JOptionPane.ERROR_MESSAGE);
         }
         
-        doc.close();
+        
     }
     
     
